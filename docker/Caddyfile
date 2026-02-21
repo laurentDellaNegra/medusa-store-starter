@@ -15,6 +15,9 @@
 	handle /.well-known* {
 		reverse_proxy backend:9000
 	}
+	handle /health* {
+		reverse_proxy backend:9000
+	}
 
 	# Everything else goes to the storefront
 	handle {
