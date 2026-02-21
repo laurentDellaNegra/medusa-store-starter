@@ -58,7 +58,11 @@ if [[ "$MODE" == "nuke" ]]; then
   fi
   info "Nuking everything..."
   $COMPOSE down -v --rmi all 2>/dev/null || true
-  docker system prune -a --volumes
+  # Stop ALL running containers (catches strays from previous deploys)
+  if [ -n "$(docker ps -q)" ]; then
+    docker stop $(docker ps -q)
+  fi
+  docker system prune -a --volumes -f
   docker builder prune -a -f
   success "Everything destroyed. Run ./deploy.sh to redeploy."
   exit 0
