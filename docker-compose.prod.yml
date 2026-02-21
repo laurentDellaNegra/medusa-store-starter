@@ -34,6 +34,8 @@ services:
     build:
       context: .
       dockerfile: apps/backend/Dockerfile
+      args:
+        MEDUSA_BACKEND_URL: ${MEDUSA_BACKEND_URL:-http://localhost:9000}
     container_name: medusa-prod-backend
     restart: unless-stopped
     depends_on:

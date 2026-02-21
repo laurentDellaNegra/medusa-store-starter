@@ -18,5 +18,7 @@ module.exports = defineConfig({
       sslmode: "disable",
     },
   },
-  admin: {},
+  admin: {
+    backendUrl: process.env.MEDUSA_BACKEND_URL,
+  },
 });

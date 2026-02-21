@@ -172,6 +172,7 @@ COOKIE_SECRET=${COOKIE_SECRET}
 STORE_CORS=${BASE_URL}
 ADMIN_CORS=${BASE_URL}
 AUTH_CORS=${BASE_URL}
+MEDUSA_BACKEND_URL=${BASE_URL}
 
 # ─── Storefront (build-time) ─────────────────────────
 PUBLIC_MEDUSA_PUBLISHABLE_KEY=placeholder_will_be_replaced_after_seed

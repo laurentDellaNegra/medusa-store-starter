@@ -19,6 +19,8 @@ RUN pnpm install --frozen-lockfile
 
 # Build Medusa (produces .medusa/server/ with compiled JS + admin dashboard)
 WORKDIR /app/apps/backend
+ARG MEDUSA_BACKEND_URL
+ENV MEDUSA_BACKEND_URL=${MEDUSA_BACKEND_URL}
 RUN npx medusa build
 
 # ──────────────────────────────────────────────
