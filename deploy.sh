@@ -304,7 +304,7 @@ else
 fi
 
 echo -e "  Storefront:  ${BLUE}${BASE_URL}${NC}"
-echo -e "  Admin:       ${BLUE}${BASE_URL}/admin${NC}"
+echo -e "  Admin:       ${BLUE}${BASE_URL}/admin-app${NC}"
 echo -e "  Admin login: ${YELLOW}${ADMIN_EMAIL}${NC}"
 echo ""
 echo -e "  ${YELLOW}Useful commands:${NC}"

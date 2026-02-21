@@ -3,6 +3,10 @@
 	handle /admin* {
 		reverse_proxy backend:9000
 	}
+	# Admin dashboard (served at /admin-app — /admin is a reserved API path)
+	handle /admin-app* {
+		reverse_proxy backend:9000
+	}
 	handle /store* {
 		reverse_proxy backend:9000
 	}
