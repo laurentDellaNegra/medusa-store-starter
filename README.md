@@ -171,8 +171,9 @@ The project includes a full dockerized production setup with 5 services: Postgre
                            │
             ┌──────────────┼──────────────┐
             │                             │
-   /admin, /store/*              everything else
-   /auth, /hooks/*
+   /admin, /admin-app,           everything else
+   /store, /auth,
+   /hooks, /health
             │                             │
  ┌──────────▼──────┐  ┌──────────────────▼┐
  │ Medusa backend  │  │ Astro storefront  │
@@ -254,6 +255,7 @@ Edit `.env.production` and fill in:
 - `POSTGRES_PASSWORD` — strong database password
 - `JWT_SECRET` / `COOKIE_SECRET` — random strings (at least 32 chars each)
 - `STORE_CORS` / `ADMIN_CORS` / `AUTH_CORS` — your domain with protocol (e.g., `https://example.com`)
+- `MEDUSA_BACKEND_URL` — your domain with protocol (e.g., `https://example.com`), required for the admin dashboard to work in production
 - `PUBLIC_MEDUSA_PUBLISHABLE_KEY` — leave the placeholder for now, you'll update it after seeding
 - `PUBLIC_BASE_URL` — the public URL of the storefront (e.g., `https://example.com`)
 - `PUBLIC_STRIPE_KEY` — your Stripe publishable key (optional)
@@ -300,7 +302,7 @@ docker compose -f docker-compose.prod.yml --env-file .env.production exec backen
 **7. Verify:**
 
 - Storefront: `https://yourdomain.com` (or `http://your-ip`)
-- Admin dashboard: `https://yourdomain.com/admin`
+- Admin dashboard: `https://yourdomain.com/admin-app`
 
 </details>
 
@@ -310,7 +312,7 @@ docker compose -f docker-compose.prod.yml --env-file .env.production exec backen
 # Rebuild after code changes
 ./deploy.sh --rebuild
 
-# Nuke everything and start fresh (destroys all data!)
+# Nuke everything and start fresh (destroys ALL data, images, volumes, and build cache!)
 ./deploy.sh --nuke
 
 # View logs
@@ -323,6 +325,13 @@ docker compose -f docker-compose.prod.yml --env-file .env.production restart bac
 # Stop everything
 docker compose -f docker-compose.prod.yml --env-file .env.production down
 ```
+
+### Important notes
+
+- **Admin dashboard path**: The admin UI is served at `/admin-app` (not `/admin`). The `/admin` path is reserved by Medusa for API routes.
+- **`MEDUSA_BACKEND_URL`**: This is a **build-time** variable — it gets baked into the admin SPA during `medusa build`. If you change the domain, you must rebuild the backend image.
+- **Health endpoint**: The Medusa health check is at `/health` and returns `OK` (uppercase).
+- **Nuke mode**: `--nuke` stops all running containers (not just compose-managed ones), then runs `docker system prune -a --volumes -f` and `docker builder prune -a -f`. It does **not** stop system services (nginx, apache) that may occupy port 80.
 
 ### Migrating to other platforms
 

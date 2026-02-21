@@ -70,7 +70,9 @@ Full dockerized stack at repo root:
 - Container names: `medusa-prod-*` (avoids conflicts with local dev containers)
 - `.env.production` — production secrets (gitignored), see `.env.production.example` for template
 - `deploy.sh` — interactive deployment script (prompts for domain, credentials, secrets)
-- Caddy routes: `/admin`, `/store`, `/auth`, `/hooks` → backend:9000, everything else → storefront:8001
+- Caddy routes: `/admin`, `/admin-app`, `/store`, `/auth`, `/hooks`, `/health` → backend:9000, everything else → storefront:8001
+- Admin dashboard served at `/admin-app` (not `/admin` — that's reserved for Medusa API routes)
+- `MEDUSA_BACKEND_URL` is a **build-time** arg — must be passed during `docker build` for admin SPA to work
 
 ## Environment files
 
