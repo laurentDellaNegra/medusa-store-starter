@@ -1,0 +1,57 @@
+---
+import { css } from "styled-system/css"
+import { ImageOff } from "lucide-react"
+
+interface Props {
+  thumbnail?: string | null
+  images?: any[] | null
+  alt?: string
+  aspectRatio?: "portrait" | "square"
+}
+
+const { thumbnail, images, alt = "Product", aspectRatio = "portrait" } = Astro.props
+const image = thumbnail || images?.[0]?.url
+---
+
+<div
+  class:list={[
+    "thumbnail",
+    css({
+      position: "relative",
+      w: "full",
+      overflow: "hidden",
+      bg: "bg.subtle",
+      borderRadius: "lg",
+      aspectRatio: aspectRatio === "square" ? "1/1" : "3/4",
+      transition: "shadow",
+      transitionDuration: "normal",
+    }),
+  ]}
+>
+  {image ? (
+    <img
+      src={image}
+      alt={alt}
+      loading="lazy"
+      class={css({
+        position: "absolute",
+        inset: 0,
+        w: "full",
+        h: "full",
+        objectFit: "cover",
+        objectPosition: "center",
+      })}
+    />
+  ) : (
+    <div class={css({
+      w: "full",
+      h: "full",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "fg.disabled",
+    })}>
+      <ImageOff size={24} />
+    </div>
+  )}
+</div>

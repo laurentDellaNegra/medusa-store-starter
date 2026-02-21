@@ -1,0 +1,33 @@
+{
+  "name": "@medusa-store-starter/backend",
+  "targets": {
+    "infra:up": {
+      "command": "docker compose up -d",
+      "options": { "cwd": "apps/backend" }
+    },
+    "infra:down": {
+      "command": "docker compose down",
+      "options": { "cwd": "apps/backend" }
+    },
+    "dev": {
+      "command": "medusa develop",
+      "options": { "cwd": "apps/backend" }
+    },
+    "build": {
+      "command": "medusa build",
+      "options": { "cwd": "apps/backend" }
+    },
+    "seed": {
+      "command": "medusa exec ./src/scripts/seed.ts",
+      "options": { "cwd": "apps/backend" }
+    },
+    "db:migrate": {
+      "command": "medusa db:migrate",
+      "options": { "cwd": "apps/backend" }
+    },
+    "preview": {
+      "command": "npx medusa db:migrate && npx medusa start",
+      "options": { "cwd": "apps/backend/.medusa/server" }
+    }
+  }
+}

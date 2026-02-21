@@ -1,0 +1,81 @@
+---
+export const prerender = false
+
+import AccountLayout from "@/layouts/AccountLayout.astro"
+import { retrieveCustomer } from "@/lib/data/customer"
+import { listOrders } from "@/lib/data/orders"
+import { convertToLocale } from "@/lib/util/money"
+import { css } from "styled-system/css"
+
+const { countryCode } = Astro.params
+
+if (!countryCode) {
+  return Astro.redirect("/us")
+}
+
+const customer = await retrieveCustomer()
+
+if (!customer) {
+  return Astro.redirect(`/${countryCode}/account`)
+}
+
+let orders: any[] = []
+try {
+  orders = (await listOrders(20, 0)) || []
+} catch {
+  // Failed to fetch orders
+}
+---
+
+<AccountLayout title="Orders | Medusa Store" countryCode={countryCode}>
+  <div>
+    <h1 class={css({ fontSize: "2xl", fontWeight: "bold", mb: "2" })}>Orders</h1>
+    <p class={css({ fontSize: "sm", color: "fg.muted", mb: "6" })}>
+      View your order history.
+    </p>
+
+    {orders.length === 0 ? (
+      <p class={css({ fontSize: "sm", color: "fg.muted" })}>
+        You haven't placed any orders yet.
+      </p>
+    ) : (
+      <div class={css({ display: "flex", flexDir: "column", gap: "3" })}>
+        {orders.map((order) => (
+          <a
+            href={`/${countryCode}/account/orders/${order.id}`}
+            class={css({
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              p: "4",
+              borderWidth: "1px",
+              borderColor: "border.default",
+              borderRadius: "md",
+              textDecoration: "none",
+              color: "fg.default",
+              _hover: { bg: "bg.muted" },
+            })}
+          >
+            <div>
+              <p class={css({ fontSize: "sm", fontWeight: "medium" })}>
+                Order #{order.display_id}
+              </p>
+              <p class={css({ fontSize: "xs", color: "fg.muted" })}>
+                {new Date(order.created_at).toLocaleDateString()} &middot;{" "}
+                {order.items?.length || 0} item{(order.items?.length || 0) !== 1 ? "s" : ""}
+              </p>
+            </div>
+            <div class={css({ textAlign: "right" })}>
+              <p class={css({ fontSize: "sm", fontWeight: "medium" })}>
+                {convertToLocale({ amount: order.total ?? 0, currency_code: order.currency_code })}
+              </p>
+              <p class={css({ fontSize: "xs", color: "fg.muted", textTransform: "capitalize" })}>
+                {order.fulfillment_status || order.status || "processing"}
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</AccountLayout>

@@ -1,0 +1,162 @@
+---
+import { css } from "styled-system/css"
+import { listCollections } from "@/lib/data/collections"
+import { listCategories } from "@/lib/data/categories"
+
+interface Props {
+  countryCode: string
+}
+
+const { countryCode } = Astro.props
+
+let collections: any[] = []
+let categories: any[] = []
+
+try {
+  const result = await listCollections({ fields: "id,handle,title" })
+  collections = result.collections || []
+} catch {}
+
+try {
+  categories = await listCategories() || []
+} catch {}
+
+const topCategories = categories.filter((c) => !c.parent_category).slice(0, 6)
+---
+
+<footer class={css({
+  borderTopWidth: "1px",
+  borderColor: "border.default",
+  mt: "16",
+})}>
+  <div class={css({
+    maxW: "8xl",
+    mx: "auto",
+    px: { base: "4", md: "8" },
+    py: "12",
+  })}>
+    <div class={css({
+      display: "grid",
+      gridTemplateColumns: { base: "1fr", md: "1fr 1fr 1fr 1fr" },
+      gap: "8",
+    })}>
+      <div>
+        <a
+          href={`/${countryCode}`}
+          class={css({
+            fontWeight: "bold",
+            fontSize: "lg",
+            textTransform: "uppercase",
+            letterSpacing: "wider",
+            color: "fg.default",
+            textDecoration: "none",
+          })}
+        >
+          Medusa Store
+        </a>
+      </div>
+
+      {topCategories.length > 0 && (
+        <div>
+          <h3 class={css({ fontWeight: "semibold", fontSize: "sm", mb: "3" })}>
+            Categories
+          </h3>
+          <ul class={css({ display: "flex", flexDir: "column", gap: "2" })}>
+            {topCategories.map((c) => (
+              <li>
+                <a
+                  href={`/${countryCode}/categories/${c.handle}`}
+                  class={css({
+                    fontSize: "sm",
+                    color: "fg.muted",
+                    textDecoration: "none",
+                    _hover: { color: "fg.default" },
+                  })}
+                >
+                  {c.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {collections.length > 0 && (
+        <div>
+          <h3 class={css({ fontWeight: "semibold", fontSize: "sm", mb: "3" })}>
+            Collections
+          </h3>
+          <ul class={css({ display: "flex", flexDir: "column", gap: "2" })}>
+            {collections.slice(0, 6).map((c) => (
+              <li>
+                <a
+                  href={`/${countryCode}/collections/${c.handle}`}
+                  class={css({
+                    fontSize: "sm",
+                    color: "fg.muted",
+                    textDecoration: "none",
+                    _hover: { color: "fg.default" },
+                  })}
+                >
+                  {c.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div>
+        <h3 class={css({ fontWeight: "semibold", fontSize: "sm", mb: "3" })}>
+          Links
+        </h3>
+        <ul class={css({ display: "flex", flexDir: "column", gap: "2" })}>
+          <li>
+            <a
+              href="https://github.com/medusajs"
+              target="_blank"
+              rel="noreferrer"
+              class={css({
+                fontSize: "sm",
+                color: "fg.muted",
+                textDecoration: "none",
+                _hover: { color: "fg.default" },
+              })}
+            >
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://docs.medusajs.com"
+              target="_blank"
+              rel="noreferrer"
+              class={css({
+                fontSize: "sm",
+                color: "fg.muted",
+                textDecoration: "none",
+                _hover: { color: "fg.default" },
+              })}
+            >
+              Documentation
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class={css({
+      borderTopWidth: "1px",
+      borderColor: "border.default",
+      mt: "8",
+      pt: "8",
+      display: "flex",
+      justifyContent: "space-between",
+      fontSize: "xs",
+      color: "fg.muted",
+    })}>
+      <span>&copy; {new Date().getFullYear()} Medusa Store. All rights reserved.</span>
+      <span>Powered by Medusa &amp; Astro</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,101 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: medusa-prod-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: medusa-store
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d medusa-store"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - medusa_prod_pgdata:/var/lib/postgresql/data
+    networks:
+      - medusa-prod
+    # Not exposed to host — only accessible within the Docker network
+
+  redis:
+    image: redis:7-alpine
+    container_name: medusa-prod-redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - medusa-prod
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: medusa-prod-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/medusa-store
+      REDIS_URL: redis://redis:6379
+      STORE_CORS: ${STORE_CORS}
+      ADMIN_CORS: ${ADMIN_CORS}
+      AUTH_CORS: ${AUTH_CORS}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env.production}
+      COOKIE_SECRET: ${COOKIE_SECRET:?Set COOKIE_SECRET in .env.production}
+    networks:
+      - medusa-prod
+
+  storefront:
+    build:
+      context: .
+      dockerfile: apps/storefront-astro/Dockerfile
+      args:
+        PUBLIC_MEDUSA_PUBLISHABLE_KEY: ${PUBLIC_MEDUSA_PUBLISHABLE_KEY}
+        PUBLIC_BASE_URL: ${PUBLIC_BASE_URL}
+        PUBLIC_DEFAULT_REGION: ${PUBLIC_DEFAULT_REGION:-us}
+        PUBLIC_STRIPE_KEY: ${PUBLIC_STRIPE_KEY:-}
+    container_name: medusa-prod-storefront
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      MEDUSA_BACKEND_URL: http://backend:9000
+    networks:
+      - medusa-prod
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: medusa-prod-caddy
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - storefront
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - medusa_prod_caddy_data:/data
+      - medusa_prod_caddy_config:/config
+    networks:
+      - medusa-prod
+
+volumes:
+  medusa_prod_pgdata:
+  medusa_prod_caddy_data:
+  medusa_prod_caddy_config:
+
+networks:
+  medusa-prod:
+    name: medusa-prod

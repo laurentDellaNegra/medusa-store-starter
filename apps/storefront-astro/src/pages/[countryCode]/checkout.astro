@@ -1,0 +1,39 @@
+---
+export const prerender = false
+
+import CheckoutLayout from "@/layouts/CheckoutLayout.astro"
+import CheckoutForm from "@/components/checkout/CheckoutForm"
+import { retrieveCart } from "@/lib/data/cart"
+import { retrieveCustomer } from "@/lib/data/customer"
+import { listCartShippingMethods } from "@/lib/data/fulfillment"
+import { listCartPaymentMethods } from "@/lib/data/payment"
+
+const { countryCode } = Astro.params
+
+if (!countryCode) {
+  return Astro.redirect("/us")
+}
+
+const cart = await retrieveCart()
+
+if (!cart || !cart.items?.length) {
+  return Astro.redirect(`/${countryCode}/cart`)
+}
+
+const [customer, shippingMethods, paymentMethods] = await Promise.all([
+  retrieveCustomer(),
+  listCartShippingMethods(cart.id),
+  listCartPaymentMethods(cart.region?.id ?? ""),
+])
+---
+
+<CheckoutLayout title="Checkout | Medusa Store" countryCode={countryCode}>
+  <CheckoutForm
+    client:load
+    cart={cart}
+    customer={customer}
+    shippingMethods={shippingMethods}
+    paymentMethods={paymentMethods}
+    countryCode={countryCode}
+  />
+</CheckoutLayout>

@@ -1,0 +1,21 @@
+{
+  "name": "medusa-store-starter",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nx run @medusa-store-starter/backend:infra:up && nx run-many --target=dev --projects=@medusa-store-starter/backend,@medusa-store-starter/storefront-astro",
+    "build": "nx run-many --target=build --projects=@medusa-store-starter/backend,@medusa-store-starter/storefront-astro",
+    "preview": "pnpm run build && nx run @medusa-store-starter/backend:infra:up && nx run-many --target=preview --projects=@medusa-store-starter/backend,@medusa-store-starter/storefront-astro"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "^1.8.2",
+    "nx": "^20.6.1"
+  },
+  "overrides": {
+    "react": "19.0.4",
+    "react-dom": "19.0.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

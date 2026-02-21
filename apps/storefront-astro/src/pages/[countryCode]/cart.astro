@@ -1,0 +1,28 @@
+---
+export const prerender = false
+
+import MainLayout from "@/layouts/MainLayout.astro"
+import CartTemplate from "@/components/cart/CartTemplate"
+import { retrieveCart } from "@/lib/data/cart"
+import { retrieveCustomer } from "@/lib/data/customer"
+
+const { countryCode } = Astro.params
+
+if (!countryCode) {
+  return Astro.redirect("/us")
+}
+
+const [cart, customer] = await Promise.all([
+  retrieveCart(),
+  retrieveCustomer(),
+])
+---
+
+<MainLayout title="Cart | Medusa Store" countryCode={countryCode}>
+  <CartTemplate
+    client:load
+    initialCart={cart}
+    customer={customer}
+    countryCode={countryCode}
+  />
+</MainLayout>

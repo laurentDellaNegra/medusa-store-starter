@@ -1,0 +1,30 @@
+---
+import { css } from "styled-system/css"
+import type { HttpTypes } from "@medusajs/types"
+import ProductPreview from "@/components/products/ProductPreview.astro"
+
+interface Props {
+  products: HttpTypes.StoreProduct[]
+  countryCode: string
+}
+
+const { products, countryCode } = Astro.props
+---
+
+{products.length > 0 ? (
+  <ul class={css({
+    display: "grid",
+    gridTemplateColumns: { base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" },
+    gap: "6",
+  })}>
+    {products.map((product) => (
+      <li>
+        <ProductPreview product={product} countryCode={countryCode} />
+      </li>
+    ))}
+  </ul>
+) : (
+  <p class={css({ textAlign: "center", color: "fg.muted", py: "12" })}>
+    No products found.
+  </p>
+)}

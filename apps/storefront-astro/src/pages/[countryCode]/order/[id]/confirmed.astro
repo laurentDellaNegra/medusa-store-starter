@@ -1,0 +1,139 @@
+---
+export const prerender = false
+
+import MainLayout from "@/layouts/MainLayout.astro"
+import OrderItems from "@/components/order/OrderItems.astro"
+import OrderDetails from "@/components/order/OrderDetails.astro"
+import { retrieveOrder } from "@/lib/data/orders"
+import { convertToLocale } from "@/lib/util/money"
+import { css } from "styled-system/css"
+
+const { countryCode, id } = Astro.params
+
+if (!countryCode || !id) {
+  return Astro.redirect("/us")
+}
+
+let order
+try {
+  order = await retrieveOrder(id)
+} catch {
+  return Astro.redirect(`/${countryCode}`)
+}
+
+if (!order) {
+  return Astro.redirect(`/${countryCode}`)
+}
+
+const total = convertToLocale({
+  amount: order.total ?? 0,
+  currency_code: order.currency_code,
+})
+---
+
+<MainLayout title="Order Confirmed | Medusa Store" countryCode={countryCode}>
+  <div class={css({ maxW: "4xl", mx: "auto", px: "4", py: "12" })}>
+    {/* Header */}
+    <div class={css({ textAlign: "center", mb: "10" })}>
+      <div class={css({ fontSize: "4xl", mb: "4" })}>✓</div>
+      <h1 class={css({ fontSize: "2xl", fontWeight: "bold", mb: "2" })}>
+        Thank you for your order!
+      </h1>
+      <p class={css({ color: "fg.muted" })}>
+        Your order has been confirmed and will be processed shortly.
+      </p>
+    </div>
+
+    {/* Order info */}
+    <div class={css({
+      bg: "bg.muted",
+      borderRadius: "lg",
+      p: "6",
+      mb: "8",
+      display: "flex",
+      justifyContent: "space-between",
+      flexWrap: "wrap",
+      gap: "4",
+    })}>
+      <div>
+        <p class={css({ fontSize: "xs", color: "fg.muted", mb: "1" })}>Order number</p>
+        <p class={css({ fontSize: "sm", fontWeight: "semibold" })}>{order.display_id}</p>
+      </div>
+      <div>
+        <p class={css({ fontSize: "xs", color: "fg.muted", mb: "1" })}>Date</p>
+        <p class={css({ fontSize: "sm", fontWeight: "semibold" })}>
+          {new Date(order.created_at).toLocaleDateString()}
+        </p>
+      </div>
+      <div>
+        <p class={css({ fontSize: "xs", color: "fg.muted", mb: "1" })}>Total</p>
+        <p class={css({ fontSize: "sm", fontWeight: "semibold" })}>{total}</p>
+      </div>
+      <div>
+        <p class={css({ fontSize: "xs", color: "fg.muted", mb: "1" })}>Email</p>
+        <p class={css({ fontSize: "sm", fontWeight: "semibold" })}>{order.email}</p>
+      </div>
+    </div>
+
+    {/* Items */}
+    <div class={css({ mb: "8" })}>
+      <OrderItems items={order.items || []} currencyCode={order.currency_code} />
+    </div>
+
+    {/* Totals */}
+    <div class={css({
+      mb: "8",
+      p: "6",
+      borderWidth: "1px",
+      borderColor: "border.default",
+      borderRadius: "lg",
+    })}>
+      <h3 class={css({ fontSize: "md", fontWeight: "semibold", mb: "4" })}>Order Total</h3>
+      <div class={css({ display: "flex", flexDir: "column", gap: "2" })}>
+        <div class={css({ display: "flex", justifyContent: "space-between", fontSize: "sm" })}>
+          <span class={css({ color: "fg.muted" })}>Subtotal</span>
+          <span>{convertToLocale({ amount: order.item_subtotal ?? 0, currency_code: order.currency_code })}</span>
+        </div>
+        <div class={css({ display: "flex", justifyContent: "space-between", fontSize: "sm" })}>
+          <span class={css({ color: "fg.muted" })}>Shipping</span>
+          <span>{convertToLocale({ amount: order.shipping_subtotal ?? 0, currency_code: order.currency_code })}</span>
+        </div>
+        <div class={css({ display: "flex", justifyContent: "space-between", fontSize: "sm" })}>
+          <span class={css({ color: "fg.muted" })}>Tax</span>
+          <span>{convertToLocale({ amount: order.tax_total ?? 0, currency_code: order.currency_code })}</span>
+        </div>
+        <div class={css({ h: "1px", bg: "border.default", my: "1" })} />
+        <div class={css({ display: "flex", justifyContent: "space-between", fontWeight: "semibold" })}>
+          <span>Total</span>
+          <span>{total}</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Details */}
+    <div class={css({ mb: "8" })}>
+      <OrderDetails order={order} />
+    </div>
+
+    {/* CTA */}
+    <div class={css({ textAlign: "center" })}>
+      <a
+        href={`/${countryCode}/store`}
+        class={css({
+          display: "inline-block",
+          px: "8",
+          py: "3",
+          bg: "bg.inverted",
+          color: "fg.inverted",
+          borderRadius: "md",
+          fontSize: "sm",
+          fontWeight: "medium",
+          textDecoration: "none",
+          _hover: { opacity: 0.9 },
+        })}
+      >
+        Continue shopping
+      </a>
+    </div>
+  </div>
+</MainLayout>

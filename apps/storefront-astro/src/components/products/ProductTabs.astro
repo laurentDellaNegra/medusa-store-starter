@@ -1,0 +1,70 @@
+---
+import { css } from "styled-system/css"
+import type { HttpTypes } from "@medusajs/types"
+
+interface Props {
+  product: HttpTypes.StoreProduct
+}
+
+const { product } = Astro.props
+---
+
+<div class={css({
+  display: "flex",
+  flexDir: "column",
+  gap: "4",
+  mt: "8",
+})}>
+  {product.description && (
+    <details open class={css({
+      borderBottomWidth: "1px",
+      borderColor: "border.default",
+      pb: "4",
+    })}>
+      <summary class={css({
+        fontSize: "sm",
+        fontWeight: "semibold",
+        cursor: "pointer",
+        py: "2",
+      })}>
+        Description
+      </summary>
+      <p class={css({
+        fontSize: "sm",
+        color: "fg.muted",
+        lineHeight: "relaxed",
+        mt: "2",
+      })}>
+        {product.description}
+      </p>
+    </details>
+  )}
+
+  {product.material && (
+    <details class={css({
+      borderBottomWidth: "1px",
+      borderColor: "border.default",
+      pb: "4",
+    })}>
+      <summary class={css({
+        fontSize: "sm",
+        fontWeight: "semibold",
+        cursor: "pointer",
+        py: "2",
+      })}>
+        Details
+      </summary>
+      <div class={css({ mt: "2", fontSize: "sm", color: "fg.muted" })}>
+        {product.material && (
+          <p>Material: {product.material}</p>
+        )}
+        {product.weight && (
+          <p>Weight: {product.weight}g</p>
+        )}
+        {product.type && (
+          <p>Type: {(product.type as any).value}</p>
+        )}
+      </div>
+    </details>
+  )}
+</div>

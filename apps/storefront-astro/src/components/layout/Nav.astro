@@ -1,0 +1,82 @@
+---
+import { css } from "styled-system/css"
+import CartButton from "./CartButton"
+
+interface Props {
+  countryCode: string
+}
+
+const { countryCode } = Astro.props
+---
+
+<div class={css({
+  position: "sticky",
+  top: 0,
+  zIndex: 50,
+  bg: "bg.default",
+  borderBottomWidth: "1px",
+  borderColor: "border.default",
+})}>
+  <header class={css({
+    maxW: "8xl",
+    mx: "auto",
+    px: { base: "4", md: "8" },
+    h: "16",
+  })}>
+    <nav class={css({
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      h: "full",
+      fontSize: "sm",
+    })}>
+      <div class={css({ display: "flex", alignItems: "center", gap: "6" })}>
+        <a
+          href={`/${countryCode}`}
+          class={css({
+            fontWeight: "bold",
+            fontSize: "lg",
+            textTransform: "uppercase",
+            letterSpacing: "wider",
+            color: "fg.default",
+            textDecoration: "none",
+            _hover: { color: "fg.muted" },
+          })}
+        >
+          Medusa Store
+        </a>
+      </div>
+
+      <div class={css({
+        display: { base: "none", md: "flex" },
+        alignItems: "center",
+        gap: "6",
+      })}>
+        <a
+          href={`/${countryCode}/store`}
+          class={css({
+            color: "fg.muted",
+            textDecoration: "none",
+            _hover: { color: "fg.default" },
+          })}
+        >
+          Store
+        </a>
+        <a
+          href={`/${countryCode}/account`}
+          class={css({
+            color: "fg.muted",
+            textDecoration: "none",
+            _hover: { color: "fg.default" },
+          })}
+        >
+          Account
+        </a>
+      </div>
+
+      <div class={css({ display: "flex", alignItems: "center", gap: "4" })}>
+        <CartButton client:load countryCode={countryCode} />
+      </div>
+    </nav>
+  </header>
+</div>

@@ -1,0 +1,83 @@
+---
+import { css } from "styled-system/css"
+
+interface Props {
+  currentPage: number
+  totalPages: number
+  baseUrl: string
+  sortBy?: string
+}
+
+const { currentPage, totalPages, baseUrl, sortBy } = Astro.props
+
+const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
+const buildUrl = (page: number) => {
+  const params = new URLSearchParams()
+  if (page > 1) params.set("page", String(page))
+  if (sortBy) params.set("sortBy", sortBy)
+  const qs = params.toString()
+  return qs ? `${baseUrl}?${qs}` : baseUrl
+}
+---
+
+{totalPages > 1 && (
+  <nav class={css({
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "2",
+    mt: "8",
+  })}>
+    {currentPage > 1 && (
+      <a
+        href={buildUrl(currentPage - 1)}
+        class={css({
+          px: "3",
+          py: "2",
+          fontSize: "sm",
+          color: "fg.muted",
+          textDecoration: "none",
+          _hover: { color: "fg.default" },
+        })}
+      >
+        Previous
+      </a>
+    )}
+
+    {pages.map((page) => (
+      <a
+        href={buildUrl(page)}
+        class={css({
+          px: "3",
+          py: "2",
+          fontSize: "sm",
+          borderRadius: "md",
+          textDecoration: "none",
+          bg: page === currentPage ? "bg.inverted" : "transparent",
+          color: page === currentPage ? "fg.inverted" : "fg.muted",
+          _hover: {
+            bg: page === currentPage ? "bg.inverted" : "bg.subtle",
+          },
+        })}
+      >
+        {page}
+      </a>
+    ))}
+
+    {currentPage < totalPages && (
+      <a
+        href={buildUrl(currentPage + 1)}
+        class={css({
+          px: "3",
+          py: "2",
+          fontSize: "sm",
+          color: "fg.muted",
+          textDecoration: "none",
+          _hover: { color: "fg.default" },
+        })}
+      >
+        Next
+      </a>
+    )}
+  </nav>
+)}

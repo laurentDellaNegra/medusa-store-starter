@@ -1,0 +1,23 @@
+{
+  "name": "@medusa-store-starter/storefront-astro",
+  "targets": {
+    "dev": {
+      "command": "astro dev --port 8001",
+      "options": {
+        "cwd": "apps/storefront-astro"
+      }
+    },
+    "build": {
+      "command": "astro build",
+      "options": {
+        "cwd": "apps/storefront-astro"
+      }
+    },
+    "preview": {
+      "command": "astro preview --port 8001",
+      "options": {
+        "cwd": "apps/storefront-astro"
+      }
+    }
+  }
+}

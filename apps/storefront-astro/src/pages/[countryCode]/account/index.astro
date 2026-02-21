@@ -1,0 +1,37 @@
+---
+export const prerender = false
+
+import MainLayout from "@/layouts/MainLayout.astro"
+import LoginRegister from "@/components/account/LoginRegister"
+import AccountOverview from "@/components/account/AccountOverview"
+import { retrieveCustomer } from "@/lib/data/customer"
+import { listOrders } from "@/lib/data/orders"
+import { css } from "styled-system/css"
+
+const { countryCode } = Astro.params
+
+if (!countryCode) {
+  return Astro.redirect("/us")
+}
+
+const customer = await retrieveCustomer()
+
+let orders = null
+if (customer) {
+  try {
+    orders = await listOrders(5, 0)
+  } catch {
+    // Orders fetch failed — show empty
+  }
+}
+---
+
+<MainLayout title="Account | Medusa Store" countryCode={countryCode}>
+  {customer ? (
+    <div class={css({ maxW: "4xl", mx: "auto", px: "4", py: "8" })}>
+      <AccountOverview client:load customer={customer} orders={orders} countryCode={countryCode} />
+    </div>
+  ) : (
+    <LoginRegister client:load />
+  )}
+</MainLayout>

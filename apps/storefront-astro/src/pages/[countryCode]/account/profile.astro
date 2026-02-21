@@ -1,0 +1,23 @@
+---
+export const prerender = false
+
+import AccountLayout from "@/layouts/AccountLayout.astro"
+import ProfileForm from "@/components/account/ProfileForm"
+import { retrieveCustomer } from "@/lib/data/customer"
+
+const { countryCode } = Astro.params
+
+if (!countryCode) {
+  return Astro.redirect("/us")
+}
+
+const customer = await retrieveCustomer()
+
+if (!customer) {
+  return Astro.redirect(`/${countryCode}/account`)
+}
+---
+
+<AccountLayout title="Profile | Medusa Store" countryCode={countryCode}>
+  <ProfileForm client:load customer={customer} />
+</AccountLayout>

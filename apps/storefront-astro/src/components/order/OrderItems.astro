@@ -1,0 +1,40 @@
+---
+import type { HttpTypes } from "@medusajs/types"
+import { convertToLocale } from "@/lib/util/money"
+import { css } from "styled-system/css"
+
+interface Props {
+  items: HttpTypes.StoreOrderLineItem[]
+  currencyCode: string
+}
+
+const { items, currencyCode } = Astro.props
+---
+
+<div class={css({ display: "flex", flexDir: "column", gap: "4" })}>
+  <h3 class={css({ fontSize: "md", fontWeight: "semibold" })}>Items</h3>
+  {items.map((item) => {
+    const thumbnail = item.thumbnail || (item.variant as any)?.product?.thumbnail
+    return (
+      <div class={css({ display: "flex", gap: "4", py: "3", borderBottomWidth: "1px", borderColor: "border.default" })}>
+        {thumbnail && (
+          <img
+            src={thumbnail}
+            alt={item.product_title || ""}
+            class={css({ w: "16", h: "20", objectFit: "cover", borderRadius: "sm", flexShrink: 0 })}
+          />
+        )}
+        <div class={css({ flex: "1" })}>
+          <p class={css({ fontSize: "sm", fontWeight: "medium" })}>{item.product_title || item.title}</p>
+          {item.variant?.title && item.variant.title !== "default" && (
+            <p class={css({ fontSize: "xs", color: "fg.muted" })}>{item.variant.title}</p>
+          )}
+          <p class={css({ fontSize: "xs", color: "fg.muted" })}>Qty: {item.quantity}</p>
+        </div>
+        <p class={css({ fontSize: "sm", fontWeight: "medium", flexShrink: 0 })}>
+          {convertToLocale({ amount: item.total ?? 0, currency_code: currencyCode })}
+        </p>
+      </div>
+    )
+  })}
+</div>

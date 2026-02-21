@@ -1,0 +1,23 @@
+{$DOMAIN:localhost} {
+	# Medusa backend API routes
+	handle /admin* {
+		reverse_proxy backend:9000
+	}
+	handle /store* {
+		reverse_proxy backend:9000
+	}
+	handle /auth* {
+		reverse_proxy backend:9000
+	}
+	handle /hooks* {
+		reverse_proxy backend:9000
+	}
+	handle /.well-known* {
+		reverse_proxy backend:9000
+	}
+
+	# Everything else goes to the storefront
+	handle {
+		reverse_proxy storefront:8001
+	}
+}

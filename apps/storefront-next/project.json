@@ -1,0 +1,21 @@
+{
+  "name": "@medusa-store-starter/storefront-next",
+  "targets": {
+    "dev": {
+      "command": "next dev --turbopack -p 8000",
+      "options": { "cwd": "apps/storefront-next" }
+    },
+    "build": {
+      "command": "next build",
+      "options": { "cwd": "apps/storefront-next" }
+    },
+    "start": {
+      "command": "next start -p 8000",
+      "options": { "cwd": "apps/storefront-next" }
+    },
+    "lint": {
+      "command": "next lint",
+      "options": { "cwd": "apps/storefront-next" }
+    }
+  }
+}

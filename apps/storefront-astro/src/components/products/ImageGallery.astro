@@ -1,0 +1,42 @@
+---
+import { css } from "styled-system/css"
+import type { HttpTypes } from "@medusajs/types"
+
+interface Props {
+  images: HttpTypes.StoreProductImage[]
+}
+
+const { images } = Astro.props
+---
+
+<div class={css({
+  display: "flex",
+  flexDir: "column",
+  gap: "4",
+})}>
+  {images.map((image, index) => (
+    <div class={css({
+      position: "relative",
+      aspectRatio: "29/34",
+      w: "full",
+      overflow: "hidden",
+      bg: "bg.subtle",
+      borderRadius: "lg",
+    })}>
+      {image.url && (
+        <img
+          src={image.url}
+          alt={`Product image ${index + 1}`}
+          loading={index <= 2 ? "eager" : "lazy"}
+          class={css({
+            position: "absolute",
+            inset: 0,
+            w: "full",
+            h: "full",
+            objectFit: "cover",
+          })}
+        />
+      )}
+    </div>
+  ))}
+</div>

@@ -1,0 +1,37 @@
+---
+import MainLayout from "./MainLayout.astro"
+import AccountNav from "@/components/account/AccountNav.astro"
+import { retrieveCustomer } from "@/lib/data/customer"
+import { css } from "styled-system/css"
+
+interface Props {
+  title?: string
+  countryCode: string
+}
+
+const { title, countryCode } = Astro.props
+const customer = await retrieveCustomer()
+
+if (!customer) {
+  return Astro.redirect(`/${countryCode}/account`)
+}
+---
+
+<MainLayout title={title} countryCode={countryCode}>
+  <div class={css({
+    maxW: "6xl",
+    mx: "auto",
+    px: "4",
+    py: "8",
+    display: "grid",
+    gridTemplateColumns: { base: "1fr", md: "200px 1fr" },
+    gap: "10",
+  })}>
+    <aside class={css({ display: { base: "none", md: "block" } })}>
+      <AccountNav countryCode={countryCode} currentPath={Astro.url.pathname} />
+    </aside>
+    <div>
+      <slot />
+    </div>
+  </div>
+</MainLayout>

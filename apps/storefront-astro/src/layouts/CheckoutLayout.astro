@@ -1,0 +1,62 @@
+---
+import BaseLayout from "./BaseLayout.astro"
+import CartInitializer from "@/components/layout/CartInitializer"
+import { retrieveCart } from "@/lib/data/cart"
+import { css } from "styled-system/css"
+
+interface Props {
+  title?: string
+  countryCode: string
+}
+
+const { title, countryCode } = Astro.props
+const cart = await retrieveCart()
+---
+
+<BaseLayout title={title}>
+  <CartInitializer client:load cart={cart} />
+  <div class={css({
+    borderBottomWidth: "1px",
+    borderColor: "border.default",
+    bg: "bg.default",
+  })}>
+    <nav class={css({
+      maxW: "8xl",
+      mx: "auto",
+      px: { base: "4", md: "8" },
+      h: "16",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    })}>
+      <a
+        href={`/${countryCode}/cart`}
+        class={css({
+          fontSize: "sm",
+          color: "fg.muted",
+          textDecoration: "none",
+          _hover: { color: "fg.default" },
+        })}
+      >
+        &larr; Back to cart
+      </a>
+      <a
+        href={`/${countryCode}`}
+        class={css({
+          fontWeight: "bold",
+          fontSize: "lg",
+          textTransform: "uppercase",
+          letterSpacing: "wider",
+          color: "fg.default",
+          textDecoration: "none",
+        })}
+      >
+        Medusa Store
+      </a>
+      <div class={css({ w: "24" })} />
+    </nav>
+  </div>
+  <main>
+    <slot />
+  </main>
+</BaseLayout>

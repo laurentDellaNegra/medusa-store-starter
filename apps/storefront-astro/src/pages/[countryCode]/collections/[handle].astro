@@ -1,0 +1,67 @@
+---
+export const prerender = false
+
+import MainLayout from "@/layouts/MainLayout.astro"
+import ProductGrid from "@/components/store/ProductGrid.astro"
+import Pagination from "@/components/store/Pagination.astro"
+import SortDropdown from "@/components/store/SortDropdown"
+import { getCollectionByHandle } from "@/lib/data/collections"
+import { listProductsWithSort } from "@/lib/data/products"
+import { css } from "styled-system/css"
+import type { SortOptions } from "@/lib/util/sort-products"
+
+const { countryCode, handle } = Astro.params
+
+if (!countryCode || !handle) {
+  return Astro.redirect("/us")
+}
+
+const collection = await getCollectionByHandle(handle)
+if (!collection) {
+  return Astro.redirect(`/${countryCode}/store`)
+}
+
+const url = Astro.url
+const page = Number(url.searchParams.get("page")) || 1
+const sortBy = (url.searchParams.get("sortBy") as SortOptions) || "created_at"
+const limit = 12
+
+const { response } = await listProductsWithSort({
+  page,
+  sortBy,
+  countryCode,
+  queryParams: { limit, collection_id: collection.id },
+})
+
+const totalPages = Math.ceil(response.count / limit)
+const baseUrl = `/${countryCode}/collections/${handle}`
+---
+
+<MainLayout title={`${collection.title} | Medusa Store`} countryCode={countryCode}>
+  <div class={css({
+    maxW: "8xl",
+    mx: "auto",
+    px: { base: "4", md: "8" },
+    py: "8",
+  })}>
+    <div class={css({
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      mb: "8",
+    })}>
+      <h1 class={css({ fontSize: "2xl", fontWeight: "medium" })}>
+        {collection.title}
+      </h1>
+      <SortDropdown client:load currentSort={sortBy} baseUrl={baseUrl} />
+    </div>
+
+    <ProductGrid products={response.products} countryCode={countryCode} />
+    <Pagination
+      currentPage={page}
+      totalPages={totalPages}
+      baseUrl={baseUrl}
+      sortBy={sortBy}
+    />
+  </div>
+</MainLayout>

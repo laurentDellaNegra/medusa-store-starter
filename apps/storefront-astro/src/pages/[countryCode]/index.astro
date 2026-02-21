@@ -1,0 +1,33 @@
+---
+export const prerender = false
+
+import MainLayout from "@/layouts/MainLayout.astro"
+import Hero from "@/components/home/Hero.astro"
+import FeaturedProducts from "@/components/home/FeaturedProducts.astro"
+import { getRegion } from "@/lib/data/regions"
+import { listCollections } from "@/lib/data/collections"
+
+const { countryCode } = Astro.params
+
+if (!countryCode) {
+  return Astro.redirect("/us")
+}
+
+const region = await getRegion(countryCode)
+const { collections } = await listCollections({ fields: "id,handle,title" })
+
+if (!region || !collections) {
+  return Astro.redirect("/us")
+}
+---
+
+<MainLayout title="Medusa Store" countryCode={countryCode}>
+  <Hero countryCode={countryCode} />
+  {collections.length > 0 && (
+    <FeaturedProducts
+      collections={collections}
+      region={region}
+      countryCode={countryCode}
+    />
+  )}
+</MainLayout>

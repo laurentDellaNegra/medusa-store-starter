@@ -1,0 +1,70 @@
+---
+import { css } from "styled-system/css"
+import type { HttpTypes } from "@medusajs/types"
+import { listProducts } from "@/lib/data/products"
+import ProductPreview from "@/components/products/ProductPreview.astro"
+
+interface Props {
+  collections: HttpTypes.StoreCollection[]
+  region: HttpTypes.StoreRegion
+  countryCode: string
+}
+
+const { collections, region, countryCode } = Astro.props
+---
+
+{collections.map(async (collection) => {
+  let products: HttpTypes.StoreProduct[] = []
+
+  try {
+    const result = await listProducts({
+      regionId: region.id,
+      queryParams: { collection_id: collection.id },
+    })
+    products = result.response.products
+  } catch {}
+
+  if (!products.length) return null
+
+  return (
+    <section class={css({
+      maxW: "8xl",
+      mx: "auto",
+      px: { base: "4", md: "8" },
+      py: { base: "8", md: "12" },
+    })}>
+      <div class={css({
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        mb: "8",
+      })}>
+        <h2 class={css({ fontSize: "xl", fontWeight: "medium" })}>
+          {collection.title}
+        </h2>
+        <a
+          href={`/${countryCode}/collections/${collection.handle}`}
+          class={css({
+            fontSize: "sm",
+            color: "fg.muted",
+            textDecoration: "underline",
+            _hover: { color: "fg.default" },
+          })}
+        >
+          View all
+        </a>
+      </div>
+      <ul class={css({
+        display: "grid",
+        gridTemplateColumns: { base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" },
+        gap: "6",
+      })}>
+        {products.slice(0, 4).map((product) => (
+          <li>
+            <ProductPreview product={product} countryCode={countryCode} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+})}

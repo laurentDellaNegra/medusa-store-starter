@@ -1,0 +1,73 @@
+---
+import type { HttpTypes } from "@medusajs/types"
+import { convertToLocale } from "@/lib/util/money"
+import { paymentInfoMap } from "@/lib/constants"
+import { css } from "styled-system/css"
+
+interface Props {
+  order: HttpTypes.StoreOrder
+}
+
+const { order } = Astro.props
+const shippingAddress = order.shipping_address
+const billingAddress = order.billing_address
+const payments = (order as any).payment_collections?.flatMap((pc: any) => pc.payments || []) || []
+const payment = payments[0]
+---
+
+<div class={css({ display: "grid", gridTemplateColumns: { base: "1fr", md: "1fr 1fr" }, gap: "6" })}>
+  {/* Shipping address */}
+  <div>
+    <h3 class={css({ fontSize: "sm", fontWeight: "semibold", mb: "2" })}>Shipping Address</h3>
+    {shippingAddress ? (
+      <div class={css({ fontSize: "sm", color: "fg.muted" })}>
+        <p>{shippingAddress.first_name} {shippingAddress.last_name}</p>
+        <p>{shippingAddress.address_1}</p>
+        {shippingAddress.address_2 && <p>{shippingAddress.address_2}</p>}
+        <p>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postal_code}</p>
+        <p>{shippingAddress.country_code?.toUpperCase()}</p>
+        {shippingAddress.phone && <p>{shippingAddress.phone}</p>}
+      </div>
+    ) : (
+      <p class={css({ fontSize: "sm", color: "fg.muted" })}>No shipping address</p>
+    )}
+  </div>
+
+  {/* Billing address */}
+  <div>
+    <h3 class={css({ fontSize: "sm", fontWeight: "semibold", mb: "2" })}>Billing Address</h3>
+    {billingAddress ? (
+      <div class={css({ fontSize: "sm", color: "fg.muted" })}>
+        <p>{billingAddress.first_name} {billingAddress.last_name}</p>
+        <p>{billingAddress.address_1}</p>
+        {billingAddress.address_2 && <p>{billingAddress.address_2}</p>}
+        <p>{billingAddress.city}, {billingAddress.province} {billingAddress.postal_code}</p>
+        <p>{billingAddress.country_code?.toUpperCase()}</p>
+      </div>
+    ) : (
+      <p class={css({ fontSize: "sm", color: "fg.muted" })}>Same as shipping</p>
+    )}
+  </div>
+
+  {/* Shipping method */}
+  <div>
+    <h3 class={css({ fontSize: "sm", fontWeight: "semibold", mb: "2" })}>Delivery Method</h3>
+    <p class={css({ fontSize: "sm", color: "fg.muted" })}>
+      {order.shipping_methods?.[0]?.name || "Standard shipping"}
+    </p>
+  </div>
+
+  {/* Payment */}
+  <div>
+    <h3 class={css({ fontSize: "sm", fontWeight: "semibold", mb: "2" })}>Payment</h3>
+    {payment ? (
+      <p class={css({ fontSize: "sm", color: "fg.muted" })}>
+        {paymentInfoMap[payment.provider_id]?.title || payment.provider_id}
+        {" — "}
+        {convertToLocale({ amount: payment.amount ?? 0, currency_code: payment.currency_code || order.currency_code })}
+      </p>
+    ) : (
+      <p class={css({ fontSize: "sm", color: "fg.muted" })}>Payment details unavailable</p>
+    )}
+  </div>
+</div>

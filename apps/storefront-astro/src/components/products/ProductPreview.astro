@@ -1,0 +1,73 @@
+---
+import { css } from "styled-system/css"
+import type { HttpTypes } from "@medusajs/types"
+import { getProductPrice } from "@/lib/util/get-product-price"
+import Thumbnail from "./Thumbnail.astro"
+
+interface Props {
+  product: HttpTypes.StoreProduct
+  countryCode: string
+}
+
+const { product, countryCode } = Astro.props
+const { cheapestPrice } = getProductPrice({ product })
+---
+
+<a
+  href={`/${countryCode}/products/${product.handle}`}
+  class={css({
+    display: "block",
+    textDecoration: "none",
+    color: "inherit",
+    _hover: {
+      "& .thumbnail": {
+        shadow: "lg",
+      },
+    },
+  })}
+>
+  <Thumbnail
+    thumbnail={product.thumbnail}
+    images={product.images}
+    alt={product.title || "Product"}
+  />
+  <div class={css({
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "start",
+    mt: "3",
+    gap: "2",
+  })}>
+    <span class={css({
+      fontSize: "sm",
+      color: "fg.muted",
+    })}>
+      {product.title}
+    </span>
+    {cheapestPrice && (
+      <div class={css({
+        display: "flex",
+        alignItems: "center",
+        gap: "2",
+        flexShrink: 0,
+      })}>
+        {cheapestPrice.price_type === "sale" && (
+          <span class={css({
+            fontSize: "sm",
+            color: "fg.disabled",
+            textDecoration: "line-through",
+          })}>
+            {cheapestPrice.original_price}
+          </span>
+        )}
+        <span class={css({
+          fontSize: "sm",
+          color: cheapestPrice.price_type === "sale" ? "fg.default" : "fg.muted",
+          fontWeight: cheapestPrice.price_type === "sale" ? "semibold" : "normal",
+        })}>
+          {cheapestPrice.calculated_price}
+        </span>
+      </div>
+    )}
+  </div>
+</a>

@@ -1,0 +1,58 @@
+---
+import { css } from "styled-system/css"
+
+interface Props {
+  countryCode: string
+  currentPath: string
+}
+
+const { countryCode, currentPath } = Astro.props
+
+const links = [
+  { href: `/${countryCode}/account`, label: "Overview" },
+  { href: `/${countryCode}/account/profile`, label: "Profile" },
+  { href: `/${countryCode}/account/addresses`, label: "Addresses" },
+  { href: `/${countryCode}/account/orders`, label: "Orders" },
+]
+
+const isActive = (href: string) => {
+  if (href === `/${countryCode}/account`) {
+    return currentPath === href || currentPath === `${href}/`
+  }
+  return currentPath.startsWith(href)
+}
+---
+
+<nav class={css({ display: "flex", flexDir: "column", gap: "1" })}>
+  <h3 class={css({ fontSize: "sm", fontWeight: "semibold", mb: "2" })}>Account</h3>
+  {links.map((link) => (
+    <a
+      href={link.href}
+      class={css({
+        fontSize: "sm",
+        py: "1.5",
+        color: isActive(link.href) ? "fg.default" : "fg.muted",
+        fontWeight: isActive(link.href) ? "semibold" : "normal",
+        textDecoration: "none",
+        _hover: { color: "fg.default" },
+      })}
+    >
+      {link.label}
+    </a>
+  ))}
+  <form action="/api/auth/logout" method="POST" class={css({ mt: "2" })}>
+    <input type="hidden" name="countryCode" value={countryCode} />
+    <button
+      type="submit"
+      class={css({
+        fontSize: "sm",
+        color: "fg.muted",
+        cursor: "pointer",
+        bg: "transparent",
+        _hover: { color: "fg.default" },
+      })}
+    >
+      Log out
+    </button>
+  </form>
+</nav>

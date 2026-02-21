@@ -1,0 +1,25 @@
+---
+import BaseLayout from "./BaseLayout.astro"
+import Nav from "@/components/layout/Nav.astro"
+import Footer from "@/components/layout/Footer.astro"
+import CartInitializer from "@/components/layout/CartInitializer"
+import { retrieveCart } from "@/lib/data/cart"
+
+interface Props {
+  title?: string
+  description?: string
+  countryCode: string
+}
+
+const { title, description, countryCode } = Astro.props
+const cart = await retrieveCart()
+---
+
+<BaseLayout title={title} description={description}>
+  <CartInitializer client:load cart={cart} />
+  <Nav countryCode={countryCode} />
+  <main>
+    <slot />
+  </main>
+  <Footer countryCode={countryCode} />
+</BaseLayout>

@@ -1,0 +1,118 @@
+---
+export const prerender = false
+
+import MainLayout from "@/layouts/MainLayout.astro"
+import ImageGallery from "@/components/products/ImageGallery.astro"
+import ProductActions from "@/components/products/ProductActions"
+import ProductTabs from "@/components/products/ProductTabs.astro"
+import RelatedProducts from "@/components/products/RelatedProducts.astro"
+import { getProductByHandle } from "@/lib/data/products"
+import { getRegion } from "@/lib/data/regions"
+import { getProductPrice } from "@/lib/util/get-product-price"
+import { css } from "styled-system/css"
+
+const { countryCode, handle } = Astro.params
+
+if (!countryCode || !handle) {
+  return Astro.redirect("/us")
+}
+
+const region = await getRegion(countryCode)
+if (!region) {
+  return Astro.redirect(`/${countryCode}`)
+}
+
+const product = await getProductByHandle(handle, region.id)
+if (!product) {
+  return Astro.redirect(`/${countryCode}/store`)
+}
+
+const { cheapestPrice } = getProductPrice({ product })
+---
+
+<MainLayout title={`${product.title} | Medusa Store`} countryCode={countryCode}>
+  <div class={css({
+    maxW: "8xl",
+    mx: "auto",
+    px: { base: "4", md: "8" },
+    py: "8",
+  })}>
+    <div class={css({
+      display: "grid",
+      gridTemplateColumns: { base: "1fr", md: "1fr 1fr" },
+      gap: { base: "8", md: "16" },
+    })}>
+      <!-- Image Gallery -->
+      <div>
+        {product.images && product.images.length > 0 ? (
+          <ImageGallery images={product.images} />
+        ) : (
+          <div class={css({
+            aspectRatio: "29/34",
+            bg: "bg.subtle",
+            borderRadius: "lg",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "fg.disabled",
+          })}>
+            No images
+          </div>
+        )}
+      </div>
+
+      <!-- Product Info -->
+      <div class={css({
+        display: "flex",
+        flexDir: "column",
+        gap: "4",
+        position: { md: "sticky" },
+        top: { md: "24" },
+        alignSelf: "start",
+      })}>
+        {product.collection && (
+          <a
+            href={`/${countryCode}/collections/${product.collection.handle}`}
+            class={css({
+              fontSize: "xs",
+              color: "fg.muted",
+              textTransform: "uppercase",
+              letterSpacing: "wide",
+              textDecoration: "none",
+              _hover: { color: "fg.default" },
+            })}
+          >
+            {product.collection.title}
+          </a>
+        )}
+
+        <h1 class={css({
+          fontSize: { base: "2xl", md: "3xl" },
+          fontWeight: "medium",
+        })}>
+          {product.title}
+        </h1>
+
+        {cheapestPrice && !product.variants?.length && (
+          <p class={css({ fontSize: "xl", color: "fg.muted" })}>
+            {cheapestPrice.calculated_price}
+          </p>
+        )}
+
+        <ProductActions
+          client:load
+          product={product}
+          countryCode={countryCode}
+        />
+
+        <ProductTabs product={product} />
+      </div>
+    </div>
+
+    <RelatedProducts
+      product={product}
+      countryCode={countryCode}
+      regionId={region.id}
+    />
+  </div>
+</MainLayout>

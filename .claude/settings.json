@@ -1,0 +1,25 @@
+{
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "panda"
+  ],
+  "enabledPlugins": {
+    "medusa-dev@medusa": true,
+    "learn-medusa@medusa": true,
+    "ecommerce-storefront@medusa": true,
+    "nx@nx-claude-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "nx-claude-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "nrwl/nx-ai-agents-config"
+      }
+    }
+  },
+  "permissions": {
+    "allow": [
+      "mcp__medusa__ask_medusa_question"
+    ]
+  }
+}

@@ -1,0 +1,105 @@
+---
+export const prerender = false
+
+import AccountLayout from "@/layouts/AccountLayout.astro"
+import OrderItems from "@/components/order/OrderItems.astro"
+import OrderDetails from "@/components/order/OrderDetails.astro"
+import { retrieveCustomer } from "@/lib/data/customer"
+import { retrieveOrder } from "@/lib/data/orders"
+import { convertToLocale } from "@/lib/util/money"
+import { css } from "styled-system/css"
+
+const { countryCode, id } = Astro.params
+
+if (!countryCode || !id) {
+  return Astro.redirect("/us")
+}
+
+const customer = await retrieveCustomer()
+
+if (!customer) {
+  return Astro.redirect(`/${countryCode}/account`)
+}
+
+let order
+try {
+  order = await retrieveOrder(id)
+} catch {
+  return Astro.redirect(`/${countryCode}/account/orders`)
+}
+
+if (!order) {
+  return Astro.redirect(`/${countryCode}/account/orders`)
+}
+
+const total = convertToLocale({ amount: order.total ?? 0, currency_code: order.currency_code })
+---
+
+<AccountLayout title={`Order #${order.display_id} | Medusa Store`} countryCode={countryCode}>
+  <div>
+    <div class={css({ mb: "6" })}>
+      <a
+        href={`/${countryCode}/account/orders`}
+        class={css({ fontSize: "sm", color: "fg.muted", textDecoration: "none", _hover: { color: "fg.default" } })}
+      >
+        &larr; Back to orders
+      </a>
+    </div>
+
+    <h1 class={css({ fontSize: "2xl", fontWeight: "bold", mb: "2" })}>
+      Order #{order.display_id}
+    </h1>
+
+    {/* Order meta */}
+    <div class={css({
+      display: "flex",
+      gap: "6",
+      flexWrap: "wrap",
+      mb: "8",
+      fontSize: "sm",
+      color: "fg.muted",
+    })}>
+      <span>Date: {new Date(order.created_at).toLocaleDateString()}</span>
+      <span>Total: {total}</span>
+      <span>Status: {order.fulfillment_status || order.status || "processing"}</span>
+    </div>
+
+    {/* Items */}
+    <div class={css({ mb: "8" })}>
+      <OrderItems items={order.items || []} currencyCode={order.currency_code} />
+    </div>
+
+    {/* Totals */}
+    <div class={css({
+      mb: "8",
+      p: "6",
+      borderWidth: "1px",
+      borderColor: "border.default",
+      borderRadius: "lg",
+    })}>
+      <h3 class={css({ fontSize: "md", fontWeight: "semibold", mb: "4" })}>Order Total</h3>
+      <div class={css({ display: "flex", flexDir: "column", gap: "2" })}>
+        <div class={css({ display: "flex", justifyContent: "space-between", fontSize: "sm" })}>
+          <span class={css({ color: "fg.muted" })}>Subtotal</span>
+          <span>{convertToLocale({ amount: order.item_subtotal ?? 0, currency_code: order.currency_code })}</span>
+        </div>
+        <div class={css({ display: "flex", justifyContent: "space-between", fontSize: "sm" })}>
+          <span class={css({ color: "fg.muted" })}>Shipping</span>
+          <span>{convertToLocale({ amount: order.shipping_subtotal ?? 0, currency_code: order.currency_code })}</span>
+        </div>
+        <div class={css({ display: "flex", justifyContent: "space-between", fontSize: "sm" })}>
+          <span class={css({ color: "fg.muted" })}>Tax</span>
+          <span>{convertToLocale({ amount: order.tax_total ?? 0, currency_code: order.currency_code })}</span>
+        </div>
+        <div class={css({ h: "1px", bg: "border.default", my: "1" })} />
+        <div class={css({ display: "flex", justifyContent: "space-between", fontWeight: "semibold" })}>
+          <span>Total</span>
+          <span>{total}</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Details */}
+    <OrderDetails order={order} />
+  </div>
+</AccountLayout>

@@ -1,0 +1,71 @@
+---
+import { css } from "styled-system/css"
+import type { HttpTypes } from "@medusajs/types"
+import { listProducts } from "@/lib/data/products"
+import ProductPreview from "./ProductPreview.astro"
+
+interface Props {
+  product: HttpTypes.StoreProduct
+  countryCode: string
+  regionId: string
+}
+
+const { product, countryCode, regionId } = Astro.props
+
+let relatedProducts: HttpTypes.StoreProduct[] = []
+
+try {
+  // Get products from same collection or tag
+  const tags = product.tags?.map((t) => t.id) || []
+  const result = await listProducts({
+    regionId,
+    queryParams: {
+      limit: 4,
+      ...(tags.length > 0 && { tag_id: tags }),
+    },
+  })
+  relatedProducts = result.response.products.filter((p) => p.id !== product.id).slice(0, 4)
+} catch {}
+
+// Fallback: fetch any products if no related found
+if (relatedProducts.length === 0) {
+  try {
+    const result = await listProducts({
+      regionId,
+      queryParams: { limit: 5 },
+    })
+    relatedProducts = result.response.products.filter((p) => p.id !== product.id).slice(0, 4)
+  } catch {}
+}
+---
+
+{relatedProducts.length > 0 && (
+  <section class={css({
+    maxW: "8xl",
+    mx: "auto",
+    px: { base: "4", md: "8" },
+    py: "12",
+    mt: "8",
+    borderTopWidth: "1px",
+    borderColor: "border.default",
+  })}>
+    <h2 class={css({
+      fontSize: "xl",
+      fontWeight: "medium",
+      mb: "8",
+    })}>
+      Related Products
+    </h2>
+    <ul class={css({
+      display: "grid",
+      gridTemplateColumns: { base: "repeat(2, 1fr)", md: "repeat(4, 1fr)" },
+      gap: "6",
+    })}>
+      {relatedProducts.map((p) => (
+        <li>
+          <ProductPreview product={p} countryCode={countryCode} />
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

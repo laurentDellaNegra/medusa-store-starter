@@ -1,0 +1,64 @@
+---
+import { css } from "styled-system/css"
+
+interface Props {
+  countryCode: string
+}
+
+const { countryCode } = Astro.props
+---
+
+<section class={css({
+  h: "75vh",
+  w: "full",
+  borderBottomWidth: "1px",
+  borderColor: "border.default",
+  bg: "bg.subtle",
+  display: "flex",
+  flexDir: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  textAlign: "center",
+  gap: "6",
+  px: "8",
+})}>
+  <div>
+    <h1 class={css({
+      fontSize: { base: "2xl", md: "4xl" },
+      fontWeight: "normal",
+      lineHeight: "tight",
+      color: "fg.default",
+    })}>
+      Medusa Store
+    </h1>
+    <h2 class={css({
+      fontSize: { base: "xl", md: "3xl" },
+      fontWeight: "normal",
+      lineHeight: "tight",
+      color: "fg.muted",
+      mt: "2",
+    })}>
+      Powered by Medusa and Astro
+    </h2>
+  </div>
+  <a
+    href={`/${countryCode}/store`}
+    class={css({
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "2",
+      px: "6",
+      py: "3",
+      bg: "bg.inverted",
+      color: "fg.inverted",
+      borderRadius: "md",
+      fontSize: "sm",
+      fontWeight: "medium",
+      textDecoration: "none",
+      transition: "opacity",
+      _hover: { opacity: 0.9 },
+    })}
+  >
+    Browse Products
+  </a>
+</section>
