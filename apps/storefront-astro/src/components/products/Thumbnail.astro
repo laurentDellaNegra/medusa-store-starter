@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets"
 import { css } from "styled-system/css"
 
 interface Props {
@@ -6,9 +7,10 @@ interface Props {
   images?: any[] | null
   alt?: string
   aspectRatio?: "portrait" | "square"
+  priority?: boolean
 }
 
-const { thumbnail, images, alt = "Product", aspectRatio = "portrait" } = Astro.props
+const { thumbnail, images, alt = "Product", aspectRatio = "portrait", priority = false } = Astro.props
 const image = thumbnail || images?.[0]?.url
 ---
 
@@ -28,10 +30,13 @@ const image = thumbnail || images?.[0]?.url
   ]}
 >
   {image ? (
-    <img
+    <Image
       src={image}
       alt={alt}
-      loading="lazy"
+      width={aspectRatio === "square" ? 400 : 400}
+      height={aspectRatio === "square" ? 400 : 533}
+      loading={priority ? "eager" : "lazy"}
+      fetchpriority={priority ? "high" : "auto"}
       class={css({
         position: "absolute",
         inset: 0,

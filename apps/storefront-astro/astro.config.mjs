@@ -5,6 +5,13 @@ export default defineConfig({
   adapter: node({ mode: "standalone" }),
   integrations: [],
   server: { port: 8001 },
+  image: {
+    domains: ["medusa-public-images.s3.eu-west-1.amazonaws.com"],
+    remotePatterns: [
+      { protocol: "http", hostname: "localhost" },
+      { protocol: "https", hostname: "**.amazonaws.com" },
+    ],
+  },
   build: {
     inlineStylesheets: "always",
   },

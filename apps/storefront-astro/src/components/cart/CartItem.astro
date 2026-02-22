@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets'
 import type { HttpTypes } from '@medusajs/types'
 import { convertToLocale } from '@/lib/util/money'
 import { css } from 'styled-system/css'
@@ -23,7 +24,7 @@ const variantTitle = item.variant?.title
   <!-- Thumbnail -->
   <div class={css({ w: '24', h: '32', flexShrink: 0, borderRadius: 'md', overflow: 'hidden', bg: 'bg.muted' })}>
     {thumbnail ? (
-      <img src={thumbnail} alt={title} class={css({ w: 'full', h: 'full', objectFit: 'cover' })} />
+      <Image src={thumbnail} alt={title} width={96} height={128} loading="lazy" class={css({ w: 'full', h: 'full', objectFit: 'cover' })} />
     ) : (
       <div class={css({ w: 'full', h: 'full', bg: 'bg.muted' })} />
     )}

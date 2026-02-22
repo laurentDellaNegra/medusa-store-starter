@@ -70,7 +70,7 @@ const cart = await retrieveCart()
         itemsContainer.innerHTML = items.map((item: any, i: number) => {
           const thumb = item.thumbnail || item.variant?.product?.thumbnail
           return `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;${i < items.length - 1 ? 'border-bottom:1px solid var(--colors-border-default)' : ''}">
-            ${thumb ? `<img src="${thumb}" alt="${item.product_title || ''}" style="width:3rem;height:4rem;object-fit:cover;border-radius:var(--radii-sm);flex-shrink:0">` : ''}
+            ${thumb ? `<img src="${thumb}" alt="${item.product_title || ''}" loading="lazy" decoding="async" style="width:3rem;height:4rem;object-fit:cover;border-radius:var(--radii-sm);flex-shrink:0">` : ''}
             <div style="flex:1;min-width:0">
               <p style="font-size:0.75rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.product_title || item.title}</p>
               <p style="font-size:0.75rem;color:var(--colors-fg-muted)">Qty: ${item.quantity}</p>

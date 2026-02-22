@@ -15,7 +15,8 @@
     "@medusajs/js-sdk": "latest",
     "@stripe/stripe-js": "^8.2.0",
     "astro": "^5.5.5",
-    "nanostores": "^0.11.3"
+    "nanostores": "^0.11.3",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@medusajs/types": "latest",

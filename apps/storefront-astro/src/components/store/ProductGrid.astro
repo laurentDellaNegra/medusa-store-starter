@@ -17,9 +17,9 @@ const { products, countryCode } = Astro.props
     gridTemplateColumns: { base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" },
     gap: "6",
   })}>
-    {products.map((product) => (
+    {products.map((product, index) => (
       <li>
-        <ProductPreview product={product} countryCode={countryCode} />
+        <ProductPreview product={product} countryCode={countryCode} priority={index < 4} />
       </li>
     ))}
   </ul>

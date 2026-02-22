@@ -7,9 +7,10 @@ import Thumbnail from "./Thumbnail.astro"
 interface Props {
   product: HttpTypes.StoreProduct
   countryCode: string
+  priority?: boolean
 }
 
-const { product, countryCode } = Astro.props
+const { product, countryCode, priority = false } = Astro.props
 const { cheapestPrice } = getProductPrice({ product })
 ---
 
@@ -30,6 +31,7 @@ const { cheapestPrice } = getProductPrice({ product })
     thumbnail={product.thumbnail}
     images={product.images}
     alt={product.title || "Product"}
+    priority={priority}
   />
   <div class={css({
     display: "flex",

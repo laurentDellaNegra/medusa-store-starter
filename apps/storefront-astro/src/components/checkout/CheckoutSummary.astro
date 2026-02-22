@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets'
 import type { HttpTypes } from '@medusajs/types'
 import { convertToLocale } from '@/lib/util/money'
 import { css } from 'styled-system/css'
@@ -26,9 +27,12 @@ const appliedCodes = (cart.promotions || []).map((p: any) => p.code).filter(Bool
     {items.map(item => (
       <div class={css({ display: 'flex', gap: '3' })}>
         {(item.thumbnail || item.variant?.product?.thumbnail) && (
-          <img
+          <Image
             src={item.thumbnail || item.variant?.product?.thumbnail || ''}
             alt={item.product_title || ''}
+            width={56}
+            height={72}
+            loading="lazy"
             class={css({ w: '14', h: '18', objectFit: 'cover', borderRadius: 'sm', flexShrink: 0 })}
           />
         )}

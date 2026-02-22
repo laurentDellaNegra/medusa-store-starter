@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets"
 import { css } from "styled-system/css"
 import type { HttpTypes } from "@medusajs/types"
 
@@ -24,9 +25,11 @@ const { images } = Astro.props
       borderRadius: "lg",
     })}>
       {image.url && (
-        <img
+        <Image
           src={image.url}
           alt={`Product image ${index + 1}`}
+          width={800}
+          height={940}
           loading={index <= 2 ? "eager" : "lazy"}
           class={css({
             position: "absolute",
