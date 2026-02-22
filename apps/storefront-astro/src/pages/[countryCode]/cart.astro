@@ -2,7 +2,8 @@
 export const prerender = false
 
 import MainLayout from "@/layouts/MainLayout.astro"
-import CartTemplate from "@/components/cart/CartTemplate"
+import CartTemplate from "@/components/cart/CartTemplate.astro"
+import EmptyCart from "@/components/cart/EmptyCart.astro"
 import { retrieveCart } from "@/lib/data/cart"
 import { retrieveCustomer } from "@/lib/data/customer"
 
@@ -19,10 +20,9 @@ const [cart, customer] = await Promise.all([
 ---
 
 <MainLayout title="Cart | Medusa Store" countryCode={countryCode}>
-  <CartTemplate
-    client:load
-    initialCart={cart}
-    customer={customer}
-    countryCode={countryCode}
-  />
+  {(!cart || !cart.items?.length) ? (
+    <EmptyCart countryCode={countryCode} />
+  ) : (
+    <CartTemplate cart={cart} customer={customer} countryCode={countryCode} />
+  )}
 </MainLayout>

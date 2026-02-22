@@ -1,0 +1,82 @@
+---
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+
+interface Props {
+  appliedCodes: string[]
+}
+
+const { appliedCodes } = Astro.props
+---
+
+<div class={css({ display: 'flex', flexDir: 'column', gap: '2' })} id="discount-section">
+  <script type="application/json" id="applied-codes-data" set:html={JSON.stringify(appliedCodes)} />
+
+  <div class={css({ display: 'flex', gap: '2' })}>
+    <input
+      type="text"
+      id="discount-input"
+      placeholder="Discount code"
+      class={css({
+        flex: '1', h: '10', px: '3',
+        borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md', fontSize: 'sm',
+        _focus: { outline: 'none', borderColor: 'fg.default' },
+      })}
+    />
+    <button id="discount-apply-btn" class={button({ size: 'sm' })}>Apply</button>
+  </div>
+  <p id="discount-error" class={css({ fontSize: 'xs', color: 'fg.error', display: 'none' })}></p>
+  {appliedCodes.length > 0 && (
+    <div class={css({ display: 'flex', flexWrap: 'wrap', gap: '1' })}>
+      {appliedCodes.map(c => (
+        <span class={css({
+          display: 'inline-flex', alignItems: 'center', gap: '1',
+          px: '2', py: '0.5', bg: 'bg.muted', borderRadius: 'sm', fontSize: 'xs',
+        })}>
+          {c}
+          <button data-remove-code={c} class={css({ cursor: 'pointer', color: 'fg.muted', _hover: { color: 'fg.default' } })}>&times;</button>
+        </span>
+      ))}
+    </div>
+  )}
+</div>
+
+<script>
+  const appliedCodes: string[] = JSON.parse(document.getElementById('applied-codes-data')?.textContent || '[]')
+  const input = document.getElementById('discount-input') as HTMLInputElement
+  const applyBtn = document.getElementById('discount-apply-btn') as HTMLButtonElement
+  const errorEl = document.getElementById('discount-error')!
+
+  async function applyCodes(codes: string[]) {
+    const res = await fetch('/api/cart/promotions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ codes }),
+    })
+    if (!res.ok) throw new Error('Failed to apply promotion')
+    window.location.reload()
+  }
+
+  applyBtn.addEventListener('click', async () => {
+    const code = input.value.trim()
+    if (!code) return
+    applyBtn.disabled = true; applyBtn.textContent = '...'
+    errorEl.style.display = 'none'
+    try {
+      await applyCodes([...appliedCodes, code])
+    } catch {
+      errorEl.textContent = 'Failed to apply discount code'
+      errorEl.style.display = 'block'
+      applyBtn.disabled = false; applyBtn.textContent = 'Apply'
+    }
+  })
+
+  document.querySelectorAll('[data-remove-code]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = (btn as HTMLElement).dataset.removeCode!
+      try {
+        await applyCodes(appliedCodes.filter(c => c !== code))
+      } catch {}
+    })
+  })
+</script>

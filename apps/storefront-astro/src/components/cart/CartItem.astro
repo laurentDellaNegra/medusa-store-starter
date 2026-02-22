@@ -1,0 +1,120 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { convertToLocale } from '@/lib/util/money'
+import { css } from 'styled-system/css'
+
+interface Props {
+  item: HttpTypes.StoreCartLineItem
+  currencyCode: string
+}
+
+const { item, currencyCode } = Astro.props
+const fmt = (amount: number) => convertToLocale({ amount, currency_code: currencyCode })
+const thumbnail = item.thumbnail || item.variant?.product?.thumbnail
+const title = item.product_title || item.title
+const variantTitle = item.variant?.title
+---
+
+<div
+  class={css({ display: 'flex', gap: '4', py: '4', transition: 'opacity 0.2s' })}
+  data-cart-item
+  data-line-id={item.id}
+>
+  <!-- Thumbnail -->
+  <div class={css({ w: '24', h: '32', flexShrink: 0, borderRadius: 'md', overflow: 'hidden', bg: 'bg.muted' })}>
+    {thumbnail ? (
+      <img src={thumbnail} alt={title} class={css({ w: 'full', h: 'full', objectFit: 'cover' })} />
+    ) : (
+      <div class={css({ w: 'full', h: 'full', bg: 'bg.muted' })} />
+    )}
+  </div>
+
+  <!-- Details -->
+  <div class={css({ flex: '1', display: 'flex', flexDir: 'column', gap: '1' })}>
+    <div class={css({ display: 'flex', justifyContent: 'space-between' })}>
+      <div>
+        <p class={css({ fontSize: 'sm', fontWeight: 'medium' })}>{title}</p>
+        {variantTitle && variantTitle !== 'default' && (
+          <p class={css({ fontSize: 'xs', color: 'fg.muted' })}>{variantTitle}</p>
+        )}
+      </div>
+      <p class={css({ fontSize: 'sm', fontWeight: 'medium' })}>{fmt(item.total ?? 0)}</p>
+    </div>
+
+    <!-- Quantity controls -->
+    <div class={css({ display: 'flex', alignItems: 'center', gap: '3', mt: 'auto' })}>
+      <div class={css({ display: 'flex', alignItems: 'center', borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md' })}>
+        <button
+          data-action="decrease"
+          data-quantity={item.quantity}
+          disabled={item.quantity <= 1}
+          class={css({ p: '1.5', cursor: 'pointer', color: 'fg.muted', _hover: { color: 'fg.default' }, _disabled: { opacity: 0.3, cursor: 'not-allowed' } })}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+        </button>
+        <span data-quantity-display class={css({ px: '3', fontSize: 'sm', minW: '8', textAlign: 'center' })}>{item.quantity}</span>
+        <button
+          data-action="increase"
+          data-quantity={item.quantity}
+          disabled={item.quantity >= 10}
+          class={css({ p: '1.5', cursor: 'pointer', color: 'fg.muted', _hover: { color: 'fg.default' }, _disabled: { opacity: 0.3, cursor: 'not-allowed' } })}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        </button>
+      </div>
+
+      <button
+        data-action="remove"
+        class={css({ color: 'fg.muted', cursor: 'pointer', _hover: { color: 'fg.error' }, _disabled: { opacity: 0.3, cursor: 'not-allowed' } })}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+      </button>
+
+      <span class={css({ fontSize: 'xs', color: 'fg.muted', ml: 'auto' })}>{fmt(item.unit_price ?? 0)} each</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-cart-item]').forEach(el => {
+    const lineId = (el as HTMLElement).dataset.lineId
+    let updating = false
+
+    const setUpdating = (v: boolean) => {
+      updating = v;
+      (el as HTMLElement).style.opacity = v ? '0.5' : '1'
+      el.querySelectorAll('button').forEach(b => { if (v) b.disabled = true })
+    }
+
+    const doFetch = async (url: string, body: object) => {
+      setUpdating(true)
+      try {
+        await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+        window.location.reload()
+      } finally {
+        setUpdating(false)
+      }
+    }
+
+    el.querySelector('[data-action="decrease"]')?.addEventListener('click', () => {
+      if (updating) return
+      const qty = Number((el.querySelector('[data-action="decrease"]') as HTMLElement).dataset.quantity)
+      if (qty > 1) doFetch('/api/cart/update-item', { lineId, quantity: qty - 1 })
+    })
+
+    el.querySelector('[data-action="increase"]')?.addEventListener('click', () => {
+      if (updating) return
+      const qty = Number((el.querySelector('[data-action="increase"]') as HTMLElement).dataset.quantity)
+      if (qty < 10) doFetch('/api/cart/update-item', { lineId, quantity: qty + 1 })
+    })
+
+    el.querySelector('[data-action="remove"]')?.addEventListener('click', () => {
+      if (updating) return
+      doFetch('/api/cart/delete-item', { lineId })
+    })
+  })
+</script>

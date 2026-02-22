@@ -1,0 +1,214 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+import CountrySelect from './CountrySelect.astro'
+
+interface Props {
+  cart: HttpTypes.StoreCart
+  customer: HttpTypes.StoreCustomer | null
+  isOpen: boolean
+}
+
+const { cart, customer, isOpen } = Astro.props
+const addr = cart.shipping_address
+
+const inputStyles = css({
+  w: 'full', h: '10', px: '3',
+  borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md', fontSize: 'sm',
+  _focus: { outline: 'none', borderColor: 'fg.default' },
+})
+const labelStyles = css({ display: 'block', fontSize: 'xs', fontWeight: 'medium', mb: '1', color: 'fg.muted' })
+---
+
+{!isOpen ? (
+  addr?.address_1 ? (
+    <div class={css({ p: '4', bg: 'bg.muted', borderRadius: 'md' })}>
+      <div class={css({ display: 'flex', justifyContent: 'space-between', mb: '2' })}>
+        <h3 class={css({ fontSize: 'sm', fontWeight: 'semibold' })}>Shipping Address</h3>
+        <a href="?step=address" class={css({ fontSize: 'xs', color: 'fg.muted', _hover: { color: 'fg.default' } })}>Edit</a>
+      </div>
+      <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>
+        {addr.first_name} {addr.last_name}<br />
+        {addr.address_1}{addr.address_2 ? `, ${addr.address_2}` : ''}<br />
+        {addr.city}, {addr.province} {addr.postal_code}<br />
+        {addr.country_code?.toUpperCase()}
+      </p>
+      {cart.email && <p class={css({ fontSize: 'sm', color: 'fg.muted', mt: '1' })}>{cart.email}</p>}
+    </div>
+  ) : null
+) : (
+  <form id="address-step-form" class={css({ display: 'flex', flexDir: 'column', gap: '6' })}>
+    <h2 class={css({ fontSize: 'lg', fontWeight: 'semibold' })}>Shipping Address</h2>
+
+    <div>
+      <label class={labelStyles}>Email</label>
+      <input type="email" name="email" required value={cart.email || customer?.email || ''} class={inputStyles} />
+    </div>
+
+    <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+      <div>
+        <label class={labelStyles}>First name</label>
+        <input type="text" name="shipping.first_name" value={addr?.first_name || customer?.first_name || ''} class={inputStyles} />
+      </div>
+      <div>
+        <label class={labelStyles}>Last name</label>
+        <input type="text" name="shipping.last_name" value={addr?.last_name || customer?.last_name || ''} class={inputStyles} />
+      </div>
+    </div>
+
+    <div>
+      <label class={labelStyles}>Address</label>
+      <input type="text" name="shipping.address_1" value={addr?.address_1 || ''} class={inputStyles} />
+    </div>
+    <div>
+      <label class={labelStyles}>Apartment, suite, etc.</label>
+      <input type="text" name="shipping.address_2" value={addr?.address_2 || ''} class={inputStyles} />
+    </div>
+
+    <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+      <div>
+        <label class={labelStyles}>City</label>
+        <input type="text" name="shipping.city" value={addr?.city || ''} class={inputStyles} />
+      </div>
+      <div>
+        <label class={labelStyles}>State / Province</label>
+        <input type="text" name="shipping.province" value={addr?.province || ''} class={inputStyles} />
+      </div>
+    </div>
+
+    <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+      <div>
+        <label class={labelStyles}>Postal code</label>
+        <input type="text" name="shipping.postal_code" value={addr?.postal_code || ''} class={inputStyles} />
+      </div>
+      <div>
+        <label class={labelStyles}>Country</label>
+        {cart.region && (
+          <CountrySelect
+            region={cart.region}
+            value={addr?.country_code || cart.region.countries?.[0]?.iso_2 || ''}
+            name="shipping.country_code"
+          />
+        )}
+      </div>
+    </div>
+
+    <div>
+      <label class={labelStyles}>Phone</label>
+      <input type="text" name="shipping.phone" value={addr?.phone || customer?.phone || ''} class={inputStyles} />
+    </div>
+
+    <label class={css({ display: 'flex', alignItems: 'center', gap: '2', cursor: 'pointer' })}>
+      <input type="checkbox" id="same-as-billing" checked />
+      <span class={css({ fontSize: 'sm' })}>Billing address same as shipping</span>
+    </label>
+
+    <!-- Billing address fields (hidden by default) -->
+    <div id="billing-fields" class={css({ display: 'none', flexDir: 'column', gap: '3', pt: '4', borderTopWidth: '1px', borderColor: 'border.default' })}>
+      <h3 class={css({ fontSize: 'md', fontWeight: 'semibold' })}>Billing Address</h3>
+      <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+        <div>
+          <label class={labelStyles}>First name</label>
+          <input type="text" name="billing.first_name" value={cart.billing_address?.first_name || ''} class={inputStyles} />
+        </div>
+        <div>
+          <label class={labelStyles}>Last name</label>
+          <input type="text" name="billing.last_name" value={cart.billing_address?.last_name || ''} class={inputStyles} />
+        </div>
+      </div>
+      <div>
+        <label class={labelStyles}>Address</label>
+        <input type="text" name="billing.address_1" value={cart.billing_address?.address_1 || ''} class={inputStyles} />
+      </div>
+      <div>
+        <label class={labelStyles}>Apartment, suite, etc.</label>
+        <input type="text" name="billing.address_2" value={cart.billing_address?.address_2 || ''} class={inputStyles} />
+      </div>
+      <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+        <div>
+          <label class={labelStyles}>City</label>
+          <input type="text" name="billing.city" value={cart.billing_address?.city || ''} class={inputStyles} />
+        </div>
+        <div>
+          <label class={labelStyles}>State / Province</label>
+          <input type="text" name="billing.province" value={cart.billing_address?.province || ''} class={inputStyles} />
+        </div>
+      </div>
+      <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+        <div>
+          <label class={labelStyles}>Postal code</label>
+          <input type="text" name="billing.postal_code" value={cart.billing_address?.postal_code || ''} class={inputStyles} />
+        </div>
+        <div>
+          <label class={labelStyles}>Country</label>
+          {cart.region && (
+            <CountrySelect
+              region={cart.region}
+              value={cart.billing_address?.country_code || ''}
+              name="billing.country_code"
+            />
+          )}
+        </div>
+      </div>
+      <div>
+        <label class={labelStyles}>Phone</label>
+        <input type="text" name="billing.phone" value={cart.billing_address?.phone || ''} class={inputStyles} />
+      </div>
+    </div>
+
+    <p id="address-step-error" class={css({ fontSize: 'sm', color: 'fg.error', display: 'none' })}></p>
+
+    <button type="submit" class={`${button({ size: 'lg' })}`}>Continue to delivery</button>
+  </form>
+)}
+
+<script>
+  const form = document.getElementById('address-step-form') as HTMLFormElement | null
+  if (form) {
+    const billingFields = document.getElementById('billing-fields')!
+    const sameCheckbox = document.getElementById('same-as-billing') as HTMLInputElement
+
+    sameCheckbox.addEventListener('change', () => {
+      billingFields.style.display = sameCheckbox.checked ? 'none' : 'flex'
+    })
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement
+      const errorEl = document.getElementById('address-step-error')!
+      btn.disabled = true; btn.textContent = 'Saving...'
+      errorEl.style.display = 'none'
+
+      const fd = new FormData(form)
+      const shipping: Record<string, string> = {}
+      const billing: Record<string, string> = {}
+      let email = ''
+
+      for (const [key, val] of fd.entries()) {
+        if (key === 'email') email = val as string
+        else if (key.startsWith('shipping.')) shipping[key.replace('shipping.', '')] = val as string
+        else if (key.startsWith('billing.')) billing[key.replace('billing.', '')] = val as string
+      }
+
+      const billingAddress = sameCheckbox.checked ? shipping : billing
+
+      try {
+        const res = await fetch('/api/cart/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, shipping_address: shipping, billing_address: billingAddress }),
+        })
+        if (!res.ok) {
+          const data = await res.json()
+          throw new Error(data.error || 'Failed to update addresses')
+        }
+        window.location.href = window.location.pathname + '?step=delivery'
+      } catch (err) {
+        errorEl.textContent = err instanceof Error ? err.message : 'Failed to update addresses'
+        errorEl.style.display = 'block'
+        btn.disabled = false; btn.textContent = 'Continue to delivery'
+      }
+    })
+  }
+</script>

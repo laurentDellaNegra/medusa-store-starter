@@ -1,0 +1,50 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { convertToLocale } from '@/lib/util/money'
+import { css } from 'styled-system/css'
+import CartTotals from '@/components/cart/CartTotals.astro'
+import DiscountCode from './DiscountCode.astro'
+
+interface Props {
+  cart: HttpTypes.StoreCart
+}
+
+const { cart } = Astro.props
+const items = cart.items || []
+const appliedCodes = (cart.promotions || []).map((p: any) => p.code).filter(Boolean)
+---
+
+<div class={css({
+  position: 'sticky', top: '24',
+  bg: 'bg.default', borderWidth: '1px', borderColor: 'border.default',
+  borderRadius: 'lg', p: '6',
+  display: 'flex', flexDir: 'column', gap: '4',
+})}>
+  <h2 class={css({ fontSize: 'lg', fontWeight: 'semibold' })}>Order Summary</h2>
+
+  <div class={css({ display: 'flex', flexDir: 'column', gap: '3' })}>
+    {items.map(item => (
+      <div class={css({ display: 'flex', gap: '3' })}>
+        {(item.thumbnail || item.variant?.product?.thumbnail) && (
+          <img
+            src={item.thumbnail || item.variant?.product?.thumbnail || ''}
+            alt={item.product_title || ''}
+            class={css({ w: '14', h: '18', objectFit: 'cover', borderRadius: 'sm', flexShrink: 0 })}
+          />
+        )}
+        <div class={css({ flex: '1', minW: 0 })}>
+          <p class={css({ fontSize: 'sm', fontWeight: 'medium', truncate: true })}>{item.product_title || item.title}</p>
+          <p class={css({ fontSize: 'xs', color: 'fg.muted' })}>Qty: {item.quantity}</p>
+        </div>
+        <p class={css({ fontSize: 'sm', fontWeight: 'medium', flexShrink: 0 })}>
+          {convertToLocale({ amount: item.total ?? 0, currency_code: cart.currency_code })}
+        </p>
+      </div>
+    ))}
+  </div>
+
+  <div class={css({ h: '1px', bg: 'border.default' })} />
+  <DiscountCode appliedCodes={appliedCodes} />
+  <div class={css({ h: '1px', bg: 'border.default' })} />
+  <CartTotals cart={cart} />
+</div>

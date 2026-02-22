@@ -1,20 +1,15 @@
 import { defineConfig } from "@pandacss/dev";
-import { createPreset } from "@park-ui/panda-preset";
+import { parkUiPreset } from "./src/theme/park-ui-preset";
 import { recipes, slotRecipes } from "./src/theme/recipes";
 
 export default defineConfig({
   preflight: true,
   presets: [
     "@pandacss/preset-base",
-    createPreset({
-      accentColor: "tomato",
-      grayColor: "sand",
-      borderRadius: "sm",
-    }),
+    parkUiPreset,
   ],
-  include: ["./src/**/*.{ts,tsx,js,jsx,astro}"],
+  include: ["./src/**/*.{ts,js,astro}"],
   exclude: [],
-  jsxFramework: "react",
   outdir: "styled-system",
   theme: {
     extend: {

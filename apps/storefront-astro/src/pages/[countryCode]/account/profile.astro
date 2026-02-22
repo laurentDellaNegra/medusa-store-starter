@@ -2,7 +2,7 @@
 export const prerender = false
 
 import AccountLayout from "@/layouts/AccountLayout.astro"
-import ProfileForm from "@/components/account/ProfileForm"
+import ProfileForm from "@/components/account/ProfileForm.astro"
 import { retrieveCustomer } from "@/lib/data/customer"
 
 const { countryCode } = Astro.params
@@ -19,5 +19,5 @@ if (!customer) {
 ---
 
 <AccountLayout title="Profile | Medusa Store" countryCode={countryCode}>
-  <ProfileForm client:load customer={customer} />
+  <ProfileForm customer={customer} />
 </AccountLayout>

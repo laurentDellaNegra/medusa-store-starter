@@ -2,8 +2,8 @@
 export const prerender = false
 
 import MainLayout from "@/layouts/MainLayout.astro"
-import LoginRegister from "@/components/account/LoginRegister"
-import AccountOverview from "@/components/account/AccountOverview"
+import LoginRegister from "@/components/account/LoginRegister.astro"
+import AccountOverview from "@/components/account/AccountOverview.astro"
 import { retrieveCustomer } from "@/lib/data/customer"
 import { listOrders } from "@/lib/data/orders"
 import { css } from "styled-system/css"
@@ -29,9 +29,9 @@ if (customer) {
 <MainLayout title="Account | Medusa Store" countryCode={countryCode}>
   {customer ? (
     <div class={css({ maxW: "4xl", mx: "auto", px: "4", py: "8" })}>
-      <AccountOverview client:load customer={customer} orders={orders} countryCode={countryCode} />
+      <AccountOverview customer={customer} orders={orders} countryCode={countryCode} />
     </div>
   ) : (
-    <LoginRegister client:load />
+    <LoginRegister />
   )}
 </MainLayout>

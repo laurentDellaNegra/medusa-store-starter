@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "./BaseLayout.astro"
-import CartInitializer from "@/components/layout/CartInitializer"
 import { retrieveCart } from "@/lib/data/cart"
 import { css } from "styled-system/css"
 
@@ -14,7 +13,17 @@ const cart = await retrieveCart()
 ---
 
 <BaseLayout title={title}>
-  <CartInitializer client:load cart={cart} />
+  <script is:inline type="application/json" id="cart-init-data" set:html={JSON.stringify(cart)} />
+  <script>
+    import { setCart } from '@/stores/cart'
+    const el = document.getElementById('cart-init-data')
+    if (el) {
+      try {
+        const cart = JSON.parse(el.textContent || '{}')
+        if (cart && cart.id) setCart(cart)
+      } catch {}
+    }
+  </script>
   <div class={css({
     borderBottomWidth: "1px",
     borderColor: "border.default",

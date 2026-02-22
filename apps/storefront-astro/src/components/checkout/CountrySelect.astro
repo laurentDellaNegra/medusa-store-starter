@@ -1,0 +1,28 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { css } from 'styled-system/css'
+
+interface Props {
+  region: HttpTypes.StoreRegion
+  value?: string
+  name: string
+}
+
+const { region, value, name } = Astro.props
+---
+
+<select
+  name={name}
+  data-country-select
+  class={css({
+    w: 'full', h: '10', px: '3',
+    borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md',
+    fontSize: 'sm', bg: 'bg.default', color: 'fg.default',
+    _focus: { outline: 'none', borderColor: 'fg.default' },
+  })}
+>
+  <option value="">Select country</option>
+  {region.countries?.map(country => (
+    <option value={country.iso_2} selected={country.iso_2 === value}>{country.display_name}</option>
+  ))}
+</select>

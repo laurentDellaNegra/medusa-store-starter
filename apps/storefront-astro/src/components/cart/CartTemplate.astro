@@ -1,0 +1,85 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+import CartItem from './CartItem.astro'
+import CartTotals from './CartTotals.astro'
+import EmptyCart from './EmptyCart.astro'
+import SignInPrompt from './SignInPrompt.astro'
+
+interface Props {
+  cart: HttpTypes.StoreCart | null
+  customer: HttpTypes.StoreCustomer | null
+  countryCode: string
+}
+
+const { cart, customer, countryCode } = Astro.props
+
+if (!cart || !cart.items?.length) {
+  return Astro.response
+}
+
+const getCheckoutStep = () => {
+  if (!cart.shipping_address?.address_1 || !cart.email) return 'address'
+  if (!cart.shipping_methods?.length) return 'delivery'
+  return 'payment'
+}
+const hasItems = cart.items && cart.items.length > 0
+---
+
+{!hasItems ? (
+  <EmptyCart countryCode={countryCode} />
+) : (
+  <div class={css({
+    display: 'grid',
+    gridTemplateColumns: { base: '1fr', lg: '1fr 380px' },
+    gap: '10', maxW: '7xl', mx: 'auto', px: '4', py: '8',
+  })}>
+    <!-- Left column — Items -->
+    <div>
+      <h1 class={css({ fontSize: '2xl', fontWeight: 'bold', mb: '6' })}>Shopping Cart</h1>
+
+      {!customer && <SignInPrompt countryCode={countryCode} />}
+
+      <div class={css({ mt: '4', divideY: '1px', divideColor: 'border.default' })}>
+        {cart.items.map(item => (
+          <CartItem item={item} currencyCode={cart.currency_code} />
+        ))}
+      </div>
+    </div>
+
+    <!-- Right column — Summary -->
+    <div>
+      <div class={css({
+        position: 'sticky', top: '24',
+        bg: 'bg.default', borderWidth: '1px', borderColor: 'border.default',
+        borderRadius: 'lg', p: '6',
+        display: 'flex', flexDir: 'column', gap: '4',
+      })}>
+        <h2 class={css({ fontSize: 'lg', fontWeight: 'semibold' })}>Order Summary</h2>
+        <CartTotals cart={cart} />
+        <a
+          href={`/${countryCode}/checkout?step=${getCheckoutStep()}`}
+          class={css({ textDecoration: 'none', display: 'block' })}
+        >
+          <button class={`${button({ variant: 'outline', size: 'lg' })} ${css({ w: 'full' })}`}>
+            Go to checkout
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+)}
+
+<script>
+  import { $cart, setCart } from '@/stores/cart'
+
+  // Initialize cart store from server-rendered data
+  const cartDataEl = document.getElementById('cart-page-data')
+  if (cartDataEl) {
+    try {
+      const cart = JSON.parse(cartDataEl.textContent || '{}')
+      if (cart && cart.id) setCart(cart)
+    } catch {}
+  }
+</script>

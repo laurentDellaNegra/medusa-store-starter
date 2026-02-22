@@ -1,0 +1,120 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { isStripeLike, isManual } from '@/lib/constants'
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+
+interface Props {
+  cart: HttpTypes.StoreCart
+  countryCode: string
+  isOpen: boolean
+}
+
+const { cart, countryCode, isOpen } = Astro.props
+
+if (!isOpen) return
+
+const previousStepsCompleted =
+  cart.shipping_address?.address_1 &&
+  cart.shipping_methods?.length &&
+  cart.payment_collection?.payment_sessions?.length
+
+const activeSession = cart.payment_collection?.payment_sessions?.find((s: any) => s.status === 'pending')
+const isStripe = activeSession && isStripeLike(activeSession.provider_id)
+const clientSecret = (activeSession?.data as any)?.client_secret as string | undefined
+---
+
+{!previousStepsCompleted ? (
+  <div class={css({ p: '4', bg: 'bg.muted', borderRadius: 'md' })}>
+    <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>
+      Please complete the previous steps before reviewing your order.
+    </p>
+  </div>
+) : (
+  <div id="review-step" class={css({ display: 'flex', flexDir: 'column', gap: '4' })}>
+    <h2 class={css({ fontSize: 'lg', fontWeight: 'semibold' })}>Review</h2>
+
+    <script type="application/json" id="review-data" set:html={JSON.stringify({
+      countryCode,
+      isStripe: !!isStripe,
+      isManual: isManual(activeSession?.provider_id),
+      clientSecret: clientSecret || null,
+      providerId: activeSession?.provider_id || '',
+    })} />
+
+    <p class={css({ fontSize: 'xs', color: 'fg.muted' })}>
+      By clicking the Place order button, you confirm that you have read,
+      understand and accept our Terms of Use, Terms of Sale and Returns Policy
+      and acknowledge that you have read the Privacy Policy.
+    </p>
+
+    <p id="review-error" class={css({ fontSize: 'sm', color: 'fg.error', display: 'none' })}></p>
+
+    <button id="place-order-btn" class={`${button({ size: 'lg' })} ${css({ w: 'full' })}`}>
+      Place order
+    </button>
+  </div>
+)}
+
+<script>
+  import { isStripeLike } from '@/lib/constants'
+  import { loadStripe } from '@stripe/stripe-js'
+
+  const container = document.getElementById('review-step')
+  if (container) {
+    const data = JSON.parse(document.getElementById('review-data')?.textContent || '{}')
+    const placeBtn = document.getElementById('place-order-btn') as HTMLButtonElement
+    const errorEl = document.getElementById('review-error')!
+
+    placeBtn.addEventListener('click', async () => {
+      placeBtn.disabled = true
+      placeBtn.textContent = data.isStripe ? 'Processing payment...' : 'Placing order...'
+      errorEl.style.display = 'none'
+
+      try {
+        // For Stripe, confirm the payment first
+        if (data.isStripe && data.clientSecret) {
+          // Try to get stripe from Payment step's global
+          let stripe = (window as any).__stripe?.getStripe?.()
+          const card = (window as any).__stripe?.getCard?.()
+
+          if (!stripe) {
+            const stripeKey = (import.meta as any).env?.PUBLIC_STRIPE_KEY || (import.meta as any).env?.PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY
+            const accountId = (import.meta as any).env?.PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID
+            if (stripeKey) {
+              stripe = await loadStripe(stripeKey, accountId ? { stripeAccount: accountId } : undefined)
+            }
+          }
+
+          if (stripe && card) {
+            const { error } = await stripe.confirmCardPayment(data.clientSecret, {
+              payment_method: { card },
+            })
+            if (error) throw new Error(error.message || 'Payment failed')
+          }
+        }
+
+        // Complete the cart
+        const res = await fetch('/api/cart/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+        const result = await res.json()
+
+        if (result.type === 'order') {
+          const orderCountry = result.order?.shipping_address?.country_code?.toLowerCase() || data.countryCode
+          window.location.href = `/${orderCountry}/order/${result.order.id}/confirmed`
+        } else if (result.error) {
+          throw new Error(result.error)
+        } else {
+          throw new Error('Payment requires additional confirmation')
+        }
+      } catch (err) {
+        errorEl.textContent = err instanceof Error ? err.message : 'Order failed'
+        errorEl.style.display = 'block'
+        placeBtn.disabled = false
+        placeBtn.textContent = 'Place order'
+      }
+    })
+  }
+</script>

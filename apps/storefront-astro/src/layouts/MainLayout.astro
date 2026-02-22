@@ -2,7 +2,6 @@
 import BaseLayout from "./BaseLayout.astro"
 import Nav from "@/components/layout/Nav.astro"
 import Footer from "@/components/layout/Footer.astro"
-import CartInitializer from "@/components/layout/CartInitializer"
 import { retrieveCart } from "@/lib/data/cart"
 
 interface Props {
@@ -16,7 +15,84 @@ const cart = await retrieveCart()
 ---
 
 <BaseLayout title={title} description={description}>
-  <CartInitializer client:load cart={cart} />
+  <script is:inline type="application/json" id="cart-init-data" set:html={JSON.stringify(cart)} />
+  <script>
+    import { $cart, $cartOpen, setCart, toggleCart, closeCart } from '@/stores/cart'
+    import { convertToLocale } from '@/lib/util/money'
+
+    // Init cart from SSR data
+    const initEl = document.getElementById('cart-init-data')
+    if (initEl) {
+      try {
+        const cart = JSON.parse(initEl.textContent || '{}')
+        if (cart && cart.id) setCart(cart)
+      } catch {}
+    }
+
+    // CartButton: toggle + count
+    document.getElementById('cart-toggle')?.addEventListener('click', () => toggleCart())
+    $cart.subscribe(cart => {
+      const el = document.getElementById('cart-count')
+      if (el) el.textContent = `Cart (${cart?.items?.length ?? 0})`
+    })
+
+    // CartDropdown: open/close + render items
+    const dropdown = document.getElementById('cart-dropdown')
+    const header = document.getElementById('cart-dropdown-header')
+    const empty = document.getElementById('cart-dropdown-empty')
+    const itemsContainer = document.getElementById('cart-dropdown-items')
+    const footer = document.getElementById('cart-dropdown-footer')
+    const totalEl = document.getElementById('cart-dropdown-total')
+
+    if (dropdown && header && empty && itemsContainer && footer && totalEl) {
+      $cartOpen.subscribe(isOpen => {
+        dropdown.style.display = isOpen ? 'flex' : 'none'
+      })
+
+      $cart.subscribe(cart => {
+        const items = cart?.items ?? []
+        const total = cart?.total ?? 0
+        const currencyCode = cart?.currency_code ?? 'usd'
+
+        header.textContent = `Cart (${items.length} item${items.length !== 1 ? 's' : ''})`
+
+        if (items.length === 0) {
+          empty.style.display = 'block'
+          itemsContainer.style.display = 'none'
+          footer.style.display = 'none'
+          return
+        }
+
+        empty.style.display = 'none'
+        itemsContainer.style.display = 'block'
+        footer.style.display = 'block'
+
+        itemsContainer.innerHTML = items.map((item: any, i: number) => {
+          const thumb = item.thumbnail || item.variant?.product?.thumbnail
+          return `<div style="display:flex;gap:0.75rem;padding:0.5rem 0;${i < items.length - 1 ? 'border-bottom:1px solid var(--colors-border-default)' : ''}">
+            ${thumb ? `<img src="${thumb}" alt="${item.product_title || ''}" style="width:3rem;height:4rem;object-fit:cover;border-radius:var(--radii-sm);flex-shrink:0">` : ''}
+            <div style="flex:1;min-width:0">
+              <p style="font-size:0.75rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.product_title || item.title}</p>
+              <p style="font-size:0.75rem;color:var(--colors-fg-muted)">Qty: ${item.quantity}</p>
+            </div>
+            <p style="font-size:0.75rem;font-weight:500;flex-shrink:0">${convertToLocale({ amount: item.total ?? 0, currency_code: currencyCode })}</p>
+          </div>`
+        }).join('')
+
+        totalEl.textContent = convertToLocale({ amount: total, currency_code: currencyCode })
+      })
+
+      document.getElementById('cart-dropdown-view')?.addEventListener('click', () => closeCart())
+      document.getElementById('cart-dropdown-checkout')?.addEventListener('click', () => closeCart())
+
+      document.addEventListener('mousedown', (e) => {
+        const wrapper = document.getElementById('cart-button-wrapper')
+        if ($cartOpen.get() && wrapper && !wrapper.contains(e.target as Node)) {
+          closeCart()
+        }
+      })
+    }
+  </script>
   <Nav countryCode={countryCode} />
   <main>
     <slot />

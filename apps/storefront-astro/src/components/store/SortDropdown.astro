@@ -1,0 +1,49 @@
+---
+import { css } from 'styled-system/css'
+import type { SortOptions } from '@/lib/util/sort-products'
+
+interface Props {
+  currentSort: SortOptions
+  baseUrl: string
+}
+
+const { currentSort, baseUrl } = Astro.props
+
+const sortOptions = [
+  { value: 'created_at', label: 'Latest Arrivals' },
+  { value: 'price_asc', label: 'Price: Low -> High' },
+  { value: 'price_desc', label: 'Price: High -> Low' },
+]
+---
+
+<select
+  id="sort-dropdown"
+  data-base-url={baseUrl}
+  class={css({
+    px: '3',
+    py: '2',
+    borderWidth: '1px',
+    borderColor: 'border.default',
+    borderRadius: 'md',
+    fontSize: 'sm',
+    bg: 'bg.default',
+    color: 'fg.default',
+    cursor: 'pointer',
+  })}
+>
+  {sortOptions.map(opt => (
+    <option value={opt.value} selected={opt.value === currentSort}>{opt.label}</option>
+  ))}
+</select>
+
+<script>
+  const select = document.getElementById('sort-dropdown') as HTMLSelectElement
+  if (select) {
+    select.addEventListener('change', () => {
+      const url = new URL(select.dataset.baseUrl || '/', window.location.origin)
+      url.searchParams.set('sortBy', select.value)
+      url.searchParams.delete('page')
+      window.location.href = url.toString()
+    })
+  }
+</script>

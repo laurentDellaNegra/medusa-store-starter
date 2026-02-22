@@ -2,7 +2,7 @@
 export const prerender = false
 
 import CheckoutLayout from "@/layouts/CheckoutLayout.astro"
-import CheckoutForm from "@/components/checkout/CheckoutForm"
+import CheckoutForm from "@/components/checkout/CheckoutForm.astro"
 import { retrieveCart } from "@/lib/data/cart"
 import { retrieveCustomer } from "@/lib/data/customer"
 import { listCartShippingMethods } from "@/lib/data/fulfillment"
@@ -29,7 +29,6 @@ const [customer, shippingMethods, paymentMethods] = await Promise.all([
 
 <CheckoutLayout title="Checkout | Medusa Store" countryCode={countryCode}>
   <CheckoutForm
-    client:load
     cart={cart}
     customer={customer}
     shippingMethods={shippingMethods}

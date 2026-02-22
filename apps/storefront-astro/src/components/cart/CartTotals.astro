@@ -1,0 +1,44 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { convertToLocale } from '@/lib/util/money'
+import { css } from 'styled-system/css'
+
+interface Props {
+  cart: HttpTypes.StoreCart
+}
+
+const { cart } = Astro.props
+const { currency_code, item_subtotal, shipping_subtotal, tax_total, discount_total, total } = cart
+const fmt = (amount?: number) => convertToLocale({ amount: amount ?? 0, currency_code })
+---
+
+<div class={css({ display: 'flex', flexDir: 'column', gap: '2' })}>
+  <div class={css({ display: 'flex', justifyContent: 'space-between', fontSize: 'sm' })}>
+    <span class={css({ color: 'fg.muted' })}>Subtotal</span>
+    <span>{fmt(item_subtotal)}</span>
+  </div>
+
+  {(discount_total ?? 0) > 0 && (
+    <div class={css({ display: 'flex', justifyContent: 'space-between', fontSize: 'sm' })}>
+      <span class={css({ color: 'fg.muted' })}>Discount</span>
+      <span class={css({ color: 'fg.default' })}>- {fmt(discount_total)}</span>
+    </div>
+  )}
+
+  <div class={css({ display: 'flex', justifyContent: 'space-between', fontSize: 'sm' })}>
+    <span class={css({ color: 'fg.muted' })}>Shipping</span>
+    <span>{shipping_subtotal ? fmt(shipping_subtotal) : 'Calculated at checkout'}</span>
+  </div>
+
+  <div class={css({ display: 'flex', justifyContent: 'space-between', fontSize: 'sm' })}>
+    <span class={css({ color: 'fg.muted' })}>Tax</span>
+    <span>{fmt(tax_total)}</span>
+  </div>
+
+  <div class={css({ h: '1px', bg: 'border.default', my: '1' })} />
+
+  <div class={css({ display: 'flex', justifyContent: 'space-between', fontWeight: 'semibold' })}>
+    <span>Total</span>
+    <span>{fmt(total)}</span>
+  </div>
+</div>

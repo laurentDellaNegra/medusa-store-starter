@@ -4,7 +4,7 @@ export const prerender = false
 import MainLayout from "@/layouts/MainLayout.astro"
 import ProductGrid from "@/components/store/ProductGrid.astro"
 import Pagination from "@/components/store/Pagination.astro"
-import SortDropdown from "@/components/store/SortDropdown"
+import SortDropdown from "@/components/store/SortDropdown.astro"
 import { getCategoryByHandle } from "@/lib/data/categories"
 import { listProductsWithSort } from "@/lib/data/products"
 import { css } from "styled-system/css"
@@ -62,7 +62,7 @@ const baseUrl = `/${countryCode}/categories/${categoryPath}`
           </p>
         )}
       </div>
-      <SortDropdown client:load currentSort={sortBy} baseUrl={baseUrl} />
+      <SortDropdown currentSort={sortBy} baseUrl={baseUrl} />
     </div>
 
     <ProductGrid products={response.products} countryCode={countryCode} />

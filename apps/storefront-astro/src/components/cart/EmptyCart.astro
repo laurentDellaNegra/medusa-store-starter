@@ -1,0 +1,41 @@
+---
+import { css } from 'styled-system/css'
+
+interface Props {
+  countryCode: string
+}
+
+const { countryCode } = Astro.props
+---
+
+<div class={css({
+  display: 'flex',
+  flexDir: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '4',
+  py: '20',
+  textAlign: 'center',
+})}>
+  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class={css({ color: 'fg.disabled' })}>
+    <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+  </svg>
+  <div>
+    <p class={css({ fontSize: 'lg', fontWeight: 'medium' })}>Your cart is empty</p>
+    <p class={css({ fontSize: 'sm', color: 'fg.muted', mt: '1' })}>Add items to your cart to get started.</p>
+  </div>
+  <a
+    href={`/${countryCode}/store`}
+    class={css({
+      mt: '2', px: '6', py: '3',
+      bg: 'bg.inverted', color: 'fg.inverted',
+      borderRadius: 'md', fontSize: 'sm', fontWeight: 'medium',
+      textDecoration: 'none', _hover: { opacity: 0.9 },
+    })}
+  >
+    Continue shopping
+  </a>
+</div>

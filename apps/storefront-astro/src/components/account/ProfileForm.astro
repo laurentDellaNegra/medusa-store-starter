@@ -1,0 +1,137 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+
+interface Props {
+  customer: HttpTypes.StoreCustomer
+}
+
+const { customer } = Astro.props
+
+const inputStyles = css({
+  w: 'full', h: '10', px: '3',
+  borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md', fontSize: 'sm',
+  _focus: { outline: 'none', borderColor: 'fg.default' },
+  _disabled: { bg: 'bg.muted', color: 'fg.muted' },
+})
+const labelStyles = css({ display: 'block', fontSize: 'xs', color: 'fg.muted', mb: '1' })
+
+const sections = [
+  { title: 'Name', fields: [
+    { label: 'First name', key: 'first_name', value: customer.first_name || '' },
+    { label: 'Last name', key: 'last_name', value: customer.last_name || '' },
+  ]},
+  { title: 'Email', fields: [
+    { label: 'Email', key: 'email', value: customer.email || '', type: 'email' },
+  ]},
+  { title: 'Phone', fields: [
+    { label: 'Phone', key: 'phone', value: customer.phone || '', type: 'tel' },
+  ]},
+]
+---
+
+<div class={css({ display: 'flex', flexDir: 'column', gap: '8' })}>
+  <div>
+    <h1 class={css({ fontSize: '2xl', fontWeight: 'bold', mb: '2' })}>Profile</h1>
+    <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>View and update your profile information.</p>
+  </div>
+
+  {sections.map((section, idx) => (
+    <>
+      {idx > 0 && <div class={css({ h: '1px', bg: 'border.default' })} />}
+      <div data-profile-section>
+        <div class={css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: '3' })}>
+          <h3 class={css({ fontSize: 'sm', fontWeight: 'semibold' })}>{section.title}</h3>
+          <div data-edit-controls>
+            <button data-action="edit" class={css({ fontSize: 'xs', color: 'fg.muted', cursor: 'pointer', _hover: { color: 'fg.default' } })}>Edit</button>
+          </div>
+          <div data-save-controls class={css({ display: 'none' })}>
+            <div class={css({ display: 'flex', gap: '2' })}>
+              <button data-action="cancel" class={css({ fontSize: 'xs', color: 'fg.muted', cursor: 'pointer' })}>Cancel</button>
+              <button data-action="save" class={`${button({ size: 'xs' })}`}>Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class={css({ display: 'grid', gridTemplateColumns: section.fields.length > 1 ? '1fr 1fr' : '1fr', gap: '3' })}>
+          {section.fields.map(field => (
+            <div>
+              <label class={labelStyles}>{field.label}</label>
+              <input
+                type={field.type || 'text'}
+                name={field.key}
+                value={field.value}
+                disabled
+                class={inputStyles}
+              />
+            </div>
+          ))}
+        </div>
+
+        <p data-error class={css({ fontSize: 'xs', color: 'fg.error', mt: '2', display: 'none' })}></p>
+        <p data-success class={css({ fontSize: 'xs', color: 'fg.default', mt: '2', display: 'none' })}>Updated successfully</p>
+      </div>
+    </>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll('[data-profile-section]').forEach(section => {
+    const editControls = section.querySelector('[data-edit-controls]') as HTMLElement
+    const saveControls = section.querySelector('[data-save-controls]') as HTMLElement
+    const inputs = section.querySelectorAll('input') as NodeListOf<HTMLInputElement>
+    const errorEl = section.querySelector('[data-error]') as HTMLElement
+    const successEl = section.querySelector('[data-success]') as HTMLElement
+    const saveBtn = section.querySelector('[data-action="save"]') as HTMLButtonElement
+
+    const originalValues: Record<string, string> = {}
+    inputs.forEach(input => { originalValues[input.name] = input.value })
+
+    section.querySelector('[data-action="edit"]')?.addEventListener('click', () => {
+      editControls.style.display = 'none'
+      saveControls.style.display = 'block'
+      inputs.forEach(input => input.disabled = false)
+      errorEl.style.display = 'none'
+      successEl.style.display = 'none'
+    })
+
+    section.querySelector('[data-action="cancel"]')?.addEventListener('click', () => {
+      saveControls.style.display = 'none'
+      editControls.style.display = 'block'
+      inputs.forEach(input => { input.disabled = true; input.value = originalValues[input.name] })
+      errorEl.style.display = 'none'
+    })
+
+    section.querySelector('[data-action="save"]')?.addEventListener('click', async () => {
+      saveBtn.disabled = true; saveBtn.textContent = 'Saving...'
+      errorEl.style.display = 'none'
+      successEl.style.display = 'none'
+
+      const values: Record<string, string> = {}
+      inputs.forEach(input => { values[input.name] = input.value })
+
+      try {
+        const res = await fetch('/api/customer/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(values),
+        })
+        if (!res.ok) {
+          const data = await res.json()
+          throw new Error(data.error || 'Failed to update')
+        }
+        saveControls.style.display = 'none'
+        editControls.style.display = 'block'
+        inputs.forEach(input => { input.disabled = true; originalValues[input.name] = input.value })
+        successEl.style.display = 'block'
+        setTimeout(() => { successEl.style.display = 'none' }, 2000)
+      } catch (err) {
+        errorEl.textContent = err instanceof Error ? err.message : 'Update failed'
+        errorEl.style.display = 'block'
+      } finally {
+        saveBtn.disabled = false; saveBtn.textContent = 'Save'
+      }
+    })
+  })
+</script>

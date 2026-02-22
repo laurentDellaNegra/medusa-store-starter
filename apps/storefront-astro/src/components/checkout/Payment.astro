@@ -1,0 +1,189 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { paymentInfoMap, isStripeLike } from '@/lib/constants'
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+
+interface Props {
+  cart: HttpTypes.StoreCart
+  paymentMethods: HttpTypes.StorePaymentProvider[] | null
+  isOpen: boolean
+}
+
+const { cart, paymentMethods, isOpen } = Astro.props
+const activeSession = cart.payment_collection?.payment_sessions?.find((s: any) => s.status === 'pending')
+const methods = paymentMethods || []
+const selectedMethod = activeSession?.provider_id || ''
+const clientSecret = (activeSession?.data as any)?.client_secret as string | undefined
+const stripeReady = !!activeSession && isStripeLike(activeSession.provider_id) && !!clientSecret
+---
+
+{!isOpen ? (
+  activeSession ? (
+    <div class={css({ p: '4', bg: 'bg.muted', borderRadius: 'md' })}>
+      <div class={css({ display: 'flex', justifyContent: 'space-between', mb: '2' })}>
+        <h3 class={css({ fontSize: 'sm', fontWeight: 'semibold' })}>Payment</h3>
+        <a href="?step=payment" class={css({ fontSize: 'xs', color: 'fg.muted', _hover: { color: 'fg.default' } })}>Edit</a>
+      </div>
+      <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>
+        {paymentInfoMap[activeSession.provider_id]?.title || activeSession.provider_id}
+      </p>
+    </div>
+  ) : null
+) : (
+  <div id="payment-step" class={css({ display: 'flex', flexDir: 'column', gap: '4' })}>
+    <h2 class={css({ fontSize: 'lg', fontWeight: 'semibold' })}>Payment Method</h2>
+
+    <script type="application/json" id="payment-data" set:html={JSON.stringify({
+      selectedMethod,
+      clientSecret: clientSecret || null,
+      stripeReady,
+    })} />
+
+    {methods.length === 0 ? (
+      <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>No payment methods available.</p>
+    ) : (
+      <div class={css({ display: 'flex', flexDir: 'column', gap: '2' })}>
+        {methods.map(method => {
+          const info = paymentInfoMap[method.id]
+          const isSelected = selectedMethod === method.id
+          const isStripe = isStripeLike(method.id)
+
+          return (
+            <label
+              data-payment-option={method.id}
+              data-is-stripe={isStripe ? 'true' : 'false'}
+              class={css({
+                p: '4', borderWidth: '1px', borderRadius: 'md', cursor: 'pointer',
+                transition: 'border-color 0.2s', _hover: { borderColor: 'fg.default' },
+              })}
+            >
+              <div class={css({ display: 'flex', alignItems: 'center', gap: '3' })}>
+                <input type="radio" name="payment_method" value={method.id} checked={isSelected} />
+                <span class={css({ fontSize: 'sm' })}>{info?.title || method.id}</span>
+              </div>
+
+              {isStripe && (
+                <div
+                  id="card-element-wrapper"
+                  class={css({ mt: '3', p: '3', borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md', display: isSelected && stripeReady ? 'block' : 'none' })}
+                >
+                  <div id="card-element"></div>
+                  <p id="card-error" class={css({ fontSize: 'xs', color: 'fg.error', mt: '2', display: 'none' })}></p>
+                </div>
+              )}
+            </label>
+          )
+        })}
+      </div>
+    )}
+
+    <p id="payment-step-error" class={css({ fontSize: 'sm', color: 'fg.error', display: 'none' })}></p>
+
+    <button id="payment-submit-btn" disabled={!selectedMethod} class={`${button({ size: 'lg' })}`}>
+      Continue to review
+    </button>
+  </div>
+)}
+
+<script>
+  import { isStripeLike } from '@/lib/constants'
+  import { loadStripe, type Stripe, type StripeCardElement } from '@stripe/stripe-js'
+
+  const container = document.getElementById('payment-step')
+  if (container) {
+    const paymentData = JSON.parse(document.getElementById('payment-data')?.textContent || '{}')
+    const submitBtn = document.getElementById('payment-submit-btn') as HTMLButtonElement
+    const errorEl = document.getElementById('payment-step-error')!
+    let selectedMethod = paymentData.selectedMethod || ''
+    let stripe: Stripe | null = null
+    let cardElement: StripeCardElement | null = null
+
+    // Initialize Stripe if needed
+    async function initStripe() {
+      if (stripe) return
+      const stripeKey = (import.meta as any).env?.PUBLIC_STRIPE_KEY || (import.meta as any).env?.PUBLIC_MEDUSA_PAYMENTS_PUBLISHABLE_KEY
+      if (!stripeKey || !paymentData.clientSecret) return
+
+      const accountId = (import.meta as any).env?.PUBLIC_MEDUSA_PAYMENTS_ACCOUNT_ID
+      stripe = await loadStripe(stripeKey, accountId ? { stripeAccount: accountId } : undefined)
+      if (!stripe) return
+
+      const elements = stripe.elements({ clientSecret: paymentData.clientSecret })
+      cardElement = elements.create('card', {
+        style: { base: { fontFamily: 'Inter, sans-serif', fontSize: '14px', color: '#1a1a1a' } },
+      })
+      const mountEl = document.getElementById('card-element')
+      if (mountEl) cardElement.mount(mountEl)
+    }
+
+    if (paymentData.stripeReady) initStripe()
+
+    // Store stripe instances globally for Review step to access
+    ;(window as any).__stripe = { getStripe: () => stripe, getCard: () => cardElement }
+
+    function updateUI() {
+      document.querySelectorAll('[data-payment-option]').forEach(el => {
+        const id = (el as HTMLElement).dataset.paymentOption
+        ;(el as HTMLElement).style.borderColor = id === selectedMethod ? 'var(--colors-fg-default)' : ''
+      })
+      const wrapper = document.getElementById('card-element-wrapper')
+      if (wrapper) {
+        wrapper.style.display = isStripeLike(selectedMethod) && paymentData.stripeReady ? 'block' : 'none'
+      }
+      submitBtn.disabled = !selectedMethod
+    }
+
+    document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+      radio.addEventListener('change', async () => {
+        const newMethod = (radio as HTMLInputElement).value
+        selectedMethod = newMethod
+        errorEl.style.display = 'none'
+
+        // For Stripe providers, initiate payment session
+        if (isStripeLike(newMethod)) {
+          try {
+            const res = await fetch('/api/cart/payment-session', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ provider_id: newMethod }),
+            })
+            if (!res.ok) {
+              const data = await res.json()
+              throw new Error(data.error || 'Failed to initiate payment session')
+            }
+            window.location.reload()
+          } catch (err) {
+            errorEl.textContent = err instanceof Error ? err.message : 'Payment session error'
+            errorEl.style.display = 'block'
+          }
+        }
+        updateUI()
+      })
+    })
+
+    updateUI()
+
+    submitBtn.addEventListener('click', async () => {
+      if (!selectedMethod) return
+      submitBtn.disabled = true; submitBtn.textContent = 'Processing...'
+      errorEl.style.display = 'none'
+
+      try {
+        if (!isStripeLike(selectedMethod) && paymentData.selectedMethod !== selectedMethod) {
+          const res = await fetch('/api/cart/payment-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ provider_id: selectedMethod }),
+          })
+          if (!res.ok) throw new Error('Failed to initiate payment session')
+        }
+        window.location.href = window.location.pathname + '?step=review'
+      } catch (err) {
+        errorEl.textContent = err instanceof Error ? err.message : 'Payment error'
+        errorEl.style.display = 'block'
+        submitBtn.disabled = false; submitBtn.textContent = 'Continue to review'
+      }
+    })
+  }
+</script>

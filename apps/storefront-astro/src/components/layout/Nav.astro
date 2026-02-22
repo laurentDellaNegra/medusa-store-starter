@@ -1,6 +1,6 @@
 ---
 import { css } from "styled-system/css"
-import CartButton from "./CartButton"
+import CartButton from "./CartButton.astro"
 
 interface Props {
   countryCode: string
@@ -75,7 +75,7 @@ const { countryCode } = Astro.props
       </div>
 
       <div class={css({ display: "flex", alignItems: "center", gap: "4" })}>
-        <CartButton client:load countryCode={countryCode} />
+        <CartButton countryCode={countryCode} />
       </div>
     </nav>
   </header>

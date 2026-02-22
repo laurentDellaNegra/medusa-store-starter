@@ -1,0 +1,150 @@
+---
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+import type { HttpTypes } from '@medusajs/types'
+import { getProductPrice } from '@/lib/util/get-product-price'
+
+interface Props {
+  product: HttpTypes.StoreProduct
+  countryCode: string
+}
+
+const { product, countryCode } = Astro.props
+const hasMultipleVariants = (product.variants?.length ?? 0) > 1
+const { variantPrice: singleVariantPrice } = getProductPrice({
+  product,
+  variantId: product.variants?.length === 1 ? product.variants[0].id : undefined,
+})
+
+const optionBtnBase = css({
+  px: '4', py: '2', borderWidth: '1px', borderColor: 'border.default',
+  borderRadius: 'md', fontSize: 'sm', bg: 'bg.default', color: 'fg.default',
+  cursor: 'pointer', transition: 'all', _hover: { borderColor: 'fg.default' },
+})
+const optionBtnSelected = css({
+  bg: 'bg.inverted', color: 'fg.inverted', borderColor: 'fg.default',
+})
+---
+
+<div class={css({ display: 'flex', flexDir: 'column', gap: '4' })} id="product-actions" data-country-code={countryCode}>
+  <script type="application/json" id="product-data" set:html={JSON.stringify({
+    variants: product.variants,
+    options: product.options,
+    singleVariant: product.variants?.length === 1,
+  })} />
+  <script type="application/json" id="option-classes" set:html={JSON.stringify({
+    base: optionBtnBase,
+    selected: optionBtnSelected,
+  })} />
+
+  {hasMultipleVariants && (product.options || []).map(option => (
+    <div>
+      <label class={css({ display: 'block', fontSize: 'sm', fontWeight: 'medium', mb: '2' })}>
+        {option.title}
+      </label>
+      <div class={css({ display: 'flex', flexWrap: 'wrap', gap: '2' })}>
+        {option.values?.map(v => (
+          <button data-option-id={option.id} data-value={v.value} class={`option-btn ${optionBtnBase}`}>
+            {v.value}
+          </button>
+        ))}
+      </div>
+    </div>
+  ))}
+
+  {hasMultipleVariants && <div class={css({ h: '1px', bg: 'border.default', my: '2' })} />}
+
+  <div id="price-display" class={css({ display: 'flex', alignItems: 'center', gap: '2' })}>
+    {singleVariantPrice && (
+      <>
+        {singleVariantPrice.price_type === 'sale' && (
+          <span class={css({ fontSize: 'lg', color: 'fg.disabled', textDecoration: 'line-through' })}>
+            {singleVariantPrice.original_price}
+          </span>
+        )}
+        <span class={css({ fontSize: 'xl', fontWeight: 'semibold' })}>
+          {singleVariantPrice.calculated_price}
+        </span>
+      </>
+    )}
+  </div>
+
+  <button id="add-to-cart-btn" disabled class={`${button({ size: 'lg' })} ${css({ w: 'full' })}`}>
+    {hasMultipleVariants ? 'Select variant' : 'Add to cart'}
+  </button>
+
+  <p id="added-message" class={css({ fontSize: 'sm', color: 'fg.default', textAlign: 'center', display: 'none' })}></p>
+</div>
+
+<script>
+  import { openCart, setCart } from '@/stores/cart'
+
+  const container = document.getElementById('product-actions')!
+  const productData = JSON.parse(document.getElementById('product-data')?.textContent || '{}')
+  const optClasses = JSON.parse(document.getElementById('option-classes')?.textContent || '{}')
+  const addBtn = document.getElementById('add-to-cart-btn') as HTMLButtonElement
+  const addedMsg = document.getElementById('added-message')!
+  const countryCode = container.dataset.countryCode || 'us'
+
+  const variants = productData.variants || []
+  const options: Record<string, string | undefined> = {}
+
+  if (productData.singleVariant && variants[0]?.options) {
+    for (const opt of variants[0].options) options[opt.option_id] = opt.value
+    addBtn.disabled = false
+    addBtn.textContent = 'Add to cart'
+  }
+
+  function optionsAsKeymap(vo: any[]) {
+    return vo?.reduce((a: Record<string, string>, o: any) => { a[o.option_id] = o.value; return a }, {})
+  }
+  function deepEqual(a: any, b: any) {
+    if (a === b) return true; if (!a || !b) return false
+    const ka = Object.keys(a), kb = Object.keys(b)
+    if (ka.length !== kb.length) return false
+    return ka.every(k => a[k] === b[k])
+  }
+  function findVariant() {
+    return variants.find((v: any) => deepEqual(optionsAsKeymap(v.options), options))
+  }
+
+  function updateUI() {
+    const sel = findVariant()
+    const inStock = sel ? (!sel.manage_inventory || sel.allow_backorder || ((sel as any).inventory_quantity || 0) > 0) : false
+    addBtn.disabled = !sel || !inStock
+    addBtn.textContent = !sel ? 'Select variant' : (!inStock ? 'Out of stock' : 'Add to cart')
+
+    document.querySelectorAll('.option-btn').forEach((btn: any) => {
+      const isSelected = options[btn.dataset.optionId] === btn.dataset.value
+      btn.className = `option-btn ${optClasses.base}${isSelected ? ' ' + optClasses.selected : ''}`
+    })
+  }
+
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const el = btn as HTMLElement
+      options[el.dataset.optionId!] = el.dataset.value!
+      updateUI()
+    })
+  })
+
+  addBtn?.addEventListener('click', async () => {
+    const sel = findVariant()
+    if (!sel?.id) return
+    addBtn.disabled = true; addBtn.textContent = 'Adding...'
+    try {
+      const res = await fetch('/api/cart/add-item', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ variantId: sel.id, quantity: 1, countryCode }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        if (data.cart) setCart(data.cart)
+        openCart()
+        addedMsg.textContent = 'Added to cart!'; addedMsg.style.display = 'block'
+        setTimeout(() => { addedMsg.style.display = 'none' }, 2000)
+      }
+    } catch {}
+    updateUI()
+  })
+</script>

@@ -1,0 +1,150 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { convertToLocale } from '@/lib/util/money'
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+
+interface Props {
+  cart: HttpTypes.StoreCart
+  shippingMethods: HttpTypes.StoreCartShippingOption[] | null
+  isOpen: boolean
+}
+
+const { cart, shippingMethods, isOpen } = Astro.props
+const activeMethod = cart.shipping_methods?.at(-1)
+const methods = shippingMethods || []
+const selectedId = activeMethod?.shipping_option_id || ''
+---
+
+{!isOpen ? (
+  activeMethod ? (
+    <div class={css({ p: '4', bg: 'bg.muted', borderRadius: 'md' })}>
+      <div class={css({ display: 'flex', justifyContent: 'space-between', mb: '2' })}>
+        <h3 class={css({ fontSize: 'sm', fontWeight: 'semibold' })}>Delivery</h3>
+        <a href="?step=delivery" class={css({ fontSize: 'xs', color: 'fg.muted', _hover: { color: 'fg.default' } })}>Edit</a>
+      </div>
+      <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>{(activeMethod as any).name || 'Shipping method selected'}</p>
+    </div>
+  ) : null
+) : (
+  <div id="shipping-step" class={css({ display: 'flex', flexDir: 'column', gap: '4' })}>
+    <h2 class={css({ fontSize: 'lg', fontWeight: 'semibold' })}>Delivery Method</h2>
+
+    <script type="application/json" id="shipping-data" set:html={JSON.stringify({
+      cartId: cart.id,
+      currencyCode: cart.currency_code,
+      methods: methods.map(m => ({
+        id: m.id,
+        name: m.name,
+        amount: m.amount,
+        price_type: m.price_type,
+      })),
+      selectedId,
+    })} />
+
+    {methods.length === 0 ? (
+      <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>No shipping methods available for your address.</p>
+    ) : (
+      <div class={css({ display: 'flex', flexDir: 'column', gap: '2' })}>
+        {methods.map(method => (
+          <label
+            data-shipping-option={method.id}
+            class={css({
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              p: '4', borderWidth: '1px', borderRadius: 'md', cursor: 'pointer',
+              transition: 'border-color 0.2s', _hover: { borderColor: 'fg.default' },
+            })}
+          >
+            <div class={css({ display: 'flex', alignItems: 'center', gap: '3' })}>
+              <input type="radio" name="shipping_method" value={method.id} checked={selectedId === method.id} />
+              <span class={css({ fontSize: 'sm' })}>{method.name}</span>
+            </div>
+            <span class={css({ fontSize: 'sm', fontWeight: 'medium' })} data-shipping-price={method.id}>
+              {method.price_type !== 'calculated' && method.amount != null
+                ? convertToLocale({ amount: method.amount, currency_code: cart.currency_code })
+                : 'Calculating...'}
+            </span>
+          </label>
+        ))}
+      </div>
+    )}
+
+    <p id="shipping-step-error" class={css({ fontSize: 'sm', color: 'fg.error', display: 'none' })}></p>
+
+    <button id="shipping-submit-btn" disabled={!selectedId} class={`${button({ size: 'lg' })}`}>
+      Continue to payment
+    </button>
+  </div>
+)}
+
+<script>
+  import { convertToLocale } from '@/lib/util/money'
+
+  const container = document.getElementById('shipping-step')
+  if (container) {
+    const data = JSON.parse(document.getElementById('shipping-data')?.textContent || '{}')
+    const submitBtn = document.getElementById('shipping-submit-btn') as HTMLButtonElement
+    const errorEl = document.getElementById('shipping-step-error')!
+    let selectedMethod = data.selectedId || ''
+
+    // Calculate prices for dynamic shipping
+    const calculated = data.methods.filter((m: any) => m.price_type === 'calculated')
+    if (calculated.length > 0) {
+      Promise.allSettled(
+        calculated.map(async (method: any) => {
+          const res = await fetch('/api/cart/shipping-method', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cartId: data.cartId, shippingMethodId: method.id, calculate: true }),
+          })
+          if (res.ok) {
+            const d = await res.json()
+            const priceEl = document.querySelector(`[data-shipping-price="${method.id}"]`)
+            if (priceEl) priceEl.textContent = convertToLocale({ amount: d.amount, currency_code: data.currencyCode })
+          }
+        })
+      )
+    }
+
+    // Update selected borders
+    function updateUI() {
+      document.querySelectorAll('[data-shipping-option]').forEach(el => {
+        const id = (el as HTMLElement).dataset.shippingOption
+        ;(el as HTMLElement).style.borderColor = id === selectedMethod ? 'var(--colors-fg-default)' : ''
+      })
+      submitBtn.disabled = !selectedMethod
+    }
+
+    document.querySelectorAll('input[name="shipping_method"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        selectedMethod = (radio as HTMLInputElement).value
+        updateUI()
+      })
+    })
+
+    updateUI()
+
+    submitBtn.addEventListener('click', async () => {
+      if (!selectedMethod) return
+      submitBtn.disabled = true; submitBtn.textContent = 'Saving...'
+      errorEl.style.display = 'none'
+
+      try {
+        const res = await fetch('/api/cart/shipping-method', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cartId: data.cartId, shippingMethodId: selectedMethod }),
+        })
+        if (!res.ok) {
+          const d = await res.json()
+          throw new Error(d.error || 'Failed to set shipping method')
+        }
+        window.location.href = window.location.pathname + '?step=payment'
+      } catch (err) {
+        errorEl.textContent = err instanceof Error ? err.message : 'Failed to set shipping'
+        errorEl.style.display = 'block'
+        submitBtn.disabled = false; submitBtn.textContent = 'Continue to payment'
+      }
+    })
+  }
+</script>

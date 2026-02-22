@@ -1,9 +1,8 @@
-import { popoverAnatomy } from '@ark-ui/anatomy'
 import { defineSlotRecipe } from '@pandacss/dev'
 
 export const popover = defineSlotRecipe({
   className: 'popover',
-  slots: popoverAnatomy.extendWith('header', 'body', 'footer').keys(),
+  slots: ['root', 'trigger', 'anchor', 'positioner', 'content', 'title', 'description', 'closeTrigger', 'arrow', 'arrowTip', 'indicator', 'header', 'body', 'footer'],
   base: {
     content: {
       '--popover-bg': 'colors.gray.surface.bg',

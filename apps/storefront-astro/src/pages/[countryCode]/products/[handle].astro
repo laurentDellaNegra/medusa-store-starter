@@ -3,7 +3,7 @@ export const prerender = false
 
 import MainLayout from "@/layouts/MainLayout.astro"
 import ImageGallery from "@/components/products/ImageGallery.astro"
-import ProductActions from "@/components/products/ProductActions"
+import ProductActions from "@/components/products/ProductActions.astro"
 import ProductTabs from "@/components/products/ProductTabs.astro"
 import RelatedProducts from "@/components/products/RelatedProducts.astro"
 import { getProductByHandle } from "@/lib/data/products"
@@ -100,7 +100,6 @@ const { cheapestPrice } = getProductPrice({ product })
         )}
 
         <ProductActions
-          client:load
           product={product}
           countryCode={countryCode}
         />

@@ -2,7 +2,7 @@
 export const prerender = false
 
 import AccountLayout from "@/layouts/AccountLayout.astro"
-import AddressBook from "@/components/account/AddressBook"
+import AddressBook from "@/components/account/AddressBook.astro"
 import { retrieveCustomer } from "@/lib/data/customer"
 import { getRegion } from "@/lib/data/regions"
 
@@ -26,5 +26,5 @@ if (!region) {
 ---
 
 <AccountLayout title="Addresses | Medusa Store" countryCode={countryCode}>
-  <AddressBook client:load customer={customer} region={region} />
+  <AddressBook customer={customer} region={region} />
 </AccountLayout>

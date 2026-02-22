@@ -1,0 +1,61 @@
+---
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+
+interface Props {
+  countryCode: string
+}
+
+const { countryCode } = Astro.props
+---
+
+<div
+  id="cart-dropdown"
+  data-country-code={countryCode}
+  class={css({
+    position: 'absolute',
+    top: 'full',
+    right: '0',
+    mt: '2',
+    w: '96',
+    maxH: 'md',
+    bg: 'bg.default',
+    borderWidth: '1px',
+    borderColor: 'border.default',
+    borderRadius: 'lg',
+    shadow: 'lg',
+    zIndex: '50',
+    display: 'none',
+    flexDir: 'column',
+    overflow: 'hidden',
+  })}
+>
+  <!-- Header -->
+  <div class={css({ p: '4', borderBottomWidth: '1px', borderColor: 'border.default' })}>
+    <p class={css({ fontSize: 'sm', fontWeight: 'semibold' })} id="cart-dropdown-header">Cart (0 items)</p>
+  </div>
+
+  <!-- Empty state -->
+  <div id="cart-dropdown-empty" class={css({ p: '8', textAlign: 'center' })}>
+    <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>Your cart is empty</p>
+  </div>
+
+  <!-- Items -->
+  <div id="cart-dropdown-items" class={css({ flex: '1', overflowY: 'auto', p: '4', display: 'none' })}></div>
+
+  <!-- Footer -->
+  <div id="cart-dropdown-footer" class={css({ p: '4', borderTopWidth: '1px', borderColor: 'border.default', display: 'none' })}>
+    <div class={css({ display: 'flex', justifyContent: 'space-between', mb: '3' })}>
+      <span class={css({ fontSize: 'sm', fontWeight: 'semibold' })}>Total</span>
+      <span class={css({ fontSize: 'sm', fontWeight: 'semibold' })} id="cart-dropdown-total"></span>
+    </div>
+    <div class={css({ display: 'flex', gap: '2' })}>
+      <a href={`/${countryCode}/cart`} id="cart-dropdown-view" class={css({ flex: '1', textDecoration: 'none' })}>
+        <button class={`${button({ variant: 'outline', size: 'sm' })} ${css({ w: 'full' })}`}>View cart</button>
+      </a>
+      <a href={`/${countryCode}/checkout`} id="cart-dropdown-checkout" class={css({ flex: '1', textDecoration: 'none' })}>
+        <button class={`${button({ size: 'sm' })} ${css({ w: 'full' })}`}>Checkout</button>
+      </a>
+    </div>
+  </div>
+</div>

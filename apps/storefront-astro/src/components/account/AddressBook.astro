@@ -1,0 +1,192 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { css } from 'styled-system/css'
+import { button } from 'styled-system/recipes'
+
+interface Props {
+  customer: HttpTypes.StoreCustomer
+  region: HttpTypes.StoreRegion
+}
+
+const { customer, region } = Astro.props
+const addresses = customer.addresses || []
+
+const inputStyles = css({
+  w: 'full', h: '10', px: '3',
+  borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md', fontSize: 'sm',
+  _focus: { outline: 'none', borderColor: 'fg.default' },
+})
+---
+
+<div>
+  <div class={css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: '6' })}>
+    <div>
+      <h1 class={css({ fontSize: '2xl', fontWeight: 'bold' })}>Shipping Addresses</h1>
+      <p class={css({ fontSize: 'sm', color: 'fg.muted', mt: '1' })}>Manage your shipping addresses for faster checkout.</p>
+    </div>
+    <button id="add-address-btn" class={button({ size: 'sm' })}>Add new address</button>
+  </div>
+
+  <p id="address-error" class={css({ fontSize: 'sm', color: 'fg.error', mb: '4', display: 'none' })}></p>
+
+  <!-- Add/Edit form (hidden by default) -->
+  <div id="address-form-wrapper" class={css({ mb: '6', p: '4', borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md', display: 'none' })}>
+    <h3 id="address-form-title" class={css({ fontSize: 'sm', fontWeight: 'semibold', mb: '4' })}>New Address</h3>
+
+    <form id="address-form" class={css({ display: 'flex', flexDir: 'column', gap: '3' })}>
+      <input type="hidden" name="addressId" value="" />
+      <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+        <input name="first_name" placeholder="First name" class={inputStyles} />
+        <input name="last_name" placeholder="Last name" class={inputStyles} />
+      </div>
+      <input name="company" placeholder="Company (optional)" class={inputStyles} />
+      <input name="address_1" placeholder="Address" class={inputStyles} />
+      <input name="address_2" placeholder="Apartment, suite, etc." class={inputStyles} />
+      <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+        <input name="city" placeholder="City" class={inputStyles} />
+        <input name="province" placeholder="State / Province" class={inputStyles} />
+      </div>
+      <div class={css({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3' })}>
+        <input name="postal_code" placeholder="Postal code" class={inputStyles} />
+        <select name="country_code" class={inputStyles}>
+          <option value="">Select country</option>
+          {region.countries?.map(c => (
+            <option value={c.iso_2}>{c.display_name}</option>
+          ))}
+        </select>
+      </div>
+      <input name="phone" placeholder="Phone" class={inputStyles} />
+
+      <div class={css({ display: 'flex', gap: '2', mt: '1' })}>
+        <button type="submit" class={button({ size: 'sm' })}>Save</button>
+        <button type="button" id="cancel-address-btn" class={button({ size: 'sm', variant: 'outline' })}>Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Address list -->
+  <div id="address-list">
+    {addresses.length === 0 ? (
+      <p id="no-addresses" class={css({ fontSize: 'sm', color: 'fg.muted' })}>No addresses saved yet.</p>
+    ) : (
+      <div class={css({ display: 'grid', gridTemplateColumns: { base: '1fr', md: '1fr 1fr' }, gap: '4' })}>
+        {addresses.map(addr => (
+          <div class={css({ p: '4', borderWidth: '1px', borderColor: 'border.default', borderRadius: 'md' })} data-address-id={addr.id}>
+            <p class={css({ fontSize: 'sm', fontWeight: 'medium' })}>{addr.first_name} {addr.last_name}</p>
+            {addr.company && <p class={css({ fontSize: 'xs', color: 'fg.muted' })}>{addr.company}</p>}
+            <p class={css({ fontSize: 'sm', color: 'fg.muted', mt: '1' })}>
+              {addr.address_1}{addr.address_2 ? `, ${addr.address_2}` : ''}
+            </p>
+            <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>{addr.city}, {addr.province} {addr.postal_code}</p>
+            <p class={css({ fontSize: 'sm', color: 'fg.muted' })}>{addr.country_code?.toUpperCase()}</p>
+            {addr.phone && <p class={css({ fontSize: 'xs', color: 'fg.muted', mt: '1' })}>{addr.phone}</p>}
+
+            <div class={css({ display: 'flex', gap: '3', mt: '3' })}>
+              <button data-edit-address={JSON.stringify(addr)} class={css({ fontSize: 'xs', color: 'fg.muted', cursor: 'pointer', _hover: { color: 'fg.default' } })}>Edit</button>
+              <button data-delete-address={addr.id} class={css({ fontSize: 'xs', color: 'fg.muted', cursor: 'pointer', _hover: { color: 'fg.error' } })}>Delete</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+<script>
+  const formWrapper = document.getElementById('address-form-wrapper')!
+  const form = document.getElementById('address-form') as HTMLFormElement
+  const formTitle = document.getElementById('address-form-title')!
+  const addBtn = document.getElementById('add-address-btn')!
+  const errorEl = document.getElementById('address-error')!
+  const defaultCountry = form.querySelector('select[name="country_code"]')?.querySelector('option:nth-child(2)')?.getAttribute('value') || ''
+
+  function showForm(title: string, data: Record<string, string> = {}) {
+    formTitle.textContent = title
+    formWrapper.style.display = 'block'
+    addBtn.style.display = 'none'
+    errorEl.style.display = 'none'
+    const fields = ['addressId', 'first_name', 'last_name', 'company', 'address_1', 'address_2', 'city', 'province', 'postal_code', 'country_code', 'phone']
+    fields.forEach(f => {
+      const input = form.querySelector(`[name="${f}"]`) as HTMLInputElement | HTMLSelectElement
+      if (input) input.value = data[f] || (f === 'country_code' ? defaultCountry : '')
+    })
+  }
+
+  function hideForm() {
+    formWrapper.style.display = 'none'
+    addBtn.style.display = 'inline-flex'
+  }
+
+  addBtn.addEventListener('click', () => showForm('New Address'))
+  document.getElementById('cancel-address-btn')?.addEventListener('click', hideForm)
+
+  // Edit buttons
+  document.querySelectorAll('[data-edit-address]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const addr = JSON.parse((btn as HTMLElement).dataset.editAddress || '{}')
+      showForm('Edit Address', {
+        addressId: addr.id || '',
+        first_name: addr.first_name || '',
+        last_name: addr.last_name || '',
+        company: addr.company || '',
+        address_1: addr.address_1 || '',
+        address_2: addr.address_2 || '',
+        city: addr.city || '',
+        province: addr.province || '',
+        postal_code: addr.postal_code || '',
+        country_code: addr.country_code || '',
+        phone: addr.phone || '',
+      })
+    })
+  })
+
+  // Delete buttons
+  document.querySelectorAll('[data-delete-address]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Delete this address?')) return
+      const addressId = (btn as HTMLElement).dataset.deleteAddress
+      try {
+        const res = await fetch('/api/customer/addresses', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete', addressId }),
+        })
+        if (!res.ok) throw new Error('Failed to delete')
+        const card = (btn as HTMLElement).closest('[data-address-id]')
+        card?.remove()
+      } catch {
+        errorEl.textContent = 'Failed to delete address'
+        errorEl.style.display = 'block'
+      }
+    })
+  })
+
+  // Save form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement
+    submitBtn.disabled = true; submitBtn.textContent = 'Saving...'
+    errorEl.style.display = 'none'
+
+    const data = Object.fromEntries(new FormData(form))
+    const addressId = data.addressId as string
+    const action = addressId ? 'update' : 'add'
+
+    try {
+      const res = await fetch('/api/customer/addresses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, ...data }),
+      })
+      if (!res.ok) {
+        const d = await res.json()
+        throw new Error(d.error || 'Failed to save address')
+      }
+      window.location.reload()
+    } catch (err) {
+      errorEl.textContent = err instanceof Error ? err.message : 'Failed to save address'
+      errorEl.style.display = 'block'
+      submitBtn.disabled = false; submitBtn.textContent = 'Save'
+    }
+  })
+</script>

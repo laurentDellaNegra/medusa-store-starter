@@ -1,0 +1,50 @@
+---
+import type { HttpTypes } from '@medusajs/types'
+import { css } from 'styled-system/css'
+import Addresses from './Addresses.astro'
+import Shipping from './Shipping.astro'
+import Payment from './Payment.astro'
+import Review from './Review.astro'
+import CheckoutSummary from './CheckoutSummary.astro'
+
+interface Props {
+  cart: HttpTypes.StoreCart
+  customer: HttpTypes.StoreCustomer | null
+  shippingMethods: HttpTypes.StoreCartShippingOption[] | null
+  paymentMethods: HttpTypes.StorePaymentProvider[] | null
+  countryCode: string
+}
+
+const { cart, customer, shippingMethods, paymentMethods, countryCode } = Astro.props
+const step = Astro.url.searchParams.get('step') || 'address'
+const steps = ['address', 'delivery', 'payment', 'review']
+---
+
+<div class={css({
+  display: 'grid',
+  gridTemplateColumns: { base: '1fr', lg: '1fr 380px' },
+  gap: '10', maxW: '7xl', mx: 'auto', px: '4', py: '8',
+})}>
+  <!-- Left column — Steps -->
+  <div class={css({ display: 'flex', flexDir: 'column', gap: '6' })}>
+    <!-- Step indicators -->
+    <div class={css({ display: 'flex', gap: '2', fontSize: 'xs', color: 'fg.muted' })}>
+      {steps.map((s, i) => (
+        <>
+          {i > 0 && <span class={css({ mx: '2' })}>&rarr;</span>}
+          <span class={css({ fontWeight: step === s ? 'bold' : 'normal', color: step === s ? 'fg.default' : 'fg.muted' })}>
+            {s.charAt(0).toUpperCase() + s.slice(1)}
+          </span>
+        </>
+      ))}
+    </div>
+
+    <Addresses cart={cart} customer={customer} isOpen={step === 'address'} />
+    <Shipping cart={cart} shippingMethods={shippingMethods} isOpen={step === 'delivery'} />
+    <Payment cart={cart} paymentMethods={paymentMethods} isOpen={step === 'payment'} />
+    <Review cart={cart} countryCode={countryCode} isOpen={step === 'review'} />
+  </div>
+
+  <!-- Right column — Summary -->
+  <CheckoutSummary cart={cart} />
+</div>
