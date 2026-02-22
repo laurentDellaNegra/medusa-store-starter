@@ -93,6 +93,9 @@ importers:
       '@astrojs/react':
         specifier: ^4.2.1
         version: 4.4.2(@types/node@22.19.11)(@types/react-dom@19.0.3(@types/react@19.0.3))(@types/react@19.0.3)(jiti@1.21.7)(lightningcss@1.30.2)(react-dom@19.0.4(react@19.0.4))(react@19.0.4)(terser@5.46.0)(yaml@2.8.2)
+      '@fontsource-variable/inter':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@medusajs/js-sdk':
         specifier: latest
         version: 2.13.1
@@ -1313,6 +1316,9 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@fontsource-variable/inter@5.2.8':
+    resolution: {integrity: sha512-kOfP2D+ykbcX/P3IFnokOhVRNoTozo5/JxhAIVYLpea/UBmCQ/YWPBfWIDuBImXX/15KH+eKh4xpEUyS2sQQGQ==}
 
   '@formatjs/ecma402-abstract@2.3.6':
     resolution: {integrity: sha512-HJnTFeRM2kVFVr5gr5kH1XP6K0JcJtE7Lzvtr3FS/so5f1kpsqqqxy5JF+FRaO6H2qmcMfAUIox7AJteieRtVw==}
@@ -12259,6 +12265,8 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
+  '@fontsource-variable/inter@5.2.8': {}
+
   '@formatjs/ecma402-abstract@2.3.6':
     dependencies:
       '@formatjs/fast-memoize': 2.2.7
@@ -13868,17 +13876,6 @@ snapshots:
 
   '@nx/nx-win32-x64-msvc@20.8.4':
     optional: true
-
-  '@oclif/command@1.8.36(@oclif/config@1.18.17)':
-    dependencies:
-      '@oclif/config': 1.18.17
-      '@oclif/errors': 1.3.6
-      '@oclif/help': 1.0.15(supports-color@8.1.1)
-      '@oclif/parser': 3.8.17
-      debug: 4.4.3(supports-color@8.1.1)
-      semver: 7.7.4
-    transitivePeerDependencies:
-      - supports-color
 
   '@oclif/command@1.8.36(@oclif/config@1.18.17)(supports-color@8.1.1)':
     dependencies:
@@ -24465,7 +24462,7 @@ snapshots:
 
   pg-god@1.0.12:
     dependencies:
-      '@oclif/command': 1.8.36(@oclif/config@1.18.17)
+      '@oclif/command': 1.8.36(@oclif/config@1.18.17)(supports-color@8.1.1)
       '@oclif/config': 1.18.17
       '@oclif/plugin-help': 3.3.1
       cli-ux: 5.6.7(@oclif/config@1.18.17)
