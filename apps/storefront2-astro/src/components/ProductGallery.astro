@@ -1,0 +1,115 @@
+---
+import { css } from "../../styled-system/css";
+import type { Product } from "../data/products";
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+
+const galleryStyle = css({
+  position: "static",
+  lg: { position: "sticky", top: "7rem" },
+});
+
+const mainImageStyle = css({
+  aspectRatio: "3/4",
+  position: "relative",
+  overflow: "hidden",
+  mb: "1rem",
+});
+
+const mainBgStyle = css({
+  position: "absolute",
+  inset: "0",
+});
+
+const mainShapeStyle = css({
+  position: "absolute",
+  inset: "0",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  "& svg": {
+    width: "55%",
+    height: "auto",
+    filter: "drop-shadow(0 25px 60px rgba(44, 24, 16, 0.2))",
+    animation: "floatBag 4s ease-in-out infinite",
+  },
+});
+
+const badgeStyle = css({
+  position: "absolute",
+  top: "1.5rem",
+  left: "1.5rem",
+  padding: "0.5rem 1.2rem",
+  bg: "rgba(255, 252, 247, 0.9)",
+  backdropFilter: "blur(10px)",
+  fontSize: "0.6rem",
+  letterSpacing: "wider",
+  textTransform: "uppercase",
+  color: "gold",
+  zIndex: "content",
+});
+
+const thumbsStyle = css({
+  display: "flex",
+  gap: "0.5rem",
+  md: { gap: "0.8rem" },
+});
+
+const thumbStyle = css({
+  width: "60px",
+  height: "75px",
+  position: "relative",
+  overflow: "hidden",
+  border: "2px solid token(colors.sand)",
+  cursor: "pointer",
+  transition: "border-color 0.3s",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  "&.active, &:hover": { borderColor: "gold" },
+  "& svg": { width: "50%", height: "auto" },
+  md: { width: "80px", height: "100px" },
+});
+
+const thumbBackgrounds = [
+  product.gradient,
+  "linear-gradient(145deg, #E8DFD0 0%, #F4EDE3 100%)",
+  "linear-gradient(145deg, #D4B896 0%, #E8DFD0 100%)",
+];
+---
+
+<div class={galleryStyle} id="pdpGallery">
+  <div class={mainImageStyle}>
+    <div class={mainBgStyle} id="pdpMainBg" style={`background:${product.gradient}`}></div>
+    <div class={mainShapeStyle} set:html={product.svg} />
+    {product.badge && <span class={badgeStyle}>{product.badge}</span>}
+  </div>
+  <div class={thumbsStyle}>
+    {thumbBackgrounds.map((bg, i) => (
+      <div
+        class={`${thumbStyle} pdp-thumb ${i === 0 ? "active" : ""}`}
+        style={`background:${bg}`}
+        data-bg={bg}
+        set:html={product.svg}
+      />
+    ))}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll(".pdp-thumb").forEach((th) => {
+    th.addEventListener("click", () => {
+      document
+        .querySelectorAll(".pdp-thumb")
+        .forEach((t) => t.classList.remove("active"));
+      th.classList.add("active");
+      const bg = th.getAttribute("data-bg");
+      const mainBg = document.getElementById("pdpMainBg");
+      if (mainBg && bg) mainBg.style.background = bg;
+    });
+  });
+</script>

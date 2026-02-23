@@ -1,0 +1,39 @@
+---
+import { css } from "../../styled-system/css";
+
+const preloaderStyle = css({
+  position: "fixed",
+  inset: "0",
+  bg: "espresso",
+  zIndex: "preloader",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  transition: "opacity 0.8s ease, visibility 0.8s ease",
+  "&.hidden": {
+    opacity: "0",
+    visibility: "hidden",
+  },
+});
+
+const textStyle = css({
+  fontFamily: "display",
+  fontSize: "3rem",
+  color: "gold",
+  letterSpacing: "ultra",
+  textTransform: "uppercase",
+  animation: "preloaderPulse 1.5s ease-in-out infinite",
+});
+---
+
+<div class={preloaderStyle} id="preloader" aria-hidden="true">
+  <div class={textStyle}>Rafia</div>
+</div>
+
+<script>
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      document.getElementById("preloader")?.classList.add("hidden");
+    }, 1200);
+  });
+</script>

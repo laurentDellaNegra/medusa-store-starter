@@ -1,0 +1,142 @@
+import { defineSlotRecipe } from "@pandacss/dev";
+
+export const cartItem = defineSlotRecipe({
+  className: "cart-item",
+  slots: [
+    "root",
+    "image",
+    "imageBg",
+    "details",
+    "name",
+    "type",
+    "price",
+    "actions",
+    "quantity",
+    "qtyButton",
+    "qtyValue",
+    "removeButton",
+    "total",
+  ],
+  base: {
+    root: {
+      display: "grid",
+      gridTemplateColumns: "120px 1fr auto",
+      gap: "2rem",
+      padding: "2rem",
+      bg: "{colors.sand.pale}",
+      alignItems: "center",
+      transition: "box-shadow 0.3s ease",
+      _hover: {
+        boxShadow: "{shadows.cartItem}",
+      },
+    },
+    image: {
+      position: "relative",
+      aspectRatio: "3/4",
+      overflow: "hidden",
+    },
+    imageBg: {
+      position: "absolute",
+      inset: "0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      "& img": {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+      },
+    },
+    details: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.5rem",
+    },
+    name: {
+      fontFamily: "display",
+      fontSize: "1.3rem",
+      fontWeight: "400",
+      color: "{colors.espresso}",
+    },
+    type: {
+      fontSize: "0.7rem",
+      letterSpacing: "0.15em",
+      textTransform: "uppercase",
+      color: "{colors.espresso.soft}",
+    },
+    price: {
+      fontFamily: "display",
+      fontSize: "1.1rem",
+      color: "{colors.gold}",
+      marginTop: "0.5rem",
+    },
+    actions: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-end",
+      gap: "1.5rem",
+    },
+    quantity: {
+      display: "flex",
+      alignItems: "center",
+      border: "1px solid {colors.sand}",
+      gap: "0",
+    },
+    qtyButton: {
+      width: "36px",
+      height: "36px",
+      bg: "transparent",
+      border: "none",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: "1.2rem",
+      color: "{colors.espresso}",
+      transition: "all 0.2s ease",
+      fontFamily: "body",
+      _hover: {
+        bg: "{colors.sand}",
+      },
+    },
+    qtyValue: {
+      width: "40px",
+      textAlign: "center",
+      fontSize: "0.85rem",
+      color: "{colors.espresso}",
+      fontFamily: "body",
+    },
+    removeButton: {
+      fontSize: "0.65rem",
+      letterSpacing: "0.15em",
+      textTransform: "uppercase",
+      color: "rgba(74, 50, 40, 0.5)",
+      bg: "transparent",
+      border: "none",
+      cursor: "pointer",
+      padding: "0",
+      fontFamily: "body",
+      transition: "color 0.3s ease",
+      _hover: {
+        color: "{colors.terracotta}",
+      },
+    },
+    total: {
+      fontFamily: "display",
+      fontSize: "1.2rem",
+      color: "{colors.espresso}",
+      fontWeight: "400",
+    },
+  },
+  variants: {
+    compact: {
+      true: {
+        root: {
+          gridTemplateColumns: "80px 1fr auto",
+          gap: "1.5rem",
+          padding: "1.5rem",
+        },
+      },
+    },
+  },
+});

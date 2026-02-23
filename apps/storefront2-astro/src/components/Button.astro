@@ -1,0 +1,88 @@
+---
+import { css } from "../../styled-system/css";
+
+interface Props {
+  visual?: "primary" | "outline" | "ghost";
+  href?: string;
+  tag?: "a" | "button";
+  class?: string;
+}
+
+const { visual = "primary", href, tag, class: className } = Astro.props;
+const Tag = tag || (href ? "a" : "button");
+
+const baseStyle = css({
+  display: "inline-block",
+  fontFamily: "body",
+  fontSize: "0.7rem",
+  fontWeight: "regular",
+  letterSpacing: "widest",
+  textTransform: "uppercase",
+  textDecoration: "none",
+  cursor: "pointer",
+  transition: "all 0.5s ease",
+  border: "none",
+  position: "relative",
+  overflow: "hidden",
+});
+
+const styles: Record<string, string> = {
+  primary: css({
+    padding: "1rem 3rem",
+    bg: "espresso",
+    color: "sand.light",
+    _before: {
+      content: '""',
+      position: "absolute",
+      top: "0",
+      left: "-100%",
+      width: "100%",
+      height: "100%",
+      bg: "gold",
+      transition: "left 0.5s ease",
+      zIndex: "0",
+    },
+    _hover: {
+      _before: { left: "0" },
+    },
+    "& span": {
+      position: "relative",
+      zIndex: "1",
+    },
+  }),
+  outline: css({
+    padding: "1rem 3rem",
+    bg: "transparent",
+    color: "espresso",
+    border: "1px solid token(colors.gold)",
+    _hover: {
+      bg: "gold",
+      color: "white",
+    },
+  }),
+  ghost: css({
+    padding: "0",
+    bg: "transparent",
+    color: "gold",
+    fontSize: "0.7rem",
+    letterSpacing: "wider",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.8rem",
+    _hover: {
+      gap: "1.2rem",
+    },
+  }),
+};
+---
+
+<Tag
+  class={`${baseStyle} ${styles[visual]} ${className || ""}`}
+  {...(href ? { href } : {})}
+>
+  {visual === "primary" ? (
+    <span><slot /></span>
+  ) : (
+    <slot />
+  )}
+</Tag>

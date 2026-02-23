@@ -1,0 +1,159 @@
+---
+import { css } from "../../styled-system/css";
+
+const rootStyle = css({
+  padding: "5rem 4rem 2.5rem",
+  bg: "espresso",
+  color: "sand",
+});
+
+const topStyle = css({
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  gap: "4rem",
+  maxWidth: "1400px",
+  mx: "auto",
+  pb: "4rem",
+  borderBottom: "1px solid token(colors.border.subtle)",
+  md: { gridTemplateColumns: "1fr 1fr" },
+  lg: { gridTemplateColumns: "2fr 1fr 1fr 1fr" },
+});
+
+const logoStyle = css({
+  fontFamily: "display",
+  fontSize: "heading.lg",
+  fontWeight: "regular",
+  letterSpacing: "display",
+  textTransform: "uppercase",
+  color: "sand.light",
+  textDecoration: "none",
+  display: "inline-block",
+  mb: "1.5rem",
+  "& span": { color: "gold" },
+});
+
+const descStyle = css({
+  fontSize: "body.sm",
+  lineHeight: "relaxed",
+  color: "text.onDarkMuted",
+  maxWidth: "300px",
+});
+
+const headingStyle = css({
+  fontSize: "sm",
+  letterSpacing: "editorial",
+  textTransform: "uppercase",
+  color: "gold",
+  mb: "1.5rem",
+});
+
+const linksStyle = css({
+  listStyle: "none",
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.8rem",
+});
+
+const linkStyle = css({
+  fontSize: "body.sm",
+  color: "text.onDarkMuted",
+  textDecoration: "none",
+  transition: "color 0.3s",
+  _hover: { color: "gold" },
+});
+
+const bottomStyle = css({
+  maxWidth: "1400px",
+  mx: "auto",
+  mt: "2.5rem",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "1rem",
+  fontSize: "0.7rem",
+  color: "text.onDarkFaint",
+  letterSpacing: "normal",
+  textAlign: "center",
+  md: { flexDirection: "row", justifyContent: "space-between", gap: "0", textAlign: "left" },
+});
+
+const socialStyle = css({
+  display: "flex",
+  gap: "1.5rem",
+});
+
+const socialLinkStyle = css({
+  color: "rgba(232, 223, 208, 0.4)",
+  textDecoration: "none",
+  fontSize: "0.7rem",
+  letterSpacing: "wide",
+  textTransform: "uppercase",
+  transition: "color 0.3s",
+  _hover: { color: "gold" },
+});
+
+const shopLinks = [
+  { href: "/shop", label: "All Bags" },
+  { href: "/shop", label: "Totes" },
+  { href: "/shop", label: "Clutches" },
+  { href: "/shop", label: "Crossbody" },
+];
+
+const aboutLinks = [
+  { href: "/#story", label: "Our Story" },
+  { href: "#", label: "Artisans" },
+  { href: "#", label: "Sustainability" },
+  { href: "#", label: "Press" },
+];
+
+const helpLinks = [
+  { href: "#", label: "Shipping" },
+  { href: "#", label: "Returns" },
+  { href: "#", label: "Care Guide" },
+  { href: "#", label: "FAQ" },
+];
+---
+
+<footer class={rootStyle}>
+  <div class={topStyle}>
+    <div>
+      <a href="/" class={logoStyle}>Rafia<span>.</span></a>
+      <p class={descStyle}>
+        Artisanal raphia bags, handcrafted in Madagascar. Where tradition meets
+        contemporary elegance.
+      </p>
+    </div>
+    <div>
+      <p class={headingStyle}>Shop</p>
+      <ul class={linksStyle}>
+        {shopLinks.map((link) => (
+          <li><a href={link.href} class={linkStyle}>{link.label}</a></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <p class={headingStyle}>About</p>
+      <ul class={linksStyle}>
+        {aboutLinks.map((link) => (
+          <li><a href={link.href} class={linkStyle}>{link.label}</a></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <p class={headingStyle}>Help</p>
+      <ul class={linksStyle}>
+        {helpLinks.map((link) => (
+          <li><a href={link.href} class={linkStyle}>{link.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+  <div class={bottomStyle}>
+    <span>&copy; 2025 Rafia. All rights reserved.</span>
+    <div class={socialStyle}>
+      <a href="#" class={socialLinkStyle}>Instagram</a>
+      <a href="#" class={socialLinkStyle}>Pinterest</a>
+      <a href="#" class={socialLinkStyle}>Facebook</a>
+    </div>
+  </div>
+</footer>

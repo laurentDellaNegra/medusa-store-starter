@@ -1,0 +1,135 @@
+---
+import { css } from "../../styled-system/css";
+
+interface TestimonialItem {
+  text: string;
+  author: string;
+}
+
+interface Props {
+  testimonials: TestimonialItem[];
+}
+
+const { testimonials } = Astro.props;
+
+const sectionStyle = css({
+  padding: "8rem 4rem",
+  bg: "espresso",
+  color: "sand.light",
+  position: "relative",
+  overflow: "hidden",
+  _before: {
+    content: '""',
+    position: "absolute",
+    top: "-200px",
+    right: "-200px",
+    width: "600px",
+    height: "600px",
+    borderRadius: "full",
+    background: "radial-gradient(circle, rgba(184, 149, 106, 0.08) 0%, transparent 70%)",
+  },
+});
+
+const innerStyle = css({
+  maxWidth: "900px",
+  mx: "auto",
+  textAlign: "center",
+  position: "relative",
+});
+
+const quoteMarkStyle = css({
+  fontFamily: "display",
+  fontSize: "display",
+  color: "gold",
+  lineHeight: "0.5",
+  mb: "2rem",
+  opacity: "0.5",
+});
+
+const textStyle = css({
+  fontFamily: "display",
+  fontSize: "clamp(1.5rem, 2.5vw, 2.2rem)",
+  fontWeight: "light",
+  fontStyle: "italic",
+  lineHeight: "normal",
+  mb: "2.5rem",
+  color: "sand",
+  transition: "opacity 0.4s ease",
+});
+
+const authorStyle = css({
+  fontSize: "caption",
+  letterSpacing: "editorial",
+  textTransform: "uppercase",
+  color: "gold",
+  transition: "opacity 0.4s ease",
+});
+
+const dotsStyle = css({
+  display: "flex",
+  gap: "0.8rem",
+  justifyContent: "center",
+  mt: "3rem",
+});
+
+const dotStyle = css({
+  width: "8px",
+  height: "8px",
+  borderRadius: "full",
+  border: "1px solid token(colors.gold)",
+  cursor: "pointer",
+  transition: "all 0.3s",
+  bg: "transparent",
+  padding: "0",
+  "&.active": {
+    bg: "gold",
+    transform: "scale(1.2)",
+  },
+});
+---
+
+<section class={sectionStyle}>
+  <div class={`${innerStyle} reveal`}>
+    <div class={quoteMarkStyle}>&ldquo;</div>
+    <p class={textStyle} id="tText">{testimonials[0].text}</p>
+    <p class={authorStyle} id="tAuth">{testimonials[0].author}</p>
+    <div class={dotsStyle}>
+      {testimonials.map((_, i) => (
+        <button class={`${dotStyle} dot ${i === 0 ? "active" : ""}`} data-index={i} aria-label={`Testimonial ${i + 1}`}></button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ testimonials }}>
+  const dots = document.querySelectorAll(".dot");
+  const tT = document.getElementById("tText");
+  const tA = document.getElementById("tAuth");
+  let cur = 0;
+
+  function switchTestimonial(i) {
+    if (!tT || !tA) return;
+    tT.style.opacity = "0";
+    tA.style.opacity = "0";
+    setTimeout(() => {
+      tT.textContent = testimonials[i].text;
+      tA.textContent = testimonials[i].author;
+      tT.style.opacity = "1";
+      tA.style.opacity = "1";
+      dots.forEach((d) => d.classList.remove("active"));
+      dots[i]?.classList.add("active");
+      cur = i;
+    }, 400);
+  }
+
+  dots.forEach((d) =>
+    d.addEventListener("click", () =>
+      switchTestimonial(Number(d.getAttribute("data-index")))
+    )
+  );
+
+  setInterval(
+    () => switchTestimonial((cur + 1) % testimonials.length),
+    6000
+  );
+</script>

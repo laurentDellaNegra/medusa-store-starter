@@ -1,0 +1,62 @@
+---
+import { css } from "../../styled-system/css";
+
+interface Props {
+  tag: string;
+  title: string;
+  description?: string;
+  centered?: boolean;
+}
+
+const { tag, title, description, centered = false } = Astro.props;
+
+const rootStyle = css({
+  mb: "5rem",
+  ...(centered ? { textAlign: "center" } : {}),
+});
+
+const tagStyle = css({
+  fontSize: "sm",
+  letterSpacing: "ultra",
+  textTransform: "uppercase",
+  color: "gold",
+  mb: "1.5rem",
+  display: "flex",
+  alignItems: "center",
+  gap: "1rem",
+  fontWeight: "regular",
+  _before: {
+    content: '""',
+    width: "30px",
+    height: "1px",
+    bg: "gold",
+  },
+  ...(centered ? { justifyContent: "center" } : {}),
+});
+
+const titleStyle = css({
+  fontFamily: "display",
+  fontSize: "heading.xl",
+  fontWeight: "light",
+  lineHeight: "snug",
+  mb: "2rem",
+  ...(centered ? { textAlign: "center" } : {}),
+  "& em": { fontStyle: "italic", color: "gold" },
+});
+
+const descStyle = css({
+  fontSize: "body",
+  lineHeight: "loose",
+  color: "espresso.soft",
+  ...(centered ? { textAlign: "center" } : {}),
+});
+
+// Split title on <em> tags
+const titleParts = title.split(/(<em>.*?<\/em>)/);
+---
+
+<div class={rootStyle}>
+  <p class={`${tagStyle} reveal`}>{tag}</p>
+  <h2 class={`${titleStyle} reveal reveal-delay-1`} set:html={title} />
+  {description && <p class={`${descStyle} reveal reveal-delay-2`}>{description}</p>}
+</div>

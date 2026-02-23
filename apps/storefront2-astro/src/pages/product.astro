@@ -1,0 +1,69 @@
+---
+import { css } from "../../styled-system/css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProductGallery from "../components/ProductGallery.astro";
+import ProductDetail from "../components/ProductDetail.astro";
+import ProductCard from "../components/ProductCard.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import { PRODUCTS, getProduct } from "../data/products";
+
+const id = Astro.url.searchParams.get("id") || PRODUCTS[0].id;
+const product = getProduct(id) || PRODUCTS[0];
+const related = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+
+const pdpStyle = css({
+  padding: "7rem 2rem 4rem",
+  maxWidth: "1400px",
+  mx: "auto",
+  lg: { padding: "9rem 4rem 6rem" },
+});
+
+const gridStyle = css({
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  gap: "3rem",
+  alignItems: "start",
+  lg: { gridTemplateColumns: "1.1fr 1fr", gap: "5rem" },
+});
+
+const relatedStyle = css({
+  padding: "4rem 2rem 5rem",
+  bg: "sand.pale",
+  lg: { padding: "6rem 4rem 8rem" },
+});
+
+const relatedGridStyle = css({
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  gap: "2.5rem",
+  maxWidth: "380px",
+  mx: "auto",
+  md: { gridTemplateColumns: "repeat(2, 1fr)", maxWidth: "1300px" },
+  lg: { gridTemplateColumns: "repeat(3, 1fr)" },
+});
+
+const relatedHeaderStyle = css({
+  textAlign: "center",
+  mb: "4rem",
+});
+---
+
+<BaseLayout title={`${product.name} — Rafia`} navVariant="light">
+  <section class={pdpStyle}>
+    <div class={gridStyle}>
+      <ProductGallery product={product} />
+      <ProductDetail product={product} />
+    </div>
+  </section>
+
+  <section class={relatedStyle}>
+    <div class={relatedHeaderStyle}>
+      <SectionHeader tag="You May Also Like" title="More <em>Pieces</em>" centered />
+    </div>
+    <div class={relatedGridStyle}>
+      {related.map((p) => (
+        <ProductCard product={p} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

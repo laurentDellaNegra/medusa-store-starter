@@ -1,0 +1,65 @@
+---
+import { css } from "../../styled-system/css";
+
+interface Props {
+  iconSvg: string;
+  title: string;
+  description: string;
+  delay?: number;
+}
+
+const { iconSvg, title, description, delay = 0 } = Astro.props;
+
+const cardStyle = css({
+  padding: "3rem",
+  border: "1px solid token(colors.sand)",
+  transition: "all 0.5s ease",
+  position: "relative",
+  overflow: "hidden",
+  _before: {
+    content: '""',
+    position: "absolute",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "3px",
+    bg: "gold",
+    transform: "scaleX(0)",
+    transformOrigin: "left",
+    transition: "transform 0.5s ease",
+  },
+  _hover: {
+    borderColor: "gold.light",
+    boxShadow: "cardHover",
+    _before: { transform: "scaleX(1)" },
+  },
+});
+
+const iconStyle = css({
+  width: "48px",
+  height: "48px",
+  mb: "2rem",
+  color: "gold",
+});
+
+const titleStyle = css({
+  fontFamily: "display",
+  fontSize: "heading.md",
+  fontWeight: "regular",
+  mb: "1rem",
+});
+
+const descStyle = css({
+  fontSize: "body.sm",
+  lineHeight: "relaxed",
+  color: "espresso.soft",
+});
+
+const revealClass = delay > 0 ? `reveal reveal-delay-${delay}` : "reveal";
+---
+
+<div class={`${cardStyle} ${revealClass}`}>
+  <div class={iconStyle} set:html={iconSvg} />
+  <h3 class={titleStyle}>{title}</h3>
+  <p class={descStyle}>{description}</p>
+</div>

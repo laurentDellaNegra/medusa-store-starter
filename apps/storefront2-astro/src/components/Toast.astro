@@ -1,0 +1,28 @@
+---
+import { css } from "../../styled-system/css";
+
+const toastStyle = css({
+  position: "fixed",
+  top: "5.5rem",
+  right: "2rem",
+  zIndex: "notification",
+  bg: "espresso",
+  color: "sand.light",
+  padding: "1rem 2rem",
+  fontSize: "0.78rem",
+  letterSpacing: "normal",
+  boxShadow: "notification",
+  transform: "translateX(120%)",
+  opacity: "0",
+  pointerEvents: "none",
+  transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+  fontFamily: "body",
+  "&.visible": {
+    transform: "translateX(0)",
+    opacity: "1",
+    pointerEvents: "auto",
+  },
+});
+---
+
+<div class={`${toastStyle} cart-toast`} id="cartNotification" aria-live="polite"></div>

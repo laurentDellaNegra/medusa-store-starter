@@ -1,0 +1,41 @@
+---
+import { css } from "../../styled-system/css";
+
+interface Props {
+  crumbs: { label: string; href: string }[];
+  current: string;
+}
+
+const { crumbs, current } = Astro.props;
+
+const rootStyle = css({
+  fontSize: "caption",
+  letterSpacing: "relaxed",
+  textTransform: "uppercase",
+  color: "espresso.soft",
+  mb: "2rem",
+});
+
+const linkStyle = css({
+  color: "gold",
+  textDecoration: "none",
+  transition: "color 0.3s",
+  _hover: { color: "espresso" },
+});
+
+const sepStyle = css({
+  mx: "0.6rem",
+  color: "sand",
+  fontSize: "caption",
+});
+---
+
+<div class={rootStyle}>
+  {crumbs.map((crumb) => (
+    <>
+      <a href={crumb.href} class={linkStyle}>{crumb.label}</a>
+      <span class={sepStyle}>/</span>
+    </>
+  ))}
+  <span>{current}</span>
+</div>

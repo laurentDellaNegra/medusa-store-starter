@@ -1,0 +1,476 @@
+---
+import { css } from "../../styled-system/css";
+import type { Product } from "../data/products";
+import Breadcrumb from "./Breadcrumb.astro";
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+
+const infoStyle = css({ paddingTop: "1rem" });
+
+const typeStyle = css({
+  fontSize: "sm",
+  letterSpacing: "editorial",
+  textTransform: "uppercase",
+  color: "gold",
+  mb: "0.8rem",
+});
+
+const nameStyle = css({
+  fontFamily: "display",
+  fontSize: "clamp(2.2rem, 3.5vw, 3.2rem)",
+  fontWeight: "light",
+  lineHeight: "snug",
+  mb: "1rem",
+});
+
+const priceStyle = css({
+  fontFamily: "display",
+  fontSize: "heading.lg",
+  color: "gold",
+  mb: "2rem",
+});
+
+const dividerStyle = css({
+  width: "40px",
+  height: "1px",
+  bg: "gold",
+  my: "2rem",
+});
+
+const descStyle = css({
+  fontSize: "body",
+  lineHeight: "loose",
+  color: "espresso.soft",
+  mb: "2rem",
+});
+
+const optionLabelStyle = css({
+  fontSize: "sm",
+  letterSpacing: "wider",
+  textTransform: "uppercase",
+  color: "espresso.soft",
+  mb: "0.8rem",
+  "& strong": { fontWeight: "regular", color: "espresso" },
+});
+
+const colorRowStyle = css({
+  display: "flex",
+  gap: "0.8rem",
+  mb: "2rem",
+});
+
+const swatchBase = css({
+  width: "32px",
+  height: "32px",
+  borderRadius: "full",
+  cursor: "pointer",
+  border: "2px solid transparent",
+  transition: "all 0.3s",
+  position: "relative",
+  "&.active": { borderColor: "espresso" },
+  _after: {
+    content: '""',
+    position: "absolute",
+    inset: "-4px",
+    borderRadius: "full",
+    border: "1px solid transparent",
+    transition: "border-color 0.3s",
+  },
+  "&.active::after": { borderColor: "gold" },
+});
+
+const qtyRowStyle = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "1.5rem",
+  mb: "2.5rem",
+});
+
+const qtyControlStyle = css({
+  display: "flex",
+  alignItems: "center",
+  border: "1px solid token(colors.sand)",
+});
+
+const qtyBtnStyle = css({
+  width: "44px",
+  height: "44px",
+  border: "none",
+  bg: "transparent",
+  fontSize: "1.1rem",
+  color: "espresso",
+  cursor: "pointer",
+  fontFamily: "body",
+  transition: "background 0.3s",
+  _hover: { bg: "sand.pale" },
+});
+
+const qtyValStyle = css({
+  width: "50px",
+  textAlign: "center",
+  border: "none",
+  borderLeft: "1px solid token(colors.sand)",
+  borderRight: "1px solid token(colors.sand)",
+  fontFamily: "body",
+  fontSize: "body.sm",
+  height: "44px",
+  bg: "transparent",
+  color: "espresso",
+  outline: "none",
+});
+
+const addBtnStyle = css({
+  width: "100%",
+  padding: "1.1rem 3rem",
+  bg: "espresso",
+  color: "sand.light",
+  fontFamily: "body",
+  fontSize: "0.75rem",
+  letterSpacing: "widest",
+  textTransform: "uppercase",
+  border: "none",
+  cursor: "pointer",
+  position: "relative",
+  overflow: "hidden",
+  transition: "all 0.5s ease",
+  _before: {
+    content: '""',
+    position: "absolute",
+    top: "0",
+    left: "-100%",
+    width: "100%",
+    height: "100%",
+    bg: "gold",
+    transition: "left 0.5s ease",
+    zIndex: "0",
+  },
+  _hover: { _before: { left: "0" } },
+  "& span": { position: "relative", zIndex: "1" },
+  "&.added": { pointerEvents: "none" },
+  "&.added::before": { left: "0" },
+});
+
+const secondaryStyle = css({
+  display: "flex",
+  gap: "2rem",
+  mt: "1.5rem",
+  pt: "1.5rem",
+  borderTop: "1px solid token(colors.sand)",
+});
+
+const secLinkStyle = css({
+  fontSize: "caption",
+  letterSpacing: "wide",
+  textTransform: "uppercase",
+  color: "espresso.soft",
+  textDecoration: "none",
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5rem",
+  transition: "color 0.3s",
+  _hover: { color: "gold" },
+  "& svg": { width: "16px", height: "16px" },
+});
+
+const accordionStyle = css({ mt: "2.5rem" });
+
+const accItemStyle = css({
+  borderTop: "1px solid token(colors.sand)",
+  _last: { borderBottom: "1px solid token(colors.sand)" },
+  "&.open .acc-icon::after": { transform: "rotate(90deg)" },
+  "&.open .acc-body": { maxHeight: "300px", pb: "1.5rem" },
+});
+
+const accHeaderStyle = css({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: "1.3rem 0",
+  cursor: "pointer",
+  userSelect: "none",
+});
+
+const accHeaderTextStyle = css({
+  fontSize: "caption",
+  letterSpacing: "wider",
+  textTransform: "uppercase",
+  color: "espresso",
+});
+
+const accIconStyle = css({
+  width: "12px",
+  height: "12px",
+  position: "relative",
+  transition: "transform 0.3s",
+  _before: {
+    content: '""',
+    position: "absolute",
+    bg: "espresso",
+    width: "12px",
+    height: "1px",
+    top: "5.5px",
+    left: "0",
+  },
+  _after: {
+    content: '""',
+    position: "absolute",
+    bg: "espresso",
+    width: "1px",
+    height: "12px",
+    left: "5.5px",
+    top: "0",
+    transition: "transform 0.3s",
+  },
+});
+
+const accBodyStyle = css({
+  maxHeight: "0",
+  overflow: "hidden",
+  transition: "max-height 0.4s ease, padding 0.4s ease",
+});
+
+const accBodyInnerStyle = css({
+  fontSize: "body.sm",
+  lineHeight: "relaxed",
+  color: "espresso.soft",
+  "& ul": { listStyle: "none" },
+  "& li": {
+    padding: "0.3rem 0",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.8rem",
+    _before: {
+      content: '""',
+      width: "4px",
+      height: "4px",
+      borderRadius: "full",
+      bg: "gold",
+      flexShrink: "0",
+    },
+  },
+});
+
+const swatches = [
+  { name: "Natural", color: "#D4C5B2" },
+  { name: "Honey", color: "#C4A872" },
+  { name: "Sand", color: "#BFA98E" },
+];
+
+const productDetailsContent =
+  "<ul>" + product.details.map((d) => "<li>" + d + "</li>").join("") + "</ul>";
+
+const accordionItems = [
+  {
+    title: "Product Details",
+    content: productDetailsContent,
+    open: true,
+  },
+  {
+    title: "Shipping & Returns",
+    content:
+      "<p>Complimentary shipping within Switzerland. International shipping available. 14-day return policy for unworn items in original packaging.</p>",
+    open: false,
+  },
+  {
+    title: "Care Instructions",
+    content:
+      "<p>Store in the provided dust bag when not in use. Avoid prolonged exposure to direct sunlight and moisture. Gently brush with a soft cloth to remove dust.</p>",
+    open: false,
+  },
+];
+---
+
+<div class={infoStyle} id="pdpInfo">
+  <Breadcrumb
+    crumbs={[
+      { label: "Home", href: "/" },
+      { label: "Collection", href: "/shop" },
+    ]}
+    current={product.name}
+  />
+  <p class={typeStyle}>{product.type}</p>
+  <h1 class={nameStyle}>{product.name}</h1>
+  <p class={priceStyle}>CHF {product.price}</p>
+  <div class={dividerStyle}></div>
+  <p class={descStyle}>{product.description}</p>
+
+  <p class={optionLabelStyle}>
+    Colour — <strong>{product.color}</strong>
+  </p>
+  <div class={colorRowStyle}>
+    {
+      swatches.map((sw, i) => (
+        <div
+          class={`${swatchBase} color-swatch ${i === 0 ? "active" : ""}`}
+          style={`background:${sw.color}`}
+          title={sw.name}
+        />
+      ))
+    }
+  </div>
+
+  <p class={optionLabelStyle}>Quantity</p>
+  <div class={qtyRowStyle}>
+    <div class={qtyControlStyle}>
+      <button class={qtyBtnStyle} id="qtyMinus">&minus;</button>
+      <input type="text" class={qtyValStyle} id="qtyVal" value="1" readonly />
+      <button class={qtyBtnStyle} id="qtyPlus">+</button>
+    </div>
+  </div>
+
+  <button class={addBtnStyle} id="addToCartBtn">
+    <span>Add to Bag — CHF {product.price}</span>
+  </button>
+
+  <div class={secondaryStyle}>
+    <a href="#" class={secLinkStyle}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+      >
+        <path
+          d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
+        ></path>
+      </svg>
+      Add to Wishlist
+    </a>
+    <a href="#" class={secLinkStyle}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+      >
+        <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"
+        ></circle>
+        <circle cx="18" cy="19" r="3"></circle>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+      </svg>
+      Share
+    </a>
+  </div>
+
+  <div class={accordionStyle}>
+    {
+      accordionItems.map((item) => (
+        <div class={`${accItemStyle} acc-item ${item.open ? "open" : ""}`}>
+          <div class={`${accHeaderStyle} acc-header`}>
+            <span class={accHeaderTextStyle}>{item.title}</span>
+            <div class={`${accIconStyle} acc-icon`} />
+          </div>
+          <div class={`${accBodyStyle} acc-body`}>
+            <div class={accBodyInnerStyle} set:html={item.content} />
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script
+  define:vars={{
+    productId: product.id,
+    productName: product.name,
+    productPrice: product.price,
+    productType: product.type,
+    productColor: product.color,
+    productGradient: product.gradient,
+    productSvg: product.svg,
+  }}
+>
+  let qty = 1;
+
+  document.getElementById("qtyMinus")?.addEventListener("click", () => {
+    if (qty > 1) {
+      qty--;
+      document.getElementById("qtyVal").value = String(qty);
+      updatePrice();
+    }
+  });
+
+  document.getElementById("qtyPlus")?.addEventListener("click", () => {
+    qty++;
+    document.getElementById("qtyVal").value = String(qty);
+    updatePrice();
+  });
+
+  function updatePrice() {
+    const span = document.querySelector("#addToCartBtn span");
+    if (span) span.textContent = `Add to Bag — CHF ${productPrice * qty}`;
+  }
+
+  document.getElementById("addToCartBtn")?.addEventListener("click", () => {
+    const cart = JSON.parse(localStorage.getItem("rafia_cart") || "[]");
+    for (let i = 0; i < qty; i++) {
+      const existing = cart.find((c) => c.id === productId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          id: productId,
+          name: productName,
+          price: productPrice,
+          type: productType,
+          color: productColor,
+          gradient: productGradient,
+          svg: productSvg,
+          qty: 1,
+        });
+      }
+    }
+    localStorage.setItem("rafia_cart", JSON.stringify(cart));
+
+    // Update badge
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    document.querySelectorAll(".cart-count").forEach((el) => {
+      el.textContent = String(count);
+      el.style.display = count > 0 ? "flex" : "none";
+      el.classList.remove("bump");
+      void el.offsetWidth;
+      el.classList.add("bump");
+    });
+
+    // Show notification
+    let n = document.getElementById("cartNotification");
+    if (n) {
+      n.innerHTML = `<span style="color:#B8956A;">✓</span>&ensp;${productName} added to bag`;
+      n.classList.add("visible");
+      clearTimeout(n._timer);
+      n._timer = setTimeout(() => n.classList.remove("visible"), 2800);
+    }
+
+    const btn = document.getElementById("addToCartBtn");
+    if (btn) {
+      btn.classList.add("added");
+      btn.querySelector("span").textContent = "✓ Added to Bag";
+      setTimeout(() => {
+        btn.classList.remove("added");
+        updatePrice();
+      }, 2000);
+    }
+  });
+
+  // Color swatches
+  document.querySelectorAll(".color-swatch").forEach((sw) => {
+    sw.addEventListener("click", () => {
+      document
+        .querySelectorAll(".color-swatch")
+        .forEach((s) => s.classList.remove("active"));
+      sw.classList.add("active");
+    });
+  });
+
+  // Accordion
+  document.querySelectorAll(".acc-header").forEach((h) => {
+    h.addEventListener("click", () => {
+      h.parentElement?.classList.toggle("open");
+    });
+  });
+</script>

@@ -1,0 +1,108 @@
+---
+import { css } from "../../styled-system/css";
+import SectionHeader from "./SectionHeader.astro";
+
+const sectionStyle = css({
+  padding: "8rem 4rem",
+  bg: "sand.pale",
+});
+
+const innerStyle = css({
+  maxWidth: "700px",
+  mx: "auto",
+  textAlign: "center",
+});
+
+const descStyle = css({
+  fontSize: "body",
+  lineHeight: "loose",
+  color: "espresso.soft",
+  textAlign: "center",
+});
+
+const formStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "0",
+  mt: "2.5rem",
+  maxWidth: "500px",
+  mx: "auto",
+  md: { flexDirection: "row" },
+});
+
+const inputStyle = css({
+  flex: "1",
+  padding: "1rem 1.5rem",
+  border: "1px solid token(colors.sand)",
+  borderBottom: "none",
+  bg: "white",
+  fontFamily: "body",
+  fontSize: "body.sm",
+  color: "espresso",
+  outline: "none",
+  transition: "border-color 0.3s",
+  _placeholder: { color: "gold.light" },
+  _focus: { borderColor: "gold" },
+  md: {
+    borderRight: "none",
+    borderBottom: "1px solid token(colors.sand)",
+  },
+});
+
+const btnStyle = css({
+  padding: "1rem 2.5rem",
+  bg: "espresso",
+  color: "sand.light",
+  fontFamily: "body",
+  fontSize: "caption",
+  letterSpacing: "wider",
+  textTransform: "uppercase",
+  border: "1px solid token(colors.espresso)",
+  cursor: "pointer",
+  transition: "all 0.4s",
+  whiteSpace: "nowrap",
+  _hover: { bg: "gold", borderColor: "gold" },
+});
+---
+
+<section class={sectionStyle} id="contact">
+  <div class={innerStyle}>
+    <SectionHeader
+      tag="Stay Connected"
+      title="Join the <em>Rafia</em> World"
+      centered
+    />
+    <p class={`${descStyle} reveal reveal-delay-2`}>
+      Be the first to discover new collections, artisan stories, and exclusive offers.
+    </p>
+    <div class={`${formStyle} reveal reveal-delay-3`}>
+      <input
+        type="email"
+        class={inputStyle}
+        placeholder="Your email address"
+        id="newsletterInput"
+      />
+      <button class={btnStyle} id="newsletterBtn">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  const btn = document.getElementById("newsletterBtn") as HTMLButtonElement;
+  const inp = document.getElementById("newsletterInput") as HTMLInputElement;
+  if (btn && inp) {
+    btn.addEventListener("click", () => {
+      if (inp.value && inp.value.includes("@")) {
+        btn.textContent = "Merci!";
+        btn.style.background = "var(--colors-sage, #8B9A7E)";
+        btn.style.borderColor = "var(--colors-sage, #8B9A7E)";
+        inp.value = "";
+        setTimeout(() => {
+          btn.textContent = "Subscribe";
+          btn.style.background = "";
+          btn.style.borderColor = "";
+        }, 3000);
+      }
+    });
+  }
+</script>

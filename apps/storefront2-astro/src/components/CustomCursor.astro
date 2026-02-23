@@ -1,0 +1,76 @@
+---
+import { css } from "../../styled-system/css";
+
+const dotStyle = css({
+  width: "8px",
+  height: "8px",
+  bg: "gold",
+  borderRadius: "full",
+  position: "fixed",
+  pointerEvents: "none",
+  zIndex: "cursorDot",
+  transition: "transform 0.15s ease",
+  mixBlendMode: "difference",
+  hideBelow: "sm",
+});
+
+const ringStyle = css({
+  width: "40px",
+  height: "40px",
+  border: "1px solid token(colors.gold)",
+  borderRadius: "full",
+  position: "fixed",
+  pointerEvents: "none",
+  zIndex: "cursorRing",
+  transition: "transform 0.3s ease, width 0.3s ease, height 0.3s ease",
+  mixBlendMode: "difference",
+  hideBelow: "sm",
+});
+---
+
+<div class={dotStyle} id="cursorDot" aria-hidden="true"></div>
+<div class={ringStyle} id="cursorRing" aria-hidden="true"></div>
+
+<script>
+  function initCursor() {
+    const dot = document.getElementById("cursorDot");
+    const ring = document.getElementById("cursorRing");
+    if (!dot || !ring || window.innerWidth < 768) return;
+
+    let mx = 0,
+      my = 0,
+      rx = 0,
+      ry = 0;
+
+    document.addEventListener("mousemove", (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+      dot.style.left = mx - 4 + "px";
+      dot.style.top = my - 4 + "px";
+    });
+
+    (function anim() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx - 20 + "px";
+      ring.style.top = ry - 20 + "px";
+      requestAnimationFrame(anim);
+    })();
+
+    document
+      .querySelectorAll("a, button, .product-card, .dot, .cart-icon, input, select")
+      .forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          ring.style.transform = "scale(1.5)";
+          dot.style.transform = "scale(0.5)";
+        });
+        el.addEventListener("mouseleave", () => {
+          ring.style.transform = "scale(1)";
+          dot.style.transform = "scale(1)";
+        });
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", initCursor);
+  document.addEventListener("astro:after-swap", initCursor);
+</script>

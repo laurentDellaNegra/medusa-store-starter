@@ -1,0 +1,111 @@
+import { defineSlotRecipe } from "@pandacss/dev";
+
+export const footer = defineSlotRecipe({
+  className: "footer",
+  slots: [
+    "root",
+    "top",
+    "brand",
+    "column",
+    "heading",
+    "links",
+    "link",
+    "bottom",
+    "social",
+    "socialLink",
+  ],
+  base: {
+    root: {
+      padding: "5rem 4rem 2.5rem",
+      bg: "{colors.espresso}",
+      color: "{colors.sand}",
+    },
+    top: {
+      display: "grid",
+      gridTemplateColumns: "2fr 1fr 1fr 1fr",
+      gap: "4rem",
+      maxWidth: "1400px",
+      marginLeft: "auto",
+      marginRight: "auto",
+      paddingBottom: "4rem",
+      borderBottom: "1px solid {colors.border.subtle}",
+      "@media (max-width: 1024px)": {
+        gridTemplateColumns: "1fr 1fr",
+        gap: "3rem",
+      },
+      "@media (max-width: 640px)": {
+        gridTemplateColumns: "1fr",
+        gap: "2.5rem",
+      },
+    },
+    brand: {
+      "& .logo": {
+        color: "{colors.sand.light}",
+        marginBottom: "1.5rem",
+        display: "inline-block",
+        fontFamily: "display",
+        fontSize: "1.4rem",
+        letterSpacing: "0.35em",
+        textTransform: "uppercase",
+        textDecoration: "none",
+      },
+    },
+    column: {},
+    heading: {
+      fontSize: "0.65rem",
+      letterSpacing: "0.3em",
+      textTransform: "uppercase",
+      color: "{colors.gold}",
+      marginBottom: "1.5rem",
+    },
+    links: {
+      listStyle: "none",
+      padding: "0",
+      margin: "0",
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.8rem",
+    },
+    link: {
+      fontSize: "0.85rem",
+      color: "rgba(232, 223, 208, 0.6)",
+      textDecoration: "none",
+      transition: "color 0.3s ease",
+      _hover: {
+        color: "{colors.gold}",
+      },
+    },
+    bottom: {
+      maxWidth: "1400px",
+      marginLeft: "auto",
+      marginRight: "auto",
+      marginTop: "2.5rem",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      fontSize: "0.7rem",
+      color: "rgba(232, 223, 208, 0.3)",
+      letterSpacing: "0.1em",
+      "@media (max-width: 640px)": {
+        flexDirection: "column",
+        gap: "1.5rem",
+        textAlign: "center",
+      },
+    },
+    social: {
+      display: "flex",
+      gap: "1.5rem",
+    },
+    socialLink: {
+      color: "rgba(232, 223, 208, 0.4)",
+      textDecoration: "none",
+      fontSize: "0.7rem",
+      letterSpacing: "0.15em",
+      textTransform: "uppercase",
+      transition: "color 0.3s ease",
+      _hover: {
+        color: "{colors.gold}",
+      },
+    },
+  },
+});

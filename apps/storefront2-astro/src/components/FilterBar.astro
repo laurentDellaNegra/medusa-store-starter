@@ -1,0 +1,89 @@
+---
+import { css } from "../../styled-system/css";
+
+const barStyle = css({
+  padding: "1.2rem 2rem",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  maxWidth: "1400px",
+  mx: "auto",
+  borderBottom: "1px solid token(colors.sand)",
+  flexWrap: "wrap",
+  gap: "1rem",
+  md: { padding: "1.5rem 3rem" },
+  lg: { padding: "2rem 4rem", flexWrap: "nowrap", gap: "0" },
+});
+
+const filtersLeftStyle = css({
+  display: "flex",
+  gap: "0.4rem",
+  flexWrap: "wrap",
+  md: { gap: "0.5rem" },
+});
+
+const filterBtnStyle = css({
+  padding: "0.45rem 1rem",
+  border: "1px solid token(colors.sand)",
+  bg: "transparent",
+  fontFamily: "body",
+  fontSize: "0.6rem",
+  letterSpacing: "wide",
+  textTransform: "uppercase",
+  color: "espresso.soft",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
+  _hover: { borderColor: "gold", color: "espresso" },
+  "&.active": {
+    bg: "espresso",
+    color: "sand.light",
+    borderColor: "espresso",
+  },
+  md: { padding: "0.55rem 1.5rem", fontSize: "caption" },
+});
+
+const selectStyle = css({
+  padding: "0.55rem 2.5rem 0.55rem 1.2rem",
+  border: "1px solid token(colors.sand)",
+  bg: "white",
+  fontFamily: "body",
+  fontSize: "caption",
+  letterSpacing: "normal",
+  color: "espresso.soft",
+  cursor: "pointer",
+  appearance: "none",
+  outline: "none",
+  backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%234A3228' stroke-width='1'/%3E%3C/svg%3E")`,
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 1rem center",
+});
+
+const categories = [
+  { filter: "all", label: "All" },
+  { filter: "Tote Bag", label: "Totes" },
+  { filter: "Clutch", label: "Clutches" },
+  { filter: "Crossbody", label: "Crossbody" },
+  { filter: "Beach Bag", label: "Beach" },
+  { filter: "Mini Bag", label: "Mini" },
+  { filter: "Bucket Bag", label: "Bucket" },
+];
+---
+
+<div class={barStyle}>
+  <div class={filtersLeftStyle}>
+    {categories.map((cat) => (
+      <button
+        class={`${filterBtnStyle} filter-btn ${cat.filter === "all" ? "active" : ""}`}
+        data-filter={cat.filter}
+      >
+        {cat.label}
+      </button>
+    ))}
+  </div>
+  <select class={selectStyle} id="sortSelect">
+    <option value="featured">Sort: Featured</option>
+    <option value="price-asc">Price: Low to High</option>
+    <option value="price-desc">Price: High to Low</option>
+    <option value="name">Name: A to Z</option>
+  </select>
+</div>

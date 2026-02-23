@@ -1,0 +1,48 @@
+---
+import { css } from "../../styled-system/css";
+
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+const doubled = [...items, ...items];
+
+const rootStyle = css({
+  padding: "2rem 0",
+  bg: "espresso",
+  overflow: "hidden",
+});
+
+const trackStyle = css({
+  display: "flex",
+  gap: "4rem",
+  animation: "marquee 30s linear infinite",
+  width: "max-content",
+});
+
+const itemStyle = css({
+  fontFamily: "display",
+  fontSize: "body.md",
+  letterSpacing: "ultra",
+  textTransform: "uppercase",
+  color: "gold",
+  whiteSpace: "nowrap",
+  display: "flex",
+  alignItems: "center",
+  gap: "4rem",
+  _after: {
+    content: '"◆"',
+    fontSize: "0.4rem",
+    color: "gold.light",
+  },
+});
+---
+
+<section class={rootStyle}>
+  <div class={trackStyle}>
+    {doubled.map((item) => (
+      <span class={itemStyle}>{item}</span>
+    ))}
+  </div>
+</section>

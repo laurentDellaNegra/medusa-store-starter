@@ -1,0 +1,143 @@
+---
+import { css } from "../../styled-system/css";
+import type { Product } from "../data/products";
+
+interface Props {
+  product: Product;
+  delay?: number;
+  showAddButton?: boolean;
+  animateIn?: boolean;
+}
+
+const { product, delay = 0, showAddButton = false, animateIn = false } = Astro.props;
+
+const cardStyle = css({
+  position: "relative",
+  cursor: "pointer",
+  textDecoration: "none",
+  color: "espresso",
+  display: "block",
+  ...(animateIn
+    ? {
+        opacity: "0",
+        transform: "translateY(30px)",
+        animation: "cardIn 0.6s ease forwards",
+        animationDelay: `${delay * 0.05}s`,
+      }
+    : {}),
+  _hover: {
+    "& .product-bg": { transform: "scale(1.05)" },
+    "& .product-shape svg": { transform: "translateY(-8px) rotate(-2deg)" },
+    "& .product-action": { opacity: "1", transform: "translateX(-50%) translateY(0)" },
+  },
+});
+
+const imageWrapStyle = css({
+  aspectRatio: "3/4",
+  position: "relative",
+  overflow: "hidden",
+  mb: "1.5rem",
+});
+
+const imageBgStyle = css({
+  position: "absolute",
+  inset: "0",
+  transition: "transform 0.8s ease",
+});
+
+const imageShapeStyle = css({
+  position: "absolute",
+  inset: "0",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: "base",
+  "& svg": {
+    width: "55%",
+    height: "auto",
+    filter: "drop-shadow(0 15px 40px rgba(44, 24, 16, 0.15))",
+    transition: "transform 0.6s ease",
+  },
+});
+
+const badgeStyle = css({
+  position: "absolute",
+  top: "1.2rem",
+  left: "1.2rem",
+  padding: "0.4rem 1rem",
+  bg: "rgba(255, 252, 247, 0.9)",
+  backdropFilter: "blur(10px)",
+  fontSize: "0.6rem",
+  letterSpacing: "wider",
+  textTransform: "uppercase",
+  color: "gold",
+  zIndex: "content",
+});
+
+const addBtnStyle = css({
+  position: "absolute",
+  bottom: "1.5rem",
+  left: "50%",
+  transform: "translateX(-50%) translateY(20px)",
+  padding: "0.75rem 2rem",
+  bg: "espresso",
+  color: "sand.light",
+  fontFamily: "body",
+  fontSize: "0.65rem",
+  letterSpacing: "wider",
+  textTransform: "uppercase",
+  border: "none",
+  cursor: "pointer",
+  opacity: "0",
+  transition: "all 0.4s ease",
+  zIndex: "content",
+  whiteSpace: "nowrap",
+  _hover: { bg: "gold" },
+});
+
+const metaStyle = css({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+});
+
+const nameStyle = css({
+  fontFamily: "display",
+  fontSize: "1.4rem",
+  fontWeight: "regular",
+  mb: "0.3rem",
+});
+
+const typeStyle = css({
+  fontSize: "caption",
+  letterSpacing: "wide",
+  textTransform: "uppercase",
+  color: "espresso.soft",
+});
+
+const priceStyle = css({
+  fontFamily: "display",
+  fontSize: "1.2rem",
+  color: "gold",
+});
+---
+
+<a href={`/product?id=${product.id}`} class={`${cardStyle} product-card`}>
+  <div class={imageWrapStyle}>
+    <div class={`${imageBgStyle} product-bg`} style={`background:${product.gradient}`}></div>
+    <div class={`${imageShapeStyle} product-shape`} set:html={product.svg} />
+    {product.badge && <span class={badgeStyle}>{product.badge}</span>}
+    {showAddButton && (
+      <button class={`${addBtnStyle} product-action`} data-product-id={product.id}>
+        Add to Bag
+      </button>
+    )}
+  </div>
+  <div class={metaStyle}>
+    <div>
+      <h3 class={nameStyle}>{product.name}</h3>
+      <p class={typeStyle}>{product.type} — {product.color}</p>
+    </div>
+    <span class={priceStyle}>CHF {product.price}</span>
+  </div>
+</a>
