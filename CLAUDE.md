@@ -52,28 +52,9 @@ Backend `package.json` has `ajv@^8.18.0` as devDependency (Medusa needs `ajv/dis
 
 ## Infrastructure (Docker)
 
-### Local development
-
-Docker is used only for infrastructure services (Postgres + Redis), not for Medusa itself.
-Medusa runs natively on the host for simpler development and faster iteration.
-
-- `apps/backend/docker-compose.yml` — Postgres 15 (port 5432) + Redis 7 (port 6379)
-- Container names: `medusa_postgres`, `medusa_redis`
-
-### Production deployment
-
-Full dockerized stack at repo root:
-
-- `docker-compose.prod.yml` — 5 services: Postgres, Redis, Medusa backend, Astro storefront, Caddy (reverse proxy)
-- `docker/Caddyfile` — reverse proxy config (auto HTTPS via Let's Encrypt)
-- `apps/backend/Dockerfile` — multi-stage Medusa build (uses `.medusa/server/` standalone output)
-- `apps/storefront-astro/Dockerfile` — multi-stage Astro SSR build (`node dist/server/entry.mjs`)
-- Container names: `medusa-prod-*` (avoids conflicts with local dev containers)
-- `.env.production` — production secrets (gitignored), see `.env.production.example` for template
-- `deploy.sh` — interactive deployment script (prompts for domain, credentials, secrets)
-- Caddy routes: `/admin`, `/admin-app`, `/store`, `/auth`, `/hooks`, `/health` → backend:9000, everything else → storefront:8001
-- Admin dashboard served at `/admin-app` (not `/admin` — that's reserved for Medusa API routes)
-- `MEDUSA_BACKEND_URL` is a **build-time** arg — must be passed during `docker build` for admin SPA to work
+- Local dev: Postgres + Redis in Docker (`apps/backend/docker-compose.yml`), Medusa runs natively on host
+- Production: fully dockerized stack — use `/deploy` skill for deployment, `/prod-logs` for debugging
+- Use `/infra` skill for local infrastructure management and troubleshooting
 
 ## Environment files
 
@@ -81,6 +62,7 @@ Full dockerized stack at repo root:
 - `apps/storefront-next/.env.local` — Medusa URL, publishable key, Stripe keys (gitignored)
 - `apps/storefront-astro/.env.local` — Medusa URL, publishable key, Stripe keys (gitignored)
 - `.env.production` — production Docker deployment secrets (gitignored)
+- Use `/setup` skill for full onboarding walkthrough (env templates, migrations, seeding, publishable key)
 
 ## Backend development (Medusa)
 
@@ -110,21 +92,7 @@ Full dockerized stack at repo root:
 - 4 pages: `/` (home), `/shop`, `/product?id=...`, `/cart`
 - Hardcoded product data in `src/data/products.ts`, localStorage cart
 - No Medusa backend integration (standalone demo storefront)
-
-### E2E & visual regression testing (Playwright)
-
-- Config: `apps/storefront2-astro/playwright.config.ts` (Chromium, desktop + mobile Pixel 7, dev server on port 4321)
-- Tests: `apps/storefront2-astro/e2e/` — 84 tests (42 per viewport) across 5 spec files
-  - `home.spec.ts` — homepage sections, navigation, CTAs
-  - `shop.spec.ts` — product grid, filtering, sorting
-  - `product.spec.ts` — PDP details, add to cart, quantity, swatches, accordion
-  - `cart.spec.ts` — empty state, add/remove items, totals, shipping logic
-  - `visual.spec.ts` — full-page screenshot comparison for all routes
-- Visual baselines: `e2e/visual.spec.ts-snapshots/` (committed to git)
-- Commands:
-  - `pnpm test:e2e` — run all tests
-  - `pnpm test:e2e:ui` — interactive Playwright UI mode
-  - `pnpm test:e2e:update` — update visual regression baselines
+- Playwright E2E + visual regression testing — use `/e2e` skill for details
 
 ---
 
