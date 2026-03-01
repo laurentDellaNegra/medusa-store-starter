@@ -1,7 +1,6 @@
 ---
 import "../styles/index.css";
 import GrainOverlay from "../components/GrainOverlay.astro";
-import CustomCursor from "../components/CustomCursor.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import Toast from "../components/Toast.astro";
@@ -20,15 +19,35 @@ const { title, navVariant = "default", activeLink } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Rafia — Artisanal raphia bags handcrafted in Madagascar. Sustainable luxury where tradition meets contemporary elegance." />
+    <meta
+      name="description"
+      content="Rafia — Artisanal raphia bags handcrafted in Madagascar. Sustainable luxury where tradition meets contemporary elegance."
+    />
     <title>{title}</title>
-    <link rel="preload" href="/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/cormorant-garamond-latin-normal.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/cormorant-garamond-latin-italic.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/outfit-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/cormorant-garamond-latin-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/cormorant-garamond-latin-italic.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
   </head>
   <body>
     <GrainOverlay />
-    <CustomCursor />
     <Navbar variant={navVariant} activeLink={activeLink} />
     <main>
       <slot />
@@ -44,7 +63,7 @@ const { title, navVariant = "default", activeLink } = Astro.props;
               if (e.isIntersecting) e.target.classList.add("visible");
             });
           },
-          { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }
+          { threshold: 0.15, rootMargin: "0px 0px -50px 0px" },
         );
         document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
       }
@@ -53,10 +72,12 @@ const { title, navVariant = "default", activeLink } = Astro.props;
         try {
           const items = JSON.parse(localStorage.getItem("rafia_cart") || "[]");
           const count = items.reduce((s: number, i: any) => s + i.qty, 0);
-          document.querySelectorAll<HTMLElement>(".cart-count").forEach((el) => {
-            el.textContent = String(count);
-            el.style.display = count > 0 ? "flex" : "none";
-          });
+          document
+            .querySelectorAll<HTMLElement>(".cart-count")
+            .forEach((el) => {
+              el.textContent = String(count);
+              el.style.display = count > 0 ? "flex" : "none";
+            });
         } catch {}
       }
 
