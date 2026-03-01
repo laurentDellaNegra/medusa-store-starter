@@ -1,141 +1,10 @@
 ---
-import { css } from "../../styled-system/css";
-
 interface Props {
   variant?: "default" | "light";
   activeLink?: string;
 }
 
 const { variant = "default", activeLink } = Astro.props;
-
-const navStyle = css({
-  position: "fixed",
-  top: "0",
-  width: "100%",
-  zIndex: "nav",
-  padding: "1.2rem 2rem",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  transition: "background 0.5s ease, padding 0.4s ease, backdrop-filter 0.5s ease",
-  lg: { padding: "1.8rem 4rem" },
-  "&.scrolled, &.nav-light": {
-    background: "rgba(255, 252, 247, 0.92)",
-    backdropFilter: "blur(20px)",
-    padding: "1rem 2rem",
-    boxShadow: "nav",
-    lg: { padding: "1rem 4rem" },
-  },
-});
-
-const logoStyle = css({
-  fontFamily: "display",
-  fontSize: "heading.lg",
-  fontWeight: "regular",
-  letterSpacing: "display",
-  textTransform: "uppercase",
-  color: "espresso",
-  textDecoration: "none",
-  "& span": { color: "gold" },
-});
-
-const linksStyle = css({
-  display: "none",
-  gap: "3rem",
-  listStyle: "none",
-  lg: { display: "flex" },
-});
-
-const linkStyle = css({
-  fontSize: "0.75rem",
-  letterSpacing: "wider",
-  textTransform: "uppercase",
-  color: "espresso.soft",
-  textDecoration: "none",
-  position: "relative",
-  fontWeight: "regular",
-  transition: "color 0.3s",
-  _after: {
-    content: '""',
-    position: "absolute",
-    bottom: "-4px",
-    left: "0",
-    width: "0",
-    height: "1px",
-    bg: "gold",
-    transition: "width 0.4s ease",
-  },
-  _hover: {
-    color: "gold",
-    _after: { width: "100%" },
-  },
-});
-
-const activeLinkStyle = css({ color: "gold" });
-
-const rightStyle = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "2rem",
-});
-
-const ctaStyle = css({
-  fontSize: "0.7rem",
-  letterSpacing: "wider",
-  textTransform: "uppercase",
-  padding: "0.7rem 2rem",
-  border: "1px solid token(colors.gold)",
-  color: "espresso",
-  textDecoration: "none",
-  transition: "all 0.4s ease",
-  fontWeight: "regular",
-  _hover: { bg: "gold", color: "white" },
-  display: "none",
-  lg: { display: "inline-block" },
-});
-
-const cartIconStyle = css({
-  position: "relative",
-  cursor: "pointer",
-  textDecoration: "none",
-  color: "espresso",
-  transition: "color 0.3s",
-  _hover: { color: "gold" },
-  "& svg": { width: "22px", height: "22px" },
-});
-
-const cartCountStyle = css({
-  position: "absolute",
-  top: "-8px",
-  right: "-10px",
-  width: "18px",
-  height: "18px",
-  borderRadius: "full",
-  bg: "gold",
-  color: "white",
-  fontSize: "xs",
-  fontWeight: "medium",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  transition: "transform 0.3s ease",
-  "&.bump": { animation: "cartBump 0.4s ease" },
-});
-
-const menuToggleStyle = css({
-  display: "flex",
-  flexDirection: "column",
-  gap: "6px",
-  cursor: "pointer",
-  zIndex: "menuToggle",
-  "& span": {
-    width: "28px",
-    height: "1px",
-    bg: "espresso",
-    transition: "all 0.3s",
-  },
-  lg: { display: "none" },
-});
 
 const navLinks = [
   { href: "/shop", label: "Collection" },
@@ -147,34 +16,34 @@ const navLinks = [
 
 <nav
   id="navbar"
-  class={`${navStyle} ${variant === "light" ? "nav-light" : ""}`}
+  class={`navbar ${variant === "light" ? "nav-light" : ""}`}
 >
-  <a href="/" class={logoStyle}>Rafia<span>.</span></a>
-  <ul class={linksStyle}>
+  <a href="/" class="navbar__logo">Rafia<span>.</span></a>
+  <ul class="navbar__links">
     {navLinks.map((link) => (
       <li>
         <a
           href={link.href}
-          class={`${linkStyle} ${activeLink === link.href ? activeLinkStyle : ""}`}
+          class:list={["navbar__link", { "navbar__link--active": activeLink === link.href }]}
         >
           {link.label}
         </a>
       </li>
     ))}
   </ul>
-  <div class={rightStyle}>
+  <div class="navbar__right">
     {variant === "default" && (
-      <a href="/shop" class={ctaStyle}>Shop Now</a>
+      <a href="/shop" class="navbar__cta">Shop Now</a>
     )}
-    <a href="/cart" class={`${cartIconStyle} cart-icon`} title="Shopping Bag">
+    <a href="/cart" class="cart-icon" title="Shopping Bag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
         <line x1="3" y1="6" x2="21" y2="6" />
         <path d="M16 10a4 4 0 01-8 0" />
       </svg>
-      <span class={`${cartCountStyle} cart-count`} style="display:none;">0</span>
+      <span class="cart-count" style="display:none;">0</span>
     </a>
-    <div class={menuToggleStyle} id="menuToggle">
+    <div class="navbar__toggle" id="menuToggle">
       <span></span><span></span><span></span>
     </div>
   </div>
@@ -194,3 +63,187 @@ const navLinks = [
   document.addEventListener("DOMContentLoaded", initNav);
   document.addEventListener("astro:after-swap", initNav);
 </script>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: var(--z-nav);
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.5s ease, padding 0.4s ease, backdrop-filter 0.5s ease;
+  }
+
+  @media (min-width: 1024px) {
+    .navbar {
+      padding: 1.8rem 4rem;
+    }
+  }
+
+  .navbar:global(.scrolled),
+  .navbar:global(.nav-light) {
+    background: rgba(255, 252, 247, 0.92);
+    backdrop-filter: blur(20px);
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow-nav);
+  }
+
+  @media (min-width: 1024px) {
+    .navbar:global(.scrolled),
+    .navbar:global(.nav-light) {
+      padding: 1rem 4rem;
+    }
+  }
+
+  .navbar__logo {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-lg);
+    font-weight: var(--fw-regular);
+    letter-spacing: var(--ls-display);
+    text-transform: uppercase;
+    color: var(--color-espresso);
+    text-decoration: none;
+  }
+
+  .navbar__logo span {
+    color: var(--color-gold);
+  }
+
+  .navbar__links {
+    display: none;
+    gap: 3rem;
+    list-style: none;
+  }
+
+  @media (min-width: 1024px) {
+    .navbar__links {
+      display: flex;
+    }
+  }
+
+  .navbar__link {
+    font-size: 0.75rem;
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    color: var(--color-espresso-soft);
+    text-decoration: none;
+    position: relative;
+    font-weight: var(--fw-regular);
+    transition: color 0.3s;
+  }
+
+  .navbar__link::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-gold);
+    transition: width 0.4s ease;
+  }
+
+  .navbar__link:hover {
+    color: var(--color-gold);
+  }
+
+  .navbar__link:hover::after {
+    width: 100%;
+  }
+
+  .navbar__link--active {
+    color: var(--color-gold);
+  }
+
+  .navbar__right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .navbar__cta {
+    font-size: 0.7rem;
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    padding: 0.7rem 2rem;
+    border: 1px solid var(--color-gold);
+    color: var(--color-espresso);
+    text-decoration: none;
+    transition: all 0.4s ease;
+    font-weight: var(--fw-regular);
+    display: none;
+  }
+
+  .navbar__cta:hover {
+    background: var(--color-gold);
+    color: var(--color-white);
+  }
+
+  @media (min-width: 1024px) {
+    .navbar__cta {
+      display: inline-block;
+    }
+  }
+
+  .cart-icon {
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--color-espresso);
+    transition: color 0.3s;
+  }
+
+  .cart-icon:hover {
+    color: var(--color-gold);
+  }
+
+  .cart-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-full);
+    background: var(--color-gold);
+    color: var(--color-white);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+
+  .cart-count:global(.bump) {
+    animation: cartBump 0.4s ease;
+  }
+
+  .navbar__toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: var(--z-menu-toggle);
+  }
+
+  .navbar__toggle span {
+    width: 28px;
+    height: 1px;
+    background: var(--color-espresso);
+    transition: all 0.3s;
+  }
+
+  @media (min-width: 1024px) {
+    .navbar__toggle {
+      display: none;
+    }
+  }
+</style>

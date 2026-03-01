@@ -1,41 +1,44 @@
 ---
-import { css } from "../../styled-system/css";
-
 interface Props {
   crumbs: { label: string; href: string }[];
   current: string;
 }
 
 const { crumbs, current } = Astro.props;
-
-const rootStyle = css({
-  fontSize: "caption",
-  letterSpacing: "relaxed",
-  textTransform: "uppercase",
-  color: "espresso.soft",
-  mb: "2rem",
-});
-
-const linkStyle = css({
-  color: "gold",
-  textDecoration: "none",
-  transition: "color 0.3s",
-  _hover: { color: "espresso" },
-});
-
-const sepStyle = css({
-  mx: "0.6rem",
-  color: "sand",
-  fontSize: "caption",
-});
 ---
 
-<div class={rootStyle}>
+<div class="breadcrumb">
   {crumbs.map((crumb) => (
     <>
-      <a href={crumb.href} class={linkStyle}>{crumb.label}</a>
-      <span class={sepStyle}>/</span>
+      <a href={crumb.href} class="link">{crumb.label}</a>
+      <span class="sep">/</span>
     </>
   ))}
   <span>{current}</span>
 </div>
+
+<style>
+  .breadcrumb {
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-relaxed);
+    text-transform: uppercase;
+    color: var(--color-espresso-soft);
+    margin-bottom: 2rem;
+  }
+
+  .link {
+    color: var(--color-gold);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .link:hover {
+    color: var(--color-espresso);
+  }
+
+  .sep {
+    margin-inline: 0.6rem;
+    color: var(--color-sand);
+    font-size: var(--fs-caption);
+  }
+</style>

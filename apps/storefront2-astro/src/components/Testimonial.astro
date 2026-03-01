@@ -1,6 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
-
 interface TestimonialItem {
   text: string;
   author: string;
@@ -11,91 +9,16 @@ interface Props {
 }
 
 const { testimonials } = Astro.props;
-
-const sectionStyle = css({
-  padding: "8rem 4rem",
-  bg: "espresso",
-  color: "sand.light",
-  position: "relative",
-  overflow: "hidden",
-  _before: {
-    content: '""',
-    position: "absolute",
-    top: "-200px",
-    right: "-200px",
-    width: "600px",
-    height: "600px",
-    borderRadius: "full",
-    background: "radial-gradient(circle, rgba(184, 149, 106, 0.08) 0%, transparent 70%)",
-  },
-});
-
-const innerStyle = css({
-  maxWidth: "900px",
-  mx: "auto",
-  textAlign: "center",
-  position: "relative",
-});
-
-const quoteMarkStyle = css({
-  fontFamily: "display",
-  fontSize: "display",
-  color: "gold",
-  lineHeight: "0.5",
-  mb: "2rem",
-  opacity: "0.5",
-});
-
-const textStyle = css({
-  fontFamily: "display",
-  fontSize: "clamp(1.5rem, 2.5vw, 2.2rem)",
-  fontWeight: "light",
-  fontStyle: "italic",
-  lineHeight: "normal",
-  mb: "2.5rem",
-  color: "sand",
-  transition: "opacity 0.4s ease",
-});
-
-const authorStyle = css({
-  fontSize: "caption",
-  letterSpacing: "editorial",
-  textTransform: "uppercase",
-  color: "gold",
-  transition: "opacity 0.4s ease",
-});
-
-const dotsStyle = css({
-  display: "flex",
-  gap: "0.8rem",
-  justifyContent: "center",
-  mt: "3rem",
-});
-
-const dotStyle = css({
-  width: "8px",
-  height: "8px",
-  borderRadius: "full",
-  border: "1px solid token(colors.gold)",
-  cursor: "pointer",
-  transition: "all 0.3s",
-  bg: "transparent",
-  padding: "0",
-  "&.active": {
-    bg: "gold",
-    transform: "scale(1.2)",
-  },
-});
 ---
 
-<section class={sectionStyle}>
-  <div class={`${innerStyle} reveal`}>
-    <div class={quoteMarkStyle}>&ldquo;</div>
-    <p class={textStyle} id="tText">{testimonials[0].text}</p>
-    <p class={authorStyle} id="tAuth">{testimonials[0].author}</p>
-    <div class={dotsStyle}>
+<section class="testimonial-section">
+  <div class="testimonial-inner reveal">
+    <div class="testimonial-quote">&ldquo;</div>
+    <p class="testimonial-text" id="tText">{testimonials[0].text}</p>
+    <p class="testimonial-author" id="tAuth">{testimonials[0].author}</p>
+    <div class="testimonial-dots">
       {testimonials.map((_, i) => (
-        <button class={`${dotStyle} dot ${i === 0 ? "active" : ""}`} data-index={i} aria-label={`Testimonial ${i + 1}`}></button>
+        <button class={`dot ${i === 0 ? "active" : ""}`} data-index={i} aria-label={`Testimonial ${i + 1}`}></button>
       ))}
     </div>
   </div>
@@ -133,3 +56,82 @@ const dotStyle = css({
     6000
   );
 </script>
+
+<style>
+  .testimonial-section {
+    padding: 8rem 4rem;
+    background: var(--color-espresso);
+    color: var(--color-sand-light);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonial-section::before {
+    content: "";
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    border-radius: var(--radius-full);
+    background: radial-gradient(circle, rgba(184, 149, 106, 0.08) 0%, transparent 70%);
+  }
+
+  .testimonial-inner {
+    max-width: var(--size-content-xl);
+    margin-inline: auto;
+    text-align: center;
+    position: relative;
+  }
+
+  .testimonial-quote {
+    font-family: var(--font-display);
+    font-size: var(--fs-display);
+    color: var(--color-gold);
+    line-height: 0.5;
+    margin-bottom: 2rem;
+    opacity: 0.5;
+  }
+
+  .testimonial-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    font-weight: var(--fw-light);
+    font-style: italic;
+    line-height: var(--lh-normal);
+    margin-bottom: 2.5rem;
+    color: var(--color-sand);
+    transition: opacity 0.4s ease;
+  }
+
+  .testimonial-author {
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-editorial);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    transition: opacity 0.4s ease;
+  }
+
+  .testimonial-dots {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-top: 3rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-gold);
+    cursor: pointer;
+    transition: all 0.3s;
+    background: transparent;
+    padding: 0;
+  }
+
+  .dot:global(.active) {
+    background: var(--color-gold);
+    transform: scale(1.2);
+  }
+</style>

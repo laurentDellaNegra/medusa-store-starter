@@ -1,88 +1,25 @@
 ---
-import { css } from "../../styled-system/css";
 import SectionHeader from "./SectionHeader.astro";
-
-const sectionStyle = css({
-  padding: "8rem 4rem",
-  bg: "sand.pale",
-});
-
-const innerStyle = css({
-  maxWidth: "700px",
-  mx: "auto",
-  textAlign: "center",
-});
-
-const descStyle = css({
-  fontSize: "body",
-  lineHeight: "loose",
-  color: "espresso.soft",
-  textAlign: "center",
-});
-
-const formStyle = css({
-  display: "flex",
-  flexDirection: "column",
-  gap: "0",
-  mt: "2.5rem",
-  maxWidth: "500px",
-  mx: "auto",
-  md: { flexDirection: "row" },
-});
-
-const inputStyle = css({
-  flex: "1",
-  padding: "1rem 1.5rem",
-  border: "1px solid token(colors.sand)",
-  borderBottom: "none",
-  bg: "white",
-  fontFamily: "body",
-  fontSize: "body.sm",
-  color: "espresso",
-  outline: "none",
-  transition: "border-color 0.3s",
-  _placeholder: { color: "gold.light" },
-  _focus: { borderColor: "gold" },
-  md: {
-    borderRight: "none",
-    borderBottom: "1px solid token(colors.sand)",
-  },
-});
-
-const btnStyle = css({
-  padding: "1rem 2.5rem",
-  bg: "espresso",
-  color: "sand.light",
-  fontFamily: "body",
-  fontSize: "caption",
-  letterSpacing: "wider",
-  textTransform: "uppercase",
-  border: "1px solid token(colors.espresso)",
-  cursor: "pointer",
-  transition: "all 0.4s",
-  whiteSpace: "nowrap",
-  _hover: { bg: "gold", borderColor: "gold" },
-});
 ---
 
-<section class={sectionStyle} id="contact">
-  <div class={innerStyle}>
+<section class="newsletter-section" id="contact">
+  <div class="newsletter-inner">
     <SectionHeader
       tag="Stay Connected"
       title="Join the <em>Rafia</em> World"
       centered
     />
-    <p class={`${descStyle} reveal reveal-delay-2`}>
+    <p class="newsletter-desc reveal reveal-delay-2">
       Be the first to discover new collections, artisan stories, and exclusive offers.
     </p>
-    <div class={`${formStyle} reveal reveal-delay-3`}>
+    <div class="newsletter-form reveal reveal-delay-3">
       <input
         type="email"
-        class={inputStyle}
+        class="newsletter-input"
         placeholder="Your email address"
         id="newsletterInput"
       />
-      <button class={btnStyle} id="newsletterBtn">Subscribe</button>
+      <button class="newsletter-btn" id="newsletterBtn">Subscribe</button>
     </div>
   </div>
 </section>
@@ -94,8 +31,8 @@ const btnStyle = css({
     btn.addEventListener("click", () => {
       if (inp.value && inp.value.includes("@")) {
         btn.textContent = "Merci!";
-        btn.style.background = "var(--colors-sage, #8B9A7E)";
-        btn.style.borderColor = "var(--colors-sage, #8B9A7E)";
+        btn.style.background = "var(--color-sage)";
+        btn.style.borderColor = "var(--color-sage)";
         inp.value = "";
         setTimeout(() => {
           btn.textContent = "Subscribe";
@@ -106,3 +43,85 @@ const btnStyle = css({
     });
   }
 </script>
+
+<style>
+  .newsletter-section {
+    padding: 8rem 4rem;
+    background: var(--color-sand-pale);
+  }
+
+  .newsletter-inner {
+    max-width: var(--size-content-lg);
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .newsletter-desc {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-espresso-soft);
+    text-align: center;
+  }
+
+  .newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 2.5rem;
+    max-width: var(--size-content-sm);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .newsletter-form {
+      flex-direction: row;
+    }
+  }
+
+  .newsletter-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--color-sand);
+    border-bottom: none;
+    background: var(--color-white);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-sm);
+    color: var(--color-espresso);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .newsletter-input::placeholder {
+    color: var(--color-gold-light);
+  }
+
+  .newsletter-input:focus {
+    border-color: var(--color-gold);
+  }
+
+  @media (min-width: 768px) {
+    .newsletter-input {
+      border-right: none;
+      border-bottom: 1px solid var(--color-sand);
+    }
+  }
+
+  .newsletter-btn {
+    padding: 1rem 2.5rem;
+    background: var(--color-espresso);
+    color: var(--color-sand-light);
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    border: 1px solid var(--color-espresso);
+    cursor: pointer;
+    transition: all 0.4s;
+    white-space: nowrap;
+  }
+
+  .newsletter-btn:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+  }
+</style>

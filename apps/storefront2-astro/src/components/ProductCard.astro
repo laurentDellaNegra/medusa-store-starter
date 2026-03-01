@@ -1,5 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
 import type { Product } from "../data/products";
 import ProductImage from "./ProductImage.astro";
 
@@ -11,89 +10,104 @@ interface Props {
 }
 
 const { product, delay = 0, showAddButton = false, animateIn = false } = Astro.props;
-
-const cardStyle = css({
-  position: "relative",
-  cursor: "pointer",
-  textDecoration: "none",
-  color: "espresso",
-  display: "block",
-  ...(animateIn
-    ? {
-        opacity: "0",
-        transform: "translateY(30px)",
-        animation: "cardIn 0.6s ease forwards",
-        animationDelay: `${delay * 0.05}s`,
-      }
-    : {}),
-  _hover: {
-    "& .product-bg": { transform: "scale(1.05)" },
-    "& .product-shape svg": { transform: "translateY(-8px) rotate(-2deg)" },
-    "& .product-action": { opacity: "1", transform: "translateX(-50%) translateY(0)" },
-  },
-});
-
-const addBtnStyle = css({
-  position: "absolute",
-  bottom: "1.5rem",
-  left: "50%",
-  transform: "translateX(-50%) translateY(20px)",
-  padding: "0.75rem 2rem",
-  bg: "espresso",
-  color: "sand.light",
-  fontFamily: "body",
-  fontSize: "0.65rem",
-  letterSpacing: "wider",
-  textTransform: "uppercase",
-  border: "none",
-  cursor: "pointer",
-  opacity: "0",
-  transition: "all 0.4s ease",
-  zIndex: "content",
-  whiteSpace: "nowrap",
-  _hover: { bg: "gold" },
-});
-
-const metaStyle = css({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-});
-
-const nameStyle = css({
-  fontFamily: "display",
-  fontSize: "1.4rem",
-  fontWeight: "regular",
-  mb: "0.3rem",
-});
-
-const typeStyle = css({
-  fontSize: "caption",
-  letterSpacing: "wide",
-  textTransform: "uppercase",
-  color: "espresso.soft",
-});
-
-const priceStyle = css({
-  fontFamily: "display",
-  fontSize: "1.2rem",
-  color: "gold",
-});
 ---
 
-<a href={`/product?id=${product.id}`} class={`${cardStyle} product-card`}>
+<a
+  href={`/product?id=${product.id}`}
+  class:list={["product-card", { "product-card--animate": animateIn }]}
+  style={animateIn ? `animation-delay: ${delay * 0.05}s` : undefined}
+>
   <ProductImage gradient={product.gradient} svg={product.svg} badge={product.badge} variant="card">
     {showAddButton && (
-      <button class={`${addBtnStyle} product-action`} data-product-id={product.id}>
+      <button class="product-action" data-product-id={product.id}>
         Add to Bag
       </button>
     )}
   </ProductImage>
-  <div class={metaStyle}>
+  <div class="product-card__meta">
     <div>
-      <h3 class={nameStyle}>{product.name}</h3>
-      <p class={typeStyle}>{product.type} — {product.color}</p>
+      <h3 class="product-card__name">{product.name}</h3>
+      <p class="product-card__type">{product.type} — {product.color}</p>
     </div>
-    <span class={priceStyle}>CHF {product.price}</span>
+    <span class="product-card__price">CHF {product.price}</span>
   </div>
 </a>
+
+<style>
+  .product-card {
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--color-espresso);
+    display: block;
+  }
+
+  .product-card--animate {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: cardIn 0.6s ease forwards;
+  }
+
+  .product-card:hover :global(.product-bg) {
+    transform: scale(1.05);
+  }
+
+  .product-card:hover :global(.product-shape svg) {
+    transform: translateY(-8px) rotate(-2deg);
+  }
+
+  .product-card:hover .product-action {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .product-action {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 0.75rem 2rem;
+    background: var(--color-espresso);
+    color: var(--color-sand-light);
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.4s ease;
+    z-index: var(--z-content);
+    white-space: nowrap;
+  }
+
+  .product-action:hover {
+    background: var(--color-gold);
+  }
+
+  .product-card__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .product-card__name {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: var(--fw-regular);
+    margin-bottom: 0.3rem;
+  }
+
+  .product-card__type {
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--color-espresso-soft);
+  }
+
+  .product-card__price {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-gold);
+  }
+</style>

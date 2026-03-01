@@ -1,5 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Preloader from "../components/Preloader.astro";
 import Marquee from "../components/Marquee.astro";
@@ -30,261 +29,22 @@ const valueIcons = {
   fair: `<svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="1.5"/><path d="M16 24C16 24 20 18 24 18C28 18 32 24 32 24C32 24 28 30 24 30C20 30 16 24 16 24Z" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="24" r="3" stroke="currentColor" stroke-width="1.5"/></svg>`,
 };
 
-const heroStyle = css({
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  position: "relative",
-  overflow: "hidden",
-  lg: { height: "100vh", minHeight: "700px", gridTemplateColumns: "1fr 1fr" },
-});
-
-const heroLeftStyle = css({
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  padding: "8rem 2rem 3rem",
-  position: "relative",
-  zIndex: "content",
-  md: { padding: "10rem 3rem 4rem" },
-  lg: { padding: "0 6rem" },
-});
-
-const heroTagStyle = css({
-  fontSize: "caption",
-  letterSpacing: "ultra",
-  textTransform: "uppercase",
-  color: "gold",
-  mb: "2rem",
-  fontWeight: "regular",
-  opacity: "0",
-  transform: "translateY(30px)",
-  animation: "fadeUp 1s ease 0.8s forwards",
-});
-
-const heroTitleStyle = css({
-  fontFamily: "display",
-  fontSize: "heading.hero",
-  fontWeight: "light",
-  lineHeight: "tight",
-  color: "espresso",
-  mb: "2rem",
-  opacity: "0",
-  transform: "translateY(40px)",
-  animation: "fadeUp 1s ease 1s forwards",
-  "& em": { fontStyle: "italic", color: "gold" },
-});
-
-const heroDescStyle = css({
-  fontSize: "body.md",
-  lineHeight: "relaxed",
-  color: "espresso.soft",
-  maxWidth: "440px",
-  mb: "3rem",
-  opacity: "0",
-  transform: "translateY(40px)",
-  animation: "fadeUp 1s ease 1.2s forwards",
-});
-
-const heroActionsStyle = css({
-  display: "flex",
-  gap: "1.5rem",
-  alignItems: "center",
-  opacity: "0",
-  transform: "translateY(30px)",
-  animation: "fadeUp 1s ease 1.4s forwards",
-});
-
-const heroRightStyle = css({
-  position: "relative",
-  overflow: "hidden",
-  bg: "sand.light",
-  height: "60vh",
-  lg: { height: "auto" },
-});
-
-const heroImageStyle = css({
-  position: "absolute",
-  inset: "0",
-  background: "linear-gradient(135deg, token(colors.sand) 0%, token(colors.gold.light) 50%, token(colors.sand.light) 100%)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  opacity: "0",
-  animation: "fadeIn 1.5s ease 0.6s forwards",
-});
-
-const heroBagStyle = css({
-  width: "320px",
-  height: "380px",
-  "& svg": {
-    width: "100%",
-    height: "100%",
-    filter: "drop-shadow(0 20px 60px rgba(44, 24, 16, 0.2))",
-  },
-});
-
-const scrollIndicatorStyle = css({
-  position: "absolute",
-  bottom: "3rem",
-  left: "2rem",
-  display: "flex",
-  alignItems: "center",
-  gap: "1rem",
-  fontSize: "sm",
-  letterSpacing: "editorial",
-  textTransform: "uppercase",
-  color: "gold",
-  opacity: "0",
-  animation: "fadeIn 1s ease 2s forwards",
-  lg: { left: "6rem" },
-});
-
-const scrollLineStyle = css({
-  width: "40px",
-  height: "1px",
-  bg: "gold",
-  animation: "scrollPulse 2s ease-in-out infinite",
-});
-
-const cornerStyle = css({
-  position: "absolute",
-  width: "80px",
-  height: "80px",
-  border: "1px solid token(colors.gold.light)",
-  opacity: "0.4",
-});
-
-const aboutStyle = css({
-  padding: "6rem 3rem",
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  gap: "4rem",
-  alignItems: "center",
-  maxWidth: "1400px",
-  mx: "auto",
-  lg: { gridTemplateColumns: "1fr 1fr", gap: "8rem", padding: "10rem 4rem" },
-});
-
-const aboutImageStyle = css({
-  aspectRatio: "3/4",
-  background: "linear-gradient(160deg, token(colors.sand) 0%, token(colors.gold.light) 100%)",
-  position: "relative",
-  overflow: "hidden",
-  _before: {
-    content: '""',
-    position: "absolute",
-    inset: "1.5rem",
-    border: "1px solid rgba(255, 255, 255, 0.4)",
-  },
-});
-
-const weavePatternStyle = css({
-  position: "absolute",
-  inset: "0",
-  display: "grid",
-  gridTemplateColumns: "repeat(8, 1fr)",
-  gridTemplateRows: "repeat(10, 1fr)",
-  gap: "3px",
-  padding: "4rem",
-  opacity: "0.3",
-});
-
-const weaveCellStyle = css({
-  bg: "rgba(255, 255, 255, 0.2)",
-  borderRadius: "sm",
-  _odd: { bg: "rgba(184, 149, 106, 0.3)" },
-});
-
-const aboutLabelStyle = css({
-  position: "absolute",
-  bottom: "2rem",
-  left: "2rem",
-  fontSize: "sm",
-  letterSpacing: "editorial",
-  textTransform: "uppercase",
-  color: "white",
-  writingMode: "vertical-rl",
-});
-
-const aboutContentStyle = css({
-  pr: "0",
-  lg: { pr: "4rem" },
-});
-
-const aboutTextStyle = css({
-  fontSize: "body",
-  lineHeight: "loose",
-  color: "espresso.soft",
-  mb: "2.5rem",
-});
-
-const statsStyle = css({
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: "2rem",
-  borderTop: "1px solid token(colors.sand)",
-  pt: "2.5rem",
-});
-
-const statNumberStyle = css({
-  fontFamily: "display",
-  fontSize: "2.5rem",
-  fontWeight: "light",
-  color: "gold",
-  lineHeight: "none",
-});
-
-const statLabelStyle = css({
-  fontSize: "sm",
-  letterSpacing: "wide",
-  textTransform: "uppercase",
-  color: "espresso.soft",
-  mt: "0.5rem",
-});
-
-const collectionStyle = css({
-  padding: "5rem 2rem",
-  bg: "sand.pale",
-  lg: { padding: "8rem 4rem 10rem" },
-});
-
-const collectionGridStyle = css({
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  gap: "2.5rem",
-  maxWidth: "400px",
-  mx: "auto",
-  md: { gridTemplateColumns: "repeat(2, 1fr)", maxWidth: "1300px" },
-  lg: { gridTemplateColumns: "repeat(3, 1fr)" },
-});
-
-const viewAllStyle = css({ textAlign: "center", mt: "4rem" });
-
-const valuesStyle = css({ padding: "10rem 4rem", maxWidth: "1400px", mx: "auto" });
-
-const valuesGridStyle = css({
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  gap: "3rem",
-  lg: { gridTemplateColumns: "repeat(3, 1fr)" },
-});
-
 const weaveCount = 80;
 ---
 
 <BaseLayout title="Rafia — Artisanal Raphia Bags from Madagascar">
   <Preloader />
 
-  <section class={heroStyle}>
-    <div class={heroLeftStyle}>
-      <div class={cornerStyle} style="top:2rem;left:2rem;border-right:none;border-bottom:none;"></div>
-      <p class={heroTagStyle}>Handcrafted in Madagascar</p>
-      <h1 class={heroTitleStyle}>The Art of<br /><em>Raphia</em> Weaving</h1>
-      <p class={heroDescStyle}>
+  <section class="hero">
+    <div class="hero__left">
+      <div class="corner corner--tl"></div>
+      <p class="hero__tag">Handcrafted in Madagascar</p>
+      <h1 class="hero__title">The Art of<br /><em>Raphia</em> Weaving</h1>
+      <p class="hero__desc">
         Each Rafia bag is a testament to centuries-old Malagasy craftsmanship,
         where every strand tells a story of tradition, elegance, and sustainable luxury.
       </p>
-      <div class={heroActionsStyle}>
+      <div class="hero__actions">
         <Button visual="primary" href="/shop">Discover Collection</Button>
         <Button visual="ghost" href="/#story">
           Our Story
@@ -293,14 +53,14 @@ const weaveCount = 80;
           </svg>
         </Button>
       </div>
-      <div class={scrollIndicatorStyle}>
-        <div class={scrollLineStyle}></div>
+      <div class="hero__scroll">
+        <div class="hero__scroll-line"></div>
         Scroll to explore
       </div>
     </div>
-    <div class={heroRightStyle}>
-      <div class={heroImageStyle}>
-        <div class={heroBagStyle}>
+    <div class="hero__right">
+      <div class="hero__image">
+        <div class="hero__bag">
           <svg viewBox="0 0 300 380" fill="none">
             <ellipse cx="150" cy="90" rx="60" ry="70" fill="none" stroke="#4A3228" stroke-width="2.5" opacity="0.7"/>
             <path d="M70 160 C70 140,80 125,100 120 L200 120 C220 125,230 140,230 160 L240 330 C240 350,225 360,210 360 L90 360 C75 360,60 350,60 330 Z" fill="url(#bagGrad)" stroke="#4A3228" stroke-width="1.5"/>
@@ -328,67 +88,67 @@ const weaveCount = 80;
           </svg>
         </div>
       </div>
-      <div class={cornerStyle} style="bottom:2rem;right:2rem;border-left:none;border-top:none;"></div>
+      <div class="corner corner--br"></div>
     </div>
   </section>
 
   <Marquee items={marqueeItems} />
 
-  <section class={aboutStyle} id="story">
-    <div class={`${aboutImageStyle} reveal`}>
-      <div class={weavePatternStyle}>
+  <section class="about" id="story">
+    <div class="about__image reveal">
+      <div class="about__weave">
         {Array.from({ length: weaveCount }).map(() => (
-          <div class={weaveCellStyle}></div>
+          <div class="about__weave-cell"></div>
         ))}
       </div>
-      <span class={aboutLabelStyle}>Est. 2024 — Madagascar</span>
+      <span class="about__label">Est. 2024 — Madagascar</span>
     </div>
-    <div class={aboutContentStyle}>
+    <div class="about__content">
       <SectionHeader tag="Our Story" title="Born from the <em>Heart</em><br>of Madagascar" />
-      <p class={`${aboutTextStyle} reveal reveal-delay-2`}>
+      <p class="about__text reveal reveal-delay-2">
         Rafia was founded on a simple yet profound belief: that true luxury lies
         in authenticity. Our bags are meticulously hand-woven by skilled artisans
         in Madagascar, where the art of raphia weaving has been passed down
         through generations.
       </p>
-      <div class={`${statsStyle} reveal reveal-delay-3`}>
+      <div class="about__stats reveal reveal-delay-3">
         <div>
-          <div class={statNumberStyle}>150+</div>
-          <div class={statLabelStyle}>Artisan partners</div>
+          <div class="about__stat-number">150+</div>
+          <div class="about__stat-label">Artisan partners</div>
         </div>
         <div>
-          <div class={statNumberStyle}>100%</div>
-          <div class={statLabelStyle}>Natural materials</div>
+          <div class="about__stat-number">100%</div>
+          <div class="about__stat-label">Natural materials</div>
         </div>
         <div>
-          <div class={statNumberStyle}>7–14</div>
-          <div class={statLabelStyle}>Days per piece</div>
+          <div class="about__stat-number">7–14</div>
+          <div class="about__stat-label">Days per piece</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class={collectionStyle} id="collection">
-    <div class={css({ textAlign: "center", maxWidth: "600px", mx: "auto", mb: "5rem" })}>
+  <section class="collection" id="collection">
+    <div class="collection__header">
       <SectionHeader tag="The Collection" title="Curated <em>Pieces</em>" centered />
     </div>
-    <div class={collectionGridStyle}>
+    <div class="collection__grid">
       {heroProducts.map((product, i) => (
         <div class={`reveal ${i > 0 ? `reveal-delay-${i}` : ""}`}>
           <ProductCard product={product} showAddButton />
         </div>
       ))}
     </div>
-    <div class={`${viewAllStyle} reveal`}>
+    <div class="collection__view-all reveal">
       <Button visual="outline" href="/shop">View All Bags</Button>
     </div>
   </section>
 
-  <section class={valuesStyle} id="values">
-    <div class={css({ textAlign: "center", maxWidth: "550px", mx: "auto", mb: "6rem" })}>
+  <section class="values" id="values">
+    <div class="values__header">
       <SectionHeader tag="Our Savoir-Faire" title="Crafted with <em>Purpose</em>" centered />
     </div>
-    <div class={valuesGridStyle}>
+    <div class="values__grid">
       <ValueCard
         iconSvg={valueIcons.craft}
         title="Time-Honoured Craft"
@@ -460,3 +220,352 @@ const weaveCount = 80;
   }
   initHomeAddToBag();
 </script>
+
+<style>
+  /* === Hero === */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      height: 100vh;
+      min-height: 700px;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .hero__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 3rem;
+    position: relative;
+    z-index: var(--z-content);
+  }
+
+  @media (min-width: 768px) {
+    .hero__left {
+      padding: 10rem 3rem 4rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero__left {
+      padding: 0 6rem;
+    }
+  }
+
+  .hero__tag {
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-ultra);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: 2rem;
+    font-weight: var(--fw-regular);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease 0.8s forwards;
+  }
+
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-hero);
+    font-weight: var(--fw-light);
+    line-height: var(--lh-tight);
+    color: var(--color-espresso);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1s ease 1s forwards;
+  }
+
+  .hero__title em {
+    font-style: italic;
+    color: var(--color-gold);
+  }
+
+  .hero__desc {
+    font-size: var(--fs-body-md);
+    line-height: var(--lh-relaxed);
+    color: var(--color-espresso-soft);
+    max-width: 440px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease 1.4s forwards;
+  }
+
+  .hero__right {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-sand-light);
+    height: 60vh;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__right {
+      height: auto;
+    }
+  }
+
+  .hero__image {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-sand) 0%, var(--color-gold-light) 50%, var(--color-sand-light) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 1.5s ease 0.6s forwards;
+  }
+
+  .hero__bag {
+    width: 320px;
+    height: 380px;
+  }
+
+  .hero__bag :global(svg) {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 20px 60px rgba(44, 24, 16, 0.2));
+  }
+
+  .hero__scroll {
+    position: absolute;
+    bottom: 3rem;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-editorial);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    opacity: 0;
+    animation: fadeIn 1s ease 2s forwards;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__scroll {
+      left: 6rem;
+    }
+  }
+
+  .hero__scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--color-gold);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  .corner {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--color-gold-light);
+    opacity: 0.4;
+  }
+
+  .corner--tl {
+    top: 2rem;
+    left: 2rem;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .corner--br {
+    bottom: 2rem;
+    right: 2rem;
+    border-left: none;
+    border-top: none;
+  }
+
+  /* === About === */
+  .about {
+    padding: 6rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: var(--size-container);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .about {
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      padding: 10rem 4rem;
+    }
+  }
+
+  .about__image {
+    aspect-ratio: 3/4;
+    background: linear-gradient(160deg, var(--color-sand) 0%, var(--color-gold-light) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about__image::before {
+    content: "";
+    position: absolute;
+    inset: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .about__weave {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 3px;
+    padding: 4rem;
+    opacity: 0.3;
+  }
+
+  .about__weave-cell {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+  }
+
+  .about__weave-cell:nth-child(odd) {
+    background: rgba(184, 149, 106, 0.3);
+  }
+
+  .about__label {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-editorial);
+    text-transform: uppercase;
+    color: var(--color-white);
+    writing-mode: vertical-rl;
+  }
+
+  .about__content {
+    padding-right: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .about__content {
+      padding-right: 4rem;
+    }
+  }
+
+  .about__text {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-espresso-soft);
+    margin-bottom: 2.5rem;
+  }
+
+  .about__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    border-top: 1px solid var(--color-sand);
+    padding-top: 2.5rem;
+  }
+
+  .about__stat-number {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: var(--fw-light);
+    color: var(--color-gold);
+    line-height: var(--lh-none);
+  }
+
+  .about__stat-label {
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--color-espresso-soft);
+    margin-top: 0.5rem;
+  }
+
+  /* === Collection === */
+  .collection {
+    padding: 5rem 2rem;
+    background: var(--color-sand-pale);
+  }
+
+  @media (min-width: 1024px) {
+    .collection {
+      padding: 8rem 4rem 10rem;
+    }
+  }
+
+  .collection__header {
+    text-align: center;
+    max-width: var(--size-content-md);
+    margin-inline: auto;
+    margin-bottom: 5rem;
+  }
+
+  .collection__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    max-width: 400px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .collection__grid {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: var(--size-content-full);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .collection__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .collection__view-all {
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  /* === Values === */
+  .values {
+    padding: 10rem 4rem;
+    max-width: var(--size-container);
+    margin-inline: auto;
+  }
+
+  .values__header {
+    text-align: center;
+    max-width: 550px;
+    margin-inline: auto;
+    margin-bottom: 6rem;
+  }
+
+  .values__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .values__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

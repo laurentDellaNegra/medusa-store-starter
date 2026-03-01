@@ -1,5 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
 import type { Product } from "../data/products";
 import Breadcrumb from "./Breadcrumb.astro";
 import QuantitySelector from "./QuantitySelector.astro";
@@ -9,218 +8,6 @@ interface Props {
 }
 
 const { product } = Astro.props;
-
-const infoStyle = css({ paddingTop: "1rem" });
-
-const typeStyle = css({
-  fontSize: "sm",
-  letterSpacing: "editorial",
-  textTransform: "uppercase",
-  color: "gold",
-  mb: "0.8rem",
-});
-
-const nameStyle = css({
-  fontFamily: "display",
-  fontSize: "clamp(2.2rem, 3.5vw, 3.2rem)",
-  fontWeight: "light",
-  lineHeight: "snug",
-  mb: "1rem",
-});
-
-const priceStyle = css({
-  fontFamily: "display",
-  fontSize: "heading.lg",
-  color: "gold",
-  mb: "2rem",
-});
-
-const dividerStyle = css({
-  width: "40px",
-  height: "1px",
-  bg: "gold",
-  my: "2rem",
-});
-
-const descStyle = css({
-  fontSize: "body",
-  lineHeight: "loose",
-  color: "espresso.soft",
-  mb: "2rem",
-});
-
-const optionLabelStyle = css({
-  fontSize: "sm",
-  letterSpacing: "wider",
-  textTransform: "uppercase",
-  color: "espresso.soft",
-  mb: "0.8rem",
-  "& strong": { fontWeight: "regular", color: "espresso" },
-});
-
-const colorRowStyle = css({
-  display: "flex",
-  gap: "0.8rem",
-  mb: "2rem",
-});
-
-const swatchBase = css({
-  width: "32px",
-  height: "32px",
-  borderRadius: "full",
-  cursor: "pointer",
-  border: "2px solid transparent",
-  transition: "all 0.3s",
-  position: "relative",
-  "&.active": { borderColor: "espresso" },
-  _after: {
-    content: '""',
-    position: "absolute",
-    inset: "-4px",
-    borderRadius: "full",
-    border: "1px solid transparent",
-    transition: "border-color 0.3s",
-  },
-  "&.active::after": { borderColor: "gold" },
-});
-
-const qtyRowStyle = css({
-  display: "flex",
-  alignItems: "center",
-  gap: "1.5rem",
-  mb: "2.5rem",
-});
-
-const addBtnStyle = css({
-  width: "100%",
-  padding: "1.1rem 3rem",
-  bg: "espresso",
-  color: "sand.light",
-  fontFamily: "body",
-  fontSize: "0.75rem",
-  letterSpacing: "widest",
-  textTransform: "uppercase",
-  border: "none",
-  cursor: "pointer",
-  position: "relative",
-  overflow: "hidden",
-  transition: "all 0.5s ease",
-  _before: {
-    content: '""',
-    position: "absolute",
-    top: "0",
-    left: "-100%",
-    width: "100%",
-    height: "100%",
-    bg: "gold",
-    transition: "left 0.5s ease",
-    zIndex: "0",
-  },
-  _hover: { _before: { left: "0" } },
-  "& span": { position: "relative", zIndex: "1" },
-  "&.added": { pointerEvents: "none" },
-  "&.added::before": { left: "0" },
-});
-
-const secondaryStyle = css({
-  display: "flex",
-  gap: "2rem",
-  mt: "1.5rem",
-  pt: "1.5rem",
-  borderTop: "1px solid token(colors.sand)",
-});
-
-const secLinkStyle = css({
-  fontSize: "caption",
-  letterSpacing: "wide",
-  textTransform: "uppercase",
-  color: "espresso.soft",
-  textDecoration: "none",
-  display: "flex",
-  alignItems: "center",
-  gap: "0.5rem",
-  transition: "color 0.3s",
-  _hover: { color: "gold" },
-  "& svg": { width: "16px", height: "16px" },
-});
-
-const accordionStyle = css({ mt: "2.5rem" });
-
-const accItemStyle = css({
-  borderTop: "1px solid token(colors.sand)",
-  _last: { borderBottom: "1px solid token(colors.sand)" },
-  "&.open .acc-icon::after": { transform: "rotate(90deg)" },
-  "&.open .acc-body": { maxHeight: "300px", pb: "1.5rem" },
-});
-
-const accHeaderStyle = css({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "1.3rem 0",
-  cursor: "pointer",
-  userSelect: "none",
-});
-
-const accHeaderTextStyle = css({
-  fontSize: "caption",
-  letterSpacing: "wider",
-  textTransform: "uppercase",
-  color: "espresso",
-});
-
-const accIconStyle = css({
-  width: "12px",
-  height: "12px",
-  position: "relative",
-  transition: "transform 0.3s",
-  _before: {
-    content: '""',
-    position: "absolute",
-    bg: "espresso",
-    width: "12px",
-    height: "1px",
-    top: "5.5px",
-    left: "0",
-  },
-  _after: {
-    content: '""',
-    position: "absolute",
-    bg: "espresso",
-    width: "1px",
-    height: "12px",
-    left: "5.5px",
-    top: "0",
-    transition: "transform 0.3s",
-  },
-});
-
-const accBodyStyle = css({
-  maxHeight: "0",
-  overflow: "hidden",
-  transition: "max-height 0.4s ease, padding 0.4s ease",
-});
-
-const accBodyInnerStyle = css({
-  fontSize: "body.sm",
-  lineHeight: "relaxed",
-  color: "espresso.soft",
-  "& ul": { listStyle: "none" },
-  "& li": {
-    padding: "0.3rem 0",
-    display: "flex",
-    alignItems: "center",
-    gap: "0.8rem",
-    _before: {
-      content: '""',
-      width: "4px",
-      height: "4px",
-      borderRadius: "full",
-      bg: "gold",
-      flexShrink: "0",
-    },
-  },
-});
 
 const swatches = [
   { name: "Natural", color: "#D4C5B2" },
@@ -252,7 +39,7 @@ const accordionItems = [
 ];
 ---
 
-<div class={infoStyle} id="pdpInfo">
+<div class="pdp-info" id="pdpInfo">
   <Breadcrumb
     crumbs={[
       { label: "Home", href: "/" },
@@ -260,20 +47,20 @@ const accordionItems = [
     ]}
     current={product.name}
   />
-  <p class={typeStyle}>{product.type}</p>
-  <h1 class={nameStyle}>{product.name}</h1>
-  <p class={priceStyle}>CHF {product.price}</p>
-  <div class={dividerStyle}></div>
-  <p class={descStyle}>{product.description}</p>
+  <p class="pdp-type">{product.type}</p>
+  <h1 class="pdp-name">{product.name}</h1>
+  <p class="pdp-price">CHF {product.price}</p>
+  <div class="pdp-divider"></div>
+  <p class="pdp-desc">{product.description}</p>
 
-  <p class={optionLabelStyle}>
+  <p class="pdp-option-label">
     Colour — <strong>{product.color}</strong>
   </p>
-  <div class={colorRowStyle}>
+  <div class="pdp-color-row">
     {
       swatches.map((sw, i) => (
         <div
-          class={`${swatchBase} color-swatch ${i === 0 ? "active" : ""}`}
+          class={`pdp-swatch color-swatch ${i === 0 ? "active" : ""}`}
           style={`background:${sw.color}`}
           title={sw.name}
         />
@@ -281,17 +68,17 @@ const accordionItems = [
     }
   </div>
 
-  <p class={optionLabelStyle}>Quantity</p>
-  <div class={qtyRowStyle}>
+  <p class="pdp-option-label">Quantity</p>
+  <div class="pdp-qty-row">
     <QuantitySelector size="md" id="qty" />
   </div>
 
-  <button class={addBtnStyle} id="addToCartBtn">
+  <button class="pdp-add-btn gold-slide-in" id="addToCartBtn">
     <span>Add to Bag — CHF {product.price}</span>
   </button>
 
-  <div class={secondaryStyle}>
-    <a href="#" class={secLinkStyle}>
+  <div class="pdp-secondary">
+    <a href="#" class="pdp-sec-link">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -304,7 +91,7 @@ const accordionItems = [
       </svg>
       Add to Wishlist
     </a>
-    <a href="#" class={secLinkStyle}>
+    <a href="#" class="pdp-sec-link">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -321,16 +108,16 @@ const accordionItems = [
     </a>
   </div>
 
-  <div class={accordionStyle}>
+  <div class="pdp-accordion">
     {
       accordionItems.map((item) => (
-        <div class={`${accItemStyle} acc-item ${item.open ? "open" : ""}`}>
-          <div class={`${accHeaderStyle} acc-header`}>
-            <span class={accHeaderTextStyle}>{item.title}</span>
-            <div class={`${accIconStyle} acc-icon`} />
+        <div class={`acc-item ${item.open ? "open" : ""}`}>
+          <div class="acc-header">
+            <span class="acc-header__text">{item.title}</span>
+            <div class="acc-icon" />
           </div>
-          <div class={`${accBodyStyle} acc-body`}>
-            <div class={accBodyInnerStyle} set:html={item.content} />
+          <div class="acc-body">
+            <div class="acc-body__inner" set:html={item.content} />
           </div>
         </div>
       ))
@@ -438,3 +225,239 @@ const accordionItems = [
     });
   });
 </script>
+
+<style>
+  .pdp-info {
+    padding-top: 1rem;
+  }
+
+  .pdp-type {
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-editorial);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .pdp-name {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+    font-weight: var(--fw-light);
+    line-height: var(--lh-snug);
+    margin-bottom: 1rem;
+  }
+
+  .pdp-price {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-lg);
+    color: var(--color-gold);
+    margin-bottom: 2rem;
+  }
+
+  .pdp-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--color-gold);
+    margin-block: 2rem;
+  }
+
+  .pdp-desc {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-espresso-soft);
+    margin-bottom: 2rem;
+  }
+
+  .pdp-option-label {
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    color: var(--color-espresso-soft);
+    margin-bottom: 0.8rem;
+  }
+
+  .pdp-option-label strong {
+    font-weight: var(--fw-regular);
+    color: var(--color-espresso);
+  }
+
+  .pdp-color-row {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .pdp-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .pdp-swatch:global(.active) {
+    border-color: var(--color-espresso);
+  }
+
+  .pdp-swatch::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: var(--radius-full);
+    border: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+
+  .pdp-swatch:global(.active)::after {
+    border-color: var(--color-gold);
+  }
+
+  .pdp-qty-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .pdp-add-btn {
+    width: 100%;
+    padding: 1.1rem 3rem;
+    background: var(--color-espresso);
+    color: var(--color-sand-light);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: var(--ls-widest);
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+
+  .pdp-secondary {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-sand);
+  }
+
+  .pdp-sec-link {
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--color-espresso-soft);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s;
+  }
+
+  .pdp-sec-link:hover {
+    color: var(--color-gold);
+  }
+
+  .pdp-sec-link svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .pdp-accordion {
+    margin-top: 2.5rem;
+  }
+
+  .acc-item {
+    border-top: 1px solid var(--color-sand);
+  }
+
+  .acc-item:last-child {
+    border-bottom: 1px solid var(--color-sand);
+  }
+
+  .acc-item:global(.open) .acc-icon::after {
+    transform: rotate(90deg);
+  }
+
+  .acc-item:global(.open) .acc-body {
+    max-height: 300px;
+    padding-bottom: 1.5rem;
+  }
+
+  .acc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.3rem 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .acc-header__text {
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    color: var(--color-espresso);
+  }
+
+  .acc-icon {
+    width: 12px;
+    height: 12px;
+    position: relative;
+    transition: transform 0.3s;
+  }
+
+  .acc-icon::before {
+    content: "";
+    position: absolute;
+    background: var(--color-espresso);
+    width: 12px;
+    height: 1px;
+    top: 5.5px;
+    left: 0;
+  }
+
+  .acc-icon::after {
+    content: "";
+    position: absolute;
+    background: var(--color-espresso);
+    width: 1px;
+    height: 12px;
+    left: 5.5px;
+    top: 0;
+    transition: transform 0.3s;
+  }
+
+  .acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+  }
+
+  .acc-body__inner {
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--color-espresso-soft);
+  }
+
+  .acc-body__inner :global(ul) {
+    list-style: none;
+  }
+
+  .acc-body__inner :global(li) {
+    padding: 0.3rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .acc-body__inner :global(li)::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--color-gold);
+    flex-shrink: 0;
+  }
+</style>

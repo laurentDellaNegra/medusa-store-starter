@@ -1,6 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
-
 interface Props {
   size?: "sm" | "md";
   value?: number;
@@ -9,23 +7,11 @@ interface Props {
 }
 
 const { size = "md", value = 1, id = "qty" } = Astro.props;
-
-/* Static styles for each size — Panda CSS needs literal objects in css() calls */
-const smControl = css({ display: "flex", alignItems: "center", border: "1px solid token(colors.sand)" });
-const smBtn = css({ width: "34px", height: "34px", border: "none", bg: "transparent", fontSize: "0.95rem", color: "espresso", cursor: "pointer", fontFamily: "body", transition: "background 0.3s", _hover: { bg: "sand.pale" } });
-const smVal = css({ width: "38px", textAlign: "center", border: "none", borderLeft: "1px solid token(colors.sand)", borderRight: "1px solid token(colors.sand)", fontFamily: "body", fontSize: "0.8rem", height: "34px", bg: "transparent", color: "espresso", outline: "none" });
-
-const mdControl = css({ display: "flex", alignItems: "center", border: "1px solid token(colors.sand)" });
-const mdBtn = css({ width: "44px", height: "44px", border: "none", bg: "transparent", fontSize: "1.1rem", color: "espresso", cursor: "pointer", fontFamily: "body", transition: "background 0.3s", _hover: { bg: "sand.pale" } });
-const mdVal = css({ width: "50px", textAlign: "center", border: "none", borderLeft: "1px solid token(colors.sand)", borderRight: "1px solid token(colors.sand)", fontFamily: "body", fontSize: "body.sm", height: "44px", bg: "transparent", color: "espresso", outline: "none" });
-
-const controlClass = size === "sm" ? smControl : mdControl;
-const btnClass = size === "sm" ? smBtn : mdBtn;
-const valClass = size === "sm" ? smVal : mdVal;
+const sizeClass = `qty-control--${size}`;
 ---
 
-<div class={controlClass}>
-  <button class={btnClass} id={`${id}Minus`}>&minus;</button>
-  <input type="text" class={valClass} id={`${id}Val`} value={String(value)} readonly />
-  <button class={btnClass} id={`${id}Plus`}>+</button>
+<div class={`qty-control ${sizeClass}`}>
+  <button class="qty-btn" id={`${id}Minus`}>&minus;</button>
+  <input type="text" class="qty-val" id={`${id}Val`} value={String(value)} readonly />
+  <button class="qty-btn" id={`${id}Plus`}>+</button>
 </div>

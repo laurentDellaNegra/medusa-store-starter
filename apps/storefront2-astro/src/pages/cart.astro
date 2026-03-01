@@ -1,56 +1,15 @@
 ---
-import { css } from "../../styled-system/css";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/Button.astro";
-
-const pageStyle = css({
-  padding: "7rem 1.5rem 3rem",
-  maxWidth: "1200px",
-  mx: "auto",
-  minHeight: "60vh",
-  lg: { padding: "9rem 4rem 4rem" },
-});
-
-const headerStyle = css({
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.5rem",
-  mb: "3rem",
-  pb: "1.5rem",
-  borderBottom: "1px solid token(colors.sand)",
-  md: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", gap: "0" },
-});
-
-const titleStyle = css({
-  fontFamily: "display",
-  fontSize: "clamp(2rem, 3.5vw, 3rem)",
-  fontWeight: "light",
-  "& em": { fontStyle: "italic", color: "gold" },
-});
-
-const countStyle = css({
-  fontSize: "0.75rem",
-  letterSpacing: "wide",
-  textTransform: "uppercase",
-  color: "espresso.soft",
-});
-
-const layoutStyle = css({
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  gap: "4rem",
-  alignItems: "start",
-  lg: { gridTemplateColumns: "1fr 380px" },
-});
 ---
 
 <BaseLayout title="Shopping Bag — Rafia" navVariant="light">
-  <section class={pageStyle}>
-    <div class={headerStyle}>
-      <h1 class={titleStyle}>Your <em>Bag</em></h1>
-      <span class={countStyle} id="cartItemCount"></span>
+  <section class="cart-page">
+    <div class="cart-header">
+      <h1 class="cart-title">Your <em>Bag</em></h1>
+      <span class="cart-count-label" id="cartItemCount"></span>
     </div>
-    <div class={layoutStyle} id="cartLayout"></div>
+    <div class="cart-layout" id="cartLayout"></div>
   </section>
 </BaseLayout>
 
@@ -227,4 +186,68 @@ const layoutStyle = css({
 
 <style is:inline>
   @keyframes fadeInItem { to { opacity: 1; } }
+</style>
+
+<style>
+  .cart-page {
+    padding: 7rem 1.5rem 3rem;
+    max-width: 1200px;
+    margin-inline: auto;
+    min-height: 60vh;
+  }
+
+  @media (min-width: 1024px) {
+    .cart-page {
+      padding: 9rem 4rem 4rem;
+    }
+  }
+
+  .cart-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-sand);
+  }
+
+  @media (min-width: 768px) {
+    .cart-header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0;
+    }
+  }
+
+  .cart-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: var(--fw-light);
+  }
+
+  .cart-title em {
+    font-style: italic;
+    color: var(--color-gold);
+  }
+
+  .cart-count-label {
+    font-size: 0.75rem;
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--color-espresso-soft);
+  }
+
+  .cart-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .cart-layout {
+      grid-template-columns: 1fr 380px;
+    }
+  }
 </style>

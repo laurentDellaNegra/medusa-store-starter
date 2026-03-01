@@ -1,35 +1,8 @@
 ---
-import { css } from "../../styled-system/css";
-
-const dotStyle = css({
-  width: "8px",
-  height: "8px",
-  bg: "gold",
-  borderRadius: "full",
-  position: "fixed",
-  pointerEvents: "none",
-  zIndex: "cursorDot",
-  transition: "transform 0.15s ease",
-  mixBlendMode: "difference",
-  hideBelow: "sm",
-});
-
-const ringStyle = css({
-  width: "40px",
-  height: "40px",
-  border: "1px solid token(colors.gold)",
-  borderRadius: "full",
-  position: "fixed",
-  pointerEvents: "none",
-  zIndex: "cursorRing",
-  transition: "transform 0.3s ease, width 0.3s ease, height 0.3s ease",
-  mixBlendMode: "difference",
-  hideBelow: "sm",
-});
 ---
 
-<div class={dotStyle} id="cursorDot" aria-hidden="true"></div>
-<div class={ringStyle} id="cursorRing" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <script>
   function initCursor() {
@@ -74,3 +47,38 @@ const ringStyle = css({
   document.addEventListener("DOMContentLoaded", initCursor);
   document.addEventListener("astro:after-swap", initCursor);
 </script>
+
+<style>
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--color-gold);
+    border-radius: var(--radius-full);
+    position: fixed;
+    pointer-events: none;
+    z-index: var(--z-cursor-dot);
+    transition: transform 0.15s ease;
+    mix-blend-mode: difference;
+    display: none;
+  }
+
+  .cursor-ring {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-gold);
+    border-radius: var(--radius-full);
+    position: fixed;
+    pointer-events: none;
+    z-index: var(--z-cursor-ring);
+    transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+    mix-blend-mode: difference;
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .cursor-dot,
+    .cursor-ring {
+      display: block;
+    }
+  }
+</style>

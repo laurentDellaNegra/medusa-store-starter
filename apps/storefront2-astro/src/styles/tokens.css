@@ -1,0 +1,124 @@
+:root {
+  /* === Colors === */
+  --color-sand: #E8DFD0;
+  --color-sand-light: #F4EDE3;
+  --color-sand-pale: #FAF7F2;
+  --color-espresso: #2C1810;
+  --color-espresso-soft: #4A3228;
+  --color-gold: #B8956A;
+  --color-gold-light: #D4B896;
+  --color-gold-bright: #C9A87C;
+  --color-cream: #FFFCF7;
+  --color-sage: #8B9A7E;
+  --color-terracotta: #C2785C;
+  --color-charcoal: #1A1A1A;
+  --color-white: #FFFFFF;
+
+  /* === Semantic Colors === */
+  --color-bg-page: var(--color-cream);
+  --color-bg-section: var(--color-sand-pale);
+  --color-bg-card: var(--color-sand-light);
+  --color-bg-dark: var(--color-espresso);
+  --color-bg-nav: rgba(255, 252, 247, 0.92);
+  --color-text-primary: var(--color-espresso);
+  --color-text-secondary: var(--color-espresso-soft);
+  --color-text-accent: var(--color-gold);
+  --color-text-on-dark: var(--color-sand);
+  --color-text-on-dark-muted: rgba(232, 223, 208, 0.6);
+  --color-text-on-dark-faint: rgba(232, 223, 208, 0.3);
+  --color-border-default: var(--color-sand);
+  --color-border-accent: var(--color-gold);
+  --color-border-subtle: rgba(184, 149, 106, 0.15);
+  --color-state-success: var(--color-sage);
+  --color-state-danger: var(--color-terracotta);
+
+  /* === Fonts === */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Outfit', sans-serif;
+
+  /* === Font Sizes === */
+  --fs-xs: 0.55rem;
+  --fs-sm: 0.65rem;
+  --fs-caption: 0.7rem;
+  --fs-body-sm: 0.85rem;
+  --fs-body: 0.95rem;
+  --fs-body-md: 1rem;
+  --fs-body-lg: 1.1rem;
+  --fs-heading-sm: 1.3rem;
+  --fs-heading-md: 1.5rem;
+  --fs-heading-lg: 1.8rem;
+  --fs-heading-xl: clamp(2.2rem, 3.5vw, 3.5rem);
+  --fs-heading-hero: clamp(3rem, 5.5vw, 5.5rem);
+  --fs-display: 8rem;
+
+  /* === Font Weights === */
+  --fw-extra-light: 200;
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+
+  /* === Letter Spacings === */
+  --ls-tight: 0.08em;
+  --ls-normal: 0.1em;
+  --ls-relaxed: 0.12em;
+  --ls-wide: 0.15em;
+  --ls-wider: 0.2em;
+  --ls-widest: 0.25em;
+  --ls-editorial: 0.3em;
+  --ls-display: 0.35em;
+  --ls-ultra: 0.4em;
+
+  /* === Line Heights === */
+  --lh-none: 1;
+  --lh-tight: 1.05;
+  --lh-snug: 1.15;
+  --lh-normal: 1.6;
+  --lh-relaxed: 1.8;
+  --lh-loose: 1.9;
+
+  /* === Shadows === */
+  --shadow-nav: 0 1px 0 rgba(184, 149, 106, 0.15);
+  --shadow-card-hover: 0 20px 60px rgba(184, 149, 106, 0.1);
+  --shadow-product-drop: 0 15px 40px rgba(44, 24, 16, 0.15);
+  --shadow-product-drop-lg: 0 25px 60px rgba(44, 24, 16, 0.2);
+  --shadow-hero-bag: 0 20px 60px rgba(44, 24, 16, 0.2);
+  --shadow-notification: 0 10px 40px rgba(44, 24, 16, 0.2);
+  --shadow-cart-item: 0 5px 15px rgba(44, 24, 16, 0.12);
+
+  /* === Z-Index === */
+  --z-base: 1;
+  --z-content: 2;
+  --z-nav: 1000;
+  --z-menu-toggle: 1001;
+  --z-notification: 2000;
+  --z-grain: 9000;
+  --z-cursor-ring: 9998;
+  --z-cursor-dot: 9999;
+  --z-preloader: 10000;
+
+  /* === Radii === */
+  --radius-sm: 1px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-full: 50%;
+
+  /* === Durations === */
+  --dur-fast: 0.15s;
+  --dur-normal: 0.3s;
+  --dur-medium: 0.4s;
+  --dur-slow: 0.5s;
+  --dur-slower: 0.8s;
+
+  /* === Easings === */
+  --ease-default: ease;
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* === Content Sizes === */
+  --size-content-sm: 500px;
+  --size-content-md: 600px;
+  --size-content-lg: 700px;
+  --size-content-xl: 900px;
+  --size-content-full: 1300px;
+  --size-container: 1400px;
+}

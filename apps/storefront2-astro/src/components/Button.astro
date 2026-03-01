@@ -1,6 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
-
 interface Props {
   visual?: "primary" | "outline" | "ghost";
   href?: string;
@@ -11,75 +9,16 @@ interface Props {
 const { visual = "primary", href, tag, class: className } = Astro.props;
 const Tag = tag || (href ? "a" : "button");
 
-const baseStyle = css({
-  display: "inline-block",
-  fontFamily: "body",
-  fontSize: "0.7rem",
-  fontWeight: "regular",
-  letterSpacing: "widest",
-  textTransform: "uppercase",
-  textDecoration: "none",
-  cursor: "pointer",
-  transition: "all 0.5s ease",
-  border: "none",
-  position: "relative",
-  overflow: "hidden",
-});
-
-/* Gold slide-in hover: _before slides left→right on hover, <span> stays above */
-const goldSlideIn = {
-  _before: {
-    content: '""',
-    position: "absolute",
-    top: "0",
-    left: "-100%",
-    width: "100%",
-    height: "100%",
-    bg: "gold",
-    transition: "left 0.5s ease",
-    zIndex: "0",
-  },
-  _hover: { _before: { left: "0" } },
-  "& span": { position: "relative", zIndex: "1" },
-} as const;
-
-const styles: Record<string, string> = {
-  primary: css({
-    padding: "1rem 3rem",
-    bg: "espresso",
-    color: "sand.light",
-    position: "relative",
-    overflow: "hidden",
-    ...goldSlideIn,
-  }),
-  outline: css({
-    padding: "1rem 3rem",
-    bg: "transparent",
-    color: "espresso",
-    border: "1px solid token(colors.gold)",
-    _hover: {
-      bg: "gold",
-      color: "white",
-    },
-  }),
-  ghost: css({
-    padding: "0",
-    bg: "transparent",
-    color: "gold",
-    fontSize: "0.7rem",
-    letterSpacing: "wider",
-    display: "flex",
-    alignItems: "center",
-    gap: "0.8rem",
-    _hover: {
-      gap: "1.2rem",
-    },
-  }),
-};
+const classes = [
+  "btn",
+  `btn--${visual}`,
+  visual === "primary" ? "gold-slide-in" : "",
+  className || "",
+].filter(Boolean).join(" ");
 ---
 
 <Tag
-  class={`${baseStyle} ${styles[visual]} ${className || ""}`}
+  class={classes}
   {...(href ? { href } : {})}
 >
   {visual === "primary" ? (
@@ -88,3 +27,53 @@ const styles: Record<string, string> = {
     <slot />
   )}
 </Tag>
+
+<style>
+  .btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: var(--fw-regular);
+    letter-spacing: var(--ls-widest);
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn--primary {
+    padding: 1rem 3rem;
+    background: var(--color-espresso);
+    color: var(--color-sand-light);
+  }
+
+  .btn--outline {
+    padding: 1rem 3rem;
+    background: transparent;
+    color: var(--color-espresso);
+    border: 1px solid var(--color-gold);
+  }
+
+  .btn--outline:hover {
+    background: var(--color-gold);
+    color: var(--color-white);
+  }
+
+  .btn--ghost {
+    padding: 0;
+    background: transparent;
+    color: var(--color-gold);
+    font-size: 0.7rem;
+    letter-spacing: var(--ls-wider);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .btn--ghost:hover {
+    gap: 1.2rem;
+  }
+</style>

@@ -1,5 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
 import Badge from "./Badge.astro";
 
 interface Props {
@@ -23,44 +22,59 @@ const {
   mb,
 } = Astro.props;
 
-const wrapStyle = css({
-  aspectRatio: "3/4",
-  position: "relative",
-  overflow: "hidden",
-  mb: mb ?? (variant === "card" ? "1.5rem" : "1rem"),
-});
-
-const bgStyle = css({
-  position: "absolute",
-  inset: "0",
-  ...(variant === "card" ? { transition: "transform 0.8s ease" } : {}),
-});
-
-const isGallery = variant === "gallery";
-
-const shapeStyle = css({
-  position: "absolute",
-  inset: "0",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  ...(variant === "card" ? { zIndex: "base" } : {}),
-  "& svg": {
-    width: "55%",
-    height: "auto",
-    filter: isGallery
-      ? "drop-shadow(0 25px 60px rgba(44, 24, 16, 0.2))"
-      : "drop-shadow(0 15px 40px rgba(44, 24, 16, 0.15))",
-    ...(isGallery
-      ? { animation: "floatBag 4s ease-in-out infinite" }
-      : { transition: "transform 0.6s ease" }),
-  },
-});
+const mbValue = mb ?? (variant === "card" ? "1.5rem" : "1rem");
 ---
 
-<div class={`${wrapStyle} ${className || ""}`}>
-  <div class={`${bgStyle} product-bg`} style={`background:${gradient}`}></div>
-  <div class={`${shapeStyle} product-shape`} set:html={svg} />
+<div
+  class:list={["product-image", `product-image--${variant}`, className]}
+  style={`margin-bottom: ${mbValue}`}
+>
+  <div class="product-image__bg product-bg" style={`background:${gradient}`}></div>
+  <div class="product-image__shape product-shape" set:html={svg} />
   {badge && <Badge text={badge} size={variant === "gallery" ? "md" : "sm"} />}
   <slot />
 </div>
+
+<style>
+  .product-image {
+    aspect-ratio: 3/4;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-image__bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .product-image--card .product-image__bg {
+    transition: transform 0.8s ease;
+  }
+
+  .product-image__shape {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-image--card .product-image__shape {
+    z-index: var(--z-base);
+  }
+
+  .product-image__shape :global(svg) {
+    width: 55%;
+    height: auto;
+  }
+
+  .product-image--card .product-image__shape :global(svg) {
+    filter: drop-shadow(0 15px 40px rgba(44, 24, 16, 0.15));
+    transition: transform 0.6s ease;
+  }
+
+  .product-image--gallery .product-image__shape :global(svg) {
+    filter: drop-shadow(0 25px 60px rgba(44, 24, 16, 0.2));
+    animation: floatBag 4s ease-in-out infinite;
+  }
+</style>

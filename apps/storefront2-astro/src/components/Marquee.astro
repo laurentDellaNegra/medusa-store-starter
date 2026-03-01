@@ -1,48 +1,49 @@
 ---
-import { css } from "../../styled-system/css";
-
 interface Props {
   items: string[];
 }
 
 const { items } = Astro.props;
 const doubled = [...items, ...items];
-
-const rootStyle = css({
-  padding: "2rem 0",
-  bg: "espresso",
-  overflow: "hidden",
-});
-
-const trackStyle = css({
-  display: "flex",
-  gap: "4rem",
-  animation: "marquee 30s linear infinite",
-  width: "max-content",
-});
-
-const itemStyle = css({
-  fontFamily: "display",
-  fontSize: "body.md",
-  letterSpacing: "ultra",
-  textTransform: "uppercase",
-  color: "gold",
-  whiteSpace: "nowrap",
-  display: "flex",
-  alignItems: "center",
-  gap: "4rem",
-  _after: {
-    content: '"◆"',
-    fontSize: "0.4rem",
-    color: "gold.light",
-  },
-});
 ---
 
-<section class={rootStyle}>
-  <div class={trackStyle}>
+<section class="marquee-root">
+  <div class="marquee-track">
     {doubled.map((item) => (
-      <span class={itemStyle}>{item}</span>
+      <span class="marquee-item">{item}</span>
     ))}
   </div>
 </section>
+
+<style>
+  .marquee-root {
+    padding: 2rem 0;
+    background: var(--color-espresso);
+    overflow: hidden;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 4rem;
+    animation: marquee 30s linear infinite;
+    width: max-content;
+  }
+
+  .marquee-item {
+    font-family: var(--font-display);
+    font-size: var(--fs-body-md);
+    letter-spacing: var(--ls-ultra);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  .marquee-item::after {
+    content: "◆";
+    font-size: 0.4rem;
+    color: var(--color-gold-light);
+  }
+</style>

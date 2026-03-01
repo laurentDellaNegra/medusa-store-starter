@@ -1,97 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
-
-const rootStyle = css({
-  padding: "5rem 4rem 2.5rem",
-  bg: "espresso",
-  color: "sand",
-});
-
-const topStyle = css({
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  gap: "4rem",
-  maxWidth: "1400px",
-  mx: "auto",
-  pb: "4rem",
-  borderBottom: "1px solid token(colors.border.subtle)",
-  md: { gridTemplateColumns: "1fr 1fr" },
-  lg: { gridTemplateColumns: "2fr 1fr 1fr 1fr" },
-});
-
-const logoStyle = css({
-  fontFamily: "display",
-  fontSize: "heading.lg",
-  fontWeight: "regular",
-  letterSpacing: "display",
-  textTransform: "uppercase",
-  color: "sand.light",
-  textDecoration: "none",
-  display: "inline-block",
-  mb: "1.5rem",
-  "& span": { color: "gold" },
-});
-
-const descStyle = css({
-  fontSize: "body.sm",
-  lineHeight: "relaxed",
-  color: "text.onDarkMuted",
-  maxWidth: "300px",
-});
-
-const headingStyle = css({
-  fontSize: "sm",
-  letterSpacing: "editorial",
-  textTransform: "uppercase",
-  color: "gold",
-  mb: "1.5rem",
-});
-
-const linksStyle = css({
-  listStyle: "none",
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.8rem",
-});
-
-const linkStyle = css({
-  fontSize: "body.sm",
-  color: "text.onDarkMuted",
-  textDecoration: "none",
-  transition: "color 0.3s",
-  _hover: { color: "gold" },
-});
-
-const bottomStyle = css({
-  maxWidth: "1400px",
-  mx: "auto",
-  mt: "2.5rem",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: "1rem",
-  fontSize: "0.7rem",
-  color: "text.onDarkFaint",
-  letterSpacing: "normal",
-  textAlign: "center",
-  md: { flexDirection: "row", justifyContent: "space-between", gap: "0", textAlign: "left" },
-});
-
-const socialStyle = css({
-  display: "flex",
-  gap: "1.5rem",
-});
-
-const socialLinkStyle = css({
-  color: "rgba(232, 223, 208, 0.4)",
-  textDecoration: "none",
-  fontSize: "0.7rem",
-  letterSpacing: "wide",
-  textTransform: "uppercase",
-  transition: "color 0.3s",
-  _hover: { color: "gold" },
-});
-
 const shopLinks = [
   { href: "/shop", label: "All Bags" },
   { href: "/shop", label: "Totes" },
@@ -114,46 +21,166 @@ const helpLinks = [
 ];
 ---
 
-<footer class={rootStyle}>
-  <div class={topStyle}>
+<footer class="footer">
+  <div class="footer__top">
     <div>
-      <a href="/" class={logoStyle}>Rafia<span>.</span></a>
-      <p class={descStyle}>
+      <a href="/" class="footer__logo">Rafia<span>.</span></a>
+      <p class="footer__desc">
         Artisanal raphia bags, handcrafted in Madagascar. Where tradition meets
         contemporary elegance.
       </p>
     </div>
     <div>
-      <p class={headingStyle}>Shop</p>
-      <ul class={linksStyle}>
+      <p class="footer__heading">Shop</p>
+      <ul class="footer__links">
         {shopLinks.map((link) => (
-          <li><a href={link.href} class={linkStyle}>{link.label}</a></li>
+          <li><a href={link.href} class="footer__link">{link.label}</a></li>
         ))}
       </ul>
     </div>
     <div>
-      <p class={headingStyle}>About</p>
-      <ul class={linksStyle}>
+      <p class="footer__heading">About</p>
+      <ul class="footer__links">
         {aboutLinks.map((link) => (
-          <li><a href={link.href} class={linkStyle}>{link.label}</a></li>
+          <li><a href={link.href} class="footer__link">{link.label}</a></li>
         ))}
       </ul>
     </div>
     <div>
-      <p class={headingStyle}>Help</p>
-      <ul class={linksStyle}>
+      <p class="footer__heading">Help</p>
+      <ul class="footer__links">
         {helpLinks.map((link) => (
-          <li><a href={link.href} class={linkStyle}>{link.label}</a></li>
+          <li><a href={link.href} class="footer__link">{link.label}</a></li>
         ))}
       </ul>
     </div>
   </div>
-  <div class={bottomStyle}>
+  <div class="footer__bottom">
     <span>&copy; 2025 Rafia. All rights reserved.</span>
-    <div class={socialStyle}>
-      <a href="#" class={socialLinkStyle}>Instagram</a>
-      <a href="#" class={socialLinkStyle}>Pinterest</a>
-      <a href="#" class={socialLinkStyle}>Facebook</a>
+    <div class="footer__social">
+      <a href="#" class="footer__social-link">Instagram</a>
+      <a href="#" class="footer__social-link">Pinterest</a>
+      <a href="#" class="footer__social-link">Facebook</a>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer {
+    padding: 5rem 4rem 2.5rem;
+    background: var(--color-espresso);
+    color: var(--color-sand);
+  }
+
+  .footer__top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    max-width: var(--size-container);
+    margin-inline: auto;
+    padding-bottom: 4rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  @media (min-width: 768px) {
+    .footer__top {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer__top {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+  }
+
+  .footer__logo {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-lg);
+    font-weight: var(--fw-regular);
+    letter-spacing: var(--ls-display);
+    text-transform: uppercase;
+    color: var(--color-sand-light);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer__logo span {
+    color: var(--color-gold);
+  }
+
+  .footer__desc {
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-on-dark-muted);
+    max-width: 300px;
+  }
+
+  .footer__heading {
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-editorial);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .footer__links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .footer__link {
+    font-size: var(--fs-body-sm);
+    color: var(--color-text-on-dark-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer__link:hover {
+    color: var(--color-gold);
+  }
+
+  .footer__bottom {
+    max-width: var(--size-container);
+    margin-inline: auto;
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.7rem;
+    color: var(--color-text-on-dark-faint);
+    letter-spacing: var(--ls-normal);
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .footer__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 0;
+      text-align: left;
+    }
+  }
+
+  .footer__social {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer__social-link {
+    color: rgba(232, 223, 208, 0.4);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .footer__social-link:hover {
+    color: var(--color-gold);
+  }
+</style>

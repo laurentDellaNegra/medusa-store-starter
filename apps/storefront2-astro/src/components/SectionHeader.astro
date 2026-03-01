@@ -1,6 +1,4 @@
 ---
-import { css } from "../../styled-system/css";
-
 interface Props {
   tag: string;
   title: string;
@@ -9,54 +7,62 @@ interface Props {
 }
 
 const { tag, title, description, centered = false } = Astro.props;
-
-const rootStyle = css({
-  mb: "5rem",
-  ...(centered ? { textAlign: "center" } : {}),
-});
-
-const tagStyle = css({
-  fontSize: "sm",
-  letterSpacing: "ultra",
-  textTransform: "uppercase",
-  color: "gold",
-  mb: "1.5rem",
-  display: "flex",
-  alignItems: "center",
-  gap: "1rem",
-  fontWeight: "regular",
-  _before: {
-    content: '""',
-    width: "30px",
-    height: "1px",
-    bg: "gold",
-  },
-  ...(centered ? { justifyContent: "center" } : {}),
-});
-
-const titleStyle = css({
-  fontFamily: "display",
-  fontSize: "heading.xl",
-  fontWeight: "light",
-  lineHeight: "snug",
-  mb: "2rem",
-  ...(centered ? { textAlign: "center" } : {}),
-  "& em": { fontStyle: "italic", color: "gold" },
-});
-
-const descStyle = css({
-  fontSize: "body",
-  lineHeight: "loose",
-  color: "espresso.soft",
-  ...(centered ? { textAlign: "center" } : {}),
-});
-
-// Split title on <em> tags
-const titleParts = title.split(/(<em>.*?<\/em>)/);
 ---
 
-<div class={rootStyle}>
-  <p class={`${tagStyle} reveal`}>{tag}</p>
-  <h2 class={`${titleStyle} reveal reveal-delay-1`} set:html={title} />
-  {description && <p class={`${descStyle} reveal reveal-delay-2`}>{description}</p>}
+<div class:list={["section-header", { "section-header--centered": centered }]}>
+  <p class="section-header__tag reveal">{tag}</p>
+  <h2 class="section-header__title reveal reveal-delay-1" set:html={title} />
+  {description && <p class="section-header__desc reveal reveal-delay-2">{description}</p>}
 </div>
+
+<style>
+  .section-header {
+    margin-bottom: 5rem;
+  }
+
+  .section-header--centered {
+    text-align: center;
+  }
+
+  .section-header__tag {
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-ultra);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: var(--fw-regular);
+  }
+
+  .section-header__tag::before {
+    content: "";
+    width: 30px;
+    height: 1px;
+    background: var(--color-gold);
+  }
+
+  .section-header--centered .section-header__tag {
+    justify-content: center;
+  }
+
+  .section-header__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-xl);
+    font-weight: var(--fw-light);
+    line-height: var(--lh-snug);
+    margin-bottom: 2rem;
+  }
+
+  .section-header__title :global(em) {
+    font-style: italic;
+    color: var(--color-gold);
+  }
+
+  .section-header__desc {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-espresso-soft);
+  }
+</style>

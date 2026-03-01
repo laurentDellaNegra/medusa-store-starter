@@ -1,0 +1,97 @@
+/* === Gold Slide-In Button Effect ===
+   Used by: Button (primary), ProductDetail (add to cart), CartSummary (checkout)
+   Wrap button text in <span> so it stays above the gold overlay. */
+
+.gold-slide-in {
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-slide-in::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--color-gold);
+  transition: left 0.5s ease;
+  z-index: 0;
+}
+
+.gold-slide-in:hover::before {
+  left: 0;
+}
+
+.gold-slide-in span {
+  position: relative;
+  z-index: 1;
+}
+
+.gold-slide-in.added {
+  pointer-events: none;
+}
+
+.gold-slide-in.added::before {
+  left: 0;
+}
+
+/* === Quantity Selector ===
+   Used by: QuantitySelector.astro, cart.astro client script
+   Size variants: --sm (34px, cart), --md (44px, PDP) */
+
+.qty-control {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-sand);
+}
+
+.qty-btn {
+  border: none;
+  background: transparent;
+  color: var(--color-espresso);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.3s;
+}
+
+.qty-btn:hover {
+  background: var(--color-sand-pale);
+}
+
+.qty-val {
+  text-align: center;
+  border: none;
+  border-left: 1px solid var(--color-sand);
+  border-right: 1px solid var(--color-sand);
+  font-family: var(--font-body);
+  background: transparent;
+  color: var(--color-espresso);
+  outline: none;
+}
+
+/* Size: sm (cart) */
+.qty-control--sm .qty-btn {
+  width: 34px;
+  height: 34px;
+  font-size: 0.95rem;
+}
+
+.qty-control--sm .qty-val {
+  width: 38px;
+  font-size: 0.8rem;
+  height: 34px;
+}
+
+/* Size: md (PDP) */
+.qty-control--md .qty-btn {
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+}
+
+.qty-control--md .qty-val {
+  width: 50px;
+  font-size: var(--fs-body-sm);
+  height: 44px;
+}

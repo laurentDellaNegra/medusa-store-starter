@@ -1,33 +1,8 @@
 ---
-import { css } from "../../styled-system/css";
-
-const preloaderStyle = css({
-  position: "fixed",
-  inset: "0",
-  bg: "espresso",
-  zIndex: "preloader",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  transition: "opacity 0.8s ease, visibility 0.8s ease",
-  "&.hidden": {
-    opacity: "0",
-    visibility: "hidden",
-  },
-});
-
-const textStyle = css({
-  fontFamily: "display",
-  fontSize: "3rem",
-  color: "gold",
-  letterSpacing: "ultra",
-  textTransform: "uppercase",
-  animation: "preloaderPulse 1.5s ease-in-out infinite",
-});
 ---
 
-<div class={preloaderStyle} id="preloader" aria-hidden="true">
-  <div class={textStyle}>Rafia</div>
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="preloader-text">Rafia</div>
 </div>
 
 <script>
@@ -37,3 +12,30 @@ const textStyle = css({
     }, 1200);
   });
 </script>
+
+<style>
+  .preloader {
+    position: fixed;
+    inset: 0;
+    background: var(--color-espresso);
+    z-index: var(--z-preloader);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+
+  .preloader:global(.hidden) {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .preloader-text {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--color-gold);
+    letter-spacing: var(--ls-ultra);
+    text-transform: uppercase;
+    animation: preloaderPulse 1.5s ease-in-out infinite;
+  }
+</style>
