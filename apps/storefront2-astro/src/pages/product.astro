@@ -11,7 +11,7 @@ const product = getProduct(id) || PRODUCTS[0];
 const related = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
 ---
 
-<BaseLayout title={`${product.name} — Rafia`} navVariant="light">
+<BaseLayout title={`${product.name} — Rafia`}>
   <section class="pdp">
     <div class="pdp__grid">
       <ProductGallery product={product} />

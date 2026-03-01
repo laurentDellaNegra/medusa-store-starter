@@ -12,14 +12,29 @@ import { PRODUCTS } from "../data/products";
 const heroProducts = PRODUCTS.slice(0, 3);
 
 const marqueeItems = [
-  "Handwoven", "Sustainable", "Madagascar", "Artisanal",
-  "Luxury", "Raphia", "Ethical", "Timeless",
+  "Handwoven",
+  "Sustainable",
+  "Madagascar",
+  "Artisanal",
+  "Luxury",
+  "Raphia",
+  "Ethical",
+  "Timeless",
 ];
 
 const testimonials = [
-  { text: "The most exquisite bag I have ever owned. You can feel the soul of Madagascar in every woven strand.", author: "— Isabelle M., Geneva" },
-  { text: "I receive compliments every time I carry my Rafia tote. The craftsmanship is extraordinary.", author: "— Chloé D., Zurich" },
-  { text: "Finally, a luxury brand that prioritises both beauty and conscience. It only grows more beautiful with time.", author: "— Sophie L., Lausanne" },
+  {
+    text: "The most exquisite bag I have ever owned. You can feel the soul of Madagascar in every woven strand.",
+    author: "— Isabelle M., Geneva",
+  },
+  {
+    text: "I receive compliments every time I carry my Rafia tote. The craftsmanship is extraordinary.",
+    author: "— Chloé D., Zurich",
+  },
+  {
+    text: "Finally, a luxury brand that prioritises both beauty and conscience. It only grows more beautiful with time.",
+    author: "— Sophie L., Lausanne",
+  },
 ];
 
 const valueIcons = {
@@ -34,19 +49,22 @@ const weaveCount = 80;
 <BaseLayout title="Rafia — Artisanal Raphia Bags from Madagascar">
   <section class="hero">
     <div class="hero__left">
-      <div class="corner corner--tl"></div>
       <p class="hero__tag">Handcrafted in Madagascar</p>
       <h1 class="hero__title">The Art of<br /><em>Raphia</em> Weaving</h1>
       <p class="hero__desc">
         Each Rafia bag is a testament to centuries-old Malagasy craftsmanship,
-        where every strand tells a story of tradition, elegance, and sustainable luxury.
+        where every strand tells a story of tradition, elegance, and sustainable
+        luxury.
       </p>
       <div class="hero__actions">
         <Button visual="primary" href="/shop">Discover Collection</Button>
         <Button visual="ghost" href="/#story">
           Our Story
           <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
-            <path d="M14 1L19 6M19 6L14 11M19 6H1" stroke="currentColor" stroke-width="1" />
+            <path
+              d="M14 1L19 6M19 6L14 11M19 6H1"
+              stroke="currentColor"
+              stroke-width="1"></path>
           </svg>
         </Button>
       </div>
@@ -55,33 +73,117 @@ const weaveCount = 80;
       <div class="hero__image">
         <div class="hero__bag">
           <svg viewBox="0 0 300 380" fill="none">
-            <ellipse cx="150" cy="90" rx="60" ry="70" fill="none" stroke="#4A3228" stroke-width="2.5" opacity="0.7"/>
-            <path d="M70 160 C70 140,80 125,100 120 L200 120 C220 125,230 140,230 160 L240 330 C240 350,225 360,210 360 L90 360 C75 360,60 350,60 330 Z" fill="url(#bagGrad)" stroke="#4A3228" stroke-width="1.5"/>
+            <ellipse
+              cx="150"
+              cy="90"
+              rx="60"
+              ry="70"
+              fill="none"
+              stroke="#4A3228"
+              stroke-width="2.5"
+              opacity="0.7"></ellipse>
+            <path
+              d="M70 160 C70 140,80 125,100 120 L200 120 C220 125,230 140,230 160 L240 330 C240 350,225 360,210 360 L90 360 C75 360,60 350,60 330 Z"
+              fill="url(#bagGrad)"
+              stroke="#4A3228"
+              stroke-width="1.5"></path>
             <g opacity="0.25">
-              <line x1="80" y1="160" x2="220" y2="160" stroke="#4A3228" stroke-width="0.8"/>
-              <line x1="75" y1="185" x2="225" y2="185" stroke="#4A3228" stroke-width="0.8"/>
-              <line x1="72" y1="210" x2="228" y2="210" stroke="#4A3228" stroke-width="0.8"/>
-              <line x1="68" y1="235" x2="232" y2="235" stroke="#4A3228" stroke-width="0.8"/>
-              <line x1="65" y1="260" x2="235" y2="260" stroke="#4A3228" stroke-width="0.8"/>
-              <line x1="63" y1="285" x2="237" y2="285" stroke="#4A3228" stroke-width="0.8"/>
-              <line x1="110" y1="125" x2="100" y2="355" stroke="#4A3228" stroke-width="0.8"/>
-              <line x1="150" y1="120" x2="150" y2="358" stroke="#4A3228" stroke-width="0.8"/>
-              <line x1="190" y1="125" x2="200" y2="355" stroke="#4A3228" stroke-width="0.8"/>
+              <line
+                x1="80"
+                y1="160"
+                x2="220"
+                y2="160"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
+              <line
+                x1="75"
+                y1="185"
+                x2="225"
+                y2="185"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
+              <line
+                x1="72"
+                y1="210"
+                x2="228"
+                y2="210"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
+              <line
+                x1="68"
+                y1="235"
+                x2="232"
+                y2="235"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
+              <line
+                x1="65"
+                y1="260"
+                x2="235"
+                y2="260"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
+              <line
+                x1="63"
+                y1="285"
+                x2="237"
+                y2="285"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
+              <line
+                x1="110"
+                y1="125"
+                x2="100"
+                y2="355"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
+              <line
+                x1="150"
+                y1="120"
+                x2="150"
+                y2="358"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
+              <line
+                x1="190"
+                y1="125"
+                x2="200"
+                y2="355"
+                stroke="#4A3228"
+                stroke-width="0.8"></line>
             </g>
-            <rect x="170" y="280" width="35" height="45" rx="2" fill="#FFFCF7" opacity="0.8"/>
-            <line x1="178" y1="295" x2="198" y2="295" stroke="#B8956A" stroke-width="0.8"/>
-            <line x1="178" y1="302" x2="193" y2="302" stroke="#B8956A" stroke-width="0.8"/>
+            <rect
+              x="170"
+              y="280"
+              width="35"
+              height="45"
+              rx="2"
+              fill="#FFFCF7"
+              opacity="0.8"></rect>
+            <line
+              x1="178"
+              y1="295"
+              x2="198"
+              y2="295"
+              stroke="#B8956A"
+              stroke-width="0.8"></line>
+            <line
+              x1="178"
+              y1="302"
+              x2="193"
+              y2="302"
+              stroke="#B8956A"
+              stroke-width="0.8"></line>
             <defs>
               <linearGradient id="bagGrad" x1="60" y1="120" x2="240" y2="360">
-                <stop offset="0%" stop-color="#D4C5B2"/>
-                <stop offset="50%" stop-color="#C4AD92"/>
-                <stop offset="100%" stop-color="#BFA88C"/>
+                <stop offset="0%" stop-color="#D4C5B2"></stop>
+                <stop offset="50%" stop-color="#C4AD92"></stop>
+                <stop offset="100%" stop-color="#BFA88C"></stop>
               </linearGradient>
             </defs>
           </svg>
         </div>
       </div>
-      <div class="corner corner--br"></div>
     </div>
   </section>
 
@@ -90,19 +192,24 @@ const weaveCount = 80;
   <section class="about" id="story">
     <div class="about__image reveal">
       <div class="about__weave">
-        {Array.from({ length: weaveCount }).map(() => (
-          <div class="about__weave-cell"></div>
-        ))}
+        {
+          Array.from({ length: weaveCount }).map(() => (
+            <div class="about__weave-cell" />
+          ))
+        }
       </div>
       <span class="about__label">Est. 2024 — Madagascar</span>
     </div>
     <div class="about__content">
-      <SectionHeader tag="Our Story" title="Born from the <em>Heart</em><br>of Madagascar" />
+      <SectionHeader
+        tag="Our Story"
+        title="Born from the <em>Heart</em><br>of Madagascar"
+      />
       <p class="about__text reveal reveal-delay-2">
         Rafia was founded on a simple yet profound belief: that true luxury lies
-        in authenticity. Our bags are meticulously hand-woven by skilled artisans
-        in Madagascar, where the art of raphia weaving has been passed down
-        through generations.
+        in authenticity. Our bags are meticulously hand-woven by skilled
+        artisans in Madagascar, where the art of raphia weaving has been passed
+        down through generations.
       </p>
       <div class="about__stats reveal reveal-delay-3">
         <div>
@@ -123,14 +230,20 @@ const weaveCount = 80;
 
   <section class="collection" id="collection">
     <div class="collection__header">
-      <SectionHeader tag="The Collection" title="Curated <em>Pieces</em>" centered />
+      <SectionHeader
+        tag="The Collection"
+        title="Curated <em>Pieces</em>"
+        centered
+      />
     </div>
     <div class="collection__grid">
-      {heroProducts.map((product, i) => (
-        <div class={`reveal ${i > 0 ? `reveal-delay-${i}` : ""}`}>
-          <ProductCard product={product} showAddButton />
-        </div>
-      ))}
+      {
+        heroProducts.map((product, i) => (
+          <div class={`reveal ${i > 0 ? `reveal-delay-${i}` : ""}`}>
+            <ProductCard product={product} showAddButton />
+          </div>
+        ))
+      }
     </div>
     <div class="collection__view-all reveal">
       <Button visual="outline" href="/shop">View All Bags</Button>
@@ -139,7 +252,11 @@ const weaveCount = 80;
 
   <section class="values" id="values">
     <div class="values__header">
-      <SectionHeader tag="Our Savoir-Faire" title="Crafted with <em>Purpose</em>" centered />
+      <SectionHeader
+        tag="Our Savoir-Faire"
+        title="Crafted with <em>Purpose</em>"
+        centered
+      />
     </div>
     <div class="values__grid">
       <ValueCard
@@ -166,50 +283,75 @@ const weaveCount = 80;
   <Newsletter />
 </BaseLayout>
 
-<script is:inline define:vars={{ products: PRODUCTS.slice(0, 3).map(p => ({ id: p.id, name: p.name, price: p.price, type: p.type, color: p.color, gradient: p.gradient, svg: p.svg })) }}>
+<script
+  is:inline
+  define:vars={{
+    products: PRODUCTS.slice(0, 3).map((p) => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      type: p.type,
+      color: p.color,
+      gradient: p.gradient,
+      svg: p.svg,
+    })),
+  }}
+>
   window.__RAFIA_PRODUCTS = products;
 </script>
 
 <script>
   function initHomeAddToBag() {
-    document.querySelectorAll<HTMLButtonElement>(".product-action").forEach((btn) => {
-      btn.addEventListener("click", (e: Event) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const card = btn.closest(".product-card") as HTMLAnchorElement | null;
-        if (!card) return;
-        const href = card.getAttribute("href") || "";
-        const id = new URLSearchParams(href.split("?")[1]).get("id");
-        if (!id) return;
-        const products = (window as any).__RAFIA_PRODUCTS as any[];
-        if (!products) return;
-        const product = products.find((p: any) => p.id === id);
-        if (!product) return;
+    document
+      .querySelectorAll<HTMLButtonElement>(".product-action")
+      .forEach((btn) => {
+        btn.addEventListener("click", (e: Event) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const card = btn.closest(".product-card") as HTMLAnchorElement | null;
+          if (!card) return;
+          const href = card.getAttribute("href") || "";
+          const id = new URLSearchParams(href.split("?")[1]).get("id");
+          if (!id) return;
+          const products = (window as any).__RAFIA_PRODUCTS as any[];
+          if (!products) return;
+          const product = products.find((p: any) => p.id === id);
+          if (!product) return;
 
-        const cart: any[] = JSON.parse(localStorage.getItem("rafia_cart") || "[]");
-        const existing = cart.find((c: any) => c.id === product.id);
-        if (existing) { existing.qty += 1; }
-        else { cart.push({ ...product, qty: 1 }); }
-        localStorage.setItem("rafia_cart", JSON.stringify(cart));
+          const cart: any[] = JSON.parse(
+            localStorage.getItem("rafia_cart") || "[]",
+          );
+          const existing = cart.find((c: any) => c.id === product.id);
+          if (existing) {
+            existing.qty += 1;
+          } else {
+            cart.push({ ...product, qty: 1 });
+          }
+          localStorage.setItem("rafia_cart", JSON.stringify(cart));
 
-        const count = cart.reduce((s: number, i: any) => s + i.qty, 0);
-        document.querySelectorAll<HTMLElement>(".cart-count").forEach((el) => {
-          el.textContent = String(count);
-          el.style.display = count > 0 ? "flex" : "none";
-          el.classList.remove("bump");
-          void el.offsetWidth;
-          el.classList.add("bump");
+          const count = cart.reduce((s: number, i: any) => s + i.qty, 0);
+          document
+            .querySelectorAll<HTMLElement>(".cart-count")
+            .forEach((el) => {
+              el.textContent = String(count);
+              el.style.display = count > 0 ? "flex" : "none";
+              el.classList.remove("bump");
+              void el.offsetWidth;
+              el.classList.add("bump");
+            });
+
+          const n = document.getElementById("cartNotification");
+          if (n) {
+            n.innerHTML = `<span style="color:#B8956A;">✓</span>&ensp;${product.name} added to bag`;
+            n.classList.add("visible");
+            clearTimeout((n as any)._timer);
+            (n as any)._timer = setTimeout(
+              () => n.classList.remove("visible"),
+              2800,
+            );
+          }
         });
-
-        const n = document.getElementById("cartNotification");
-        if (n) {
-          n.innerHTML = `<span style="color:#B8956A;">✓</span>&ensp;${product.name} added to bag`;
-          n.classList.add("visible");
-          clearTimeout((n as any)._timer);
-          (n as any)._timer = setTimeout(() => n.classList.remove("visible"), 2800);
-        }
       });
-    });
   }
   initHomeAddToBag();
 </script>
@@ -317,7 +459,12 @@ const weaveCount = 80;
   .hero__image {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--color-sand) 0%, var(--color-gold-light) 50%, var(--color-sand-light) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-sand) 0%,
+      var(--color-gold-light) 50%,
+      var(--color-sand-light) 100%
+    );
     display: flex;
     align-items: center;
     justify-content: center;
@@ -334,28 +481,6 @@ const weaveCount = 80;
     width: 100%;
     height: 100%;
     filter: drop-shadow(0 20px 60px rgba(44, 24, 16, 0.2));
-  }
-
-  .corner {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border: 1px solid var(--color-gold-light);
-    opacity: 0.4;
-  }
-
-  .corner--tl {
-    top: 2rem;
-    left: 2rem;
-    border-right: none;
-    border-bottom: none;
-  }
-
-  .corner--br {
-    bottom: 2rem;
-    right: 2rem;
-    border-left: none;
-    border-top: none;
   }
 
   /* === About === */
@@ -379,7 +504,11 @@ const weaveCount = 80;
 
   .about__image {
     aspect-ratio: 3/4;
-    background: linear-gradient(160deg, var(--color-sand) 0%, var(--color-gold-light) 100%);
+    background: linear-gradient(
+      160deg,
+      var(--color-sand) 0%,
+      var(--color-gold-light) 100%
+    );
     position: relative;
     overflow: hidden;
   }

@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import "../styles/index.css";
 import GrainOverlay from "../components/GrainOverlay.astro";
 import Navbar from "../components/Navbar.astro";
@@ -7,11 +8,10 @@ import Toast from "../components/Toast.astro";
 
 interface Props {
   title: string;
-  navVariant?: "default" | "light";
   activeLink?: string;
 }
 
-const { title, navVariant = "default", activeLink } = Astro.props;
+const { title, activeLink } = Astro.props;
 ---
 
 <!doctype html>
@@ -24,6 +24,7 @@ const { title, navVariant = "default", activeLink } = Astro.props;
       content="Rafia — Artisanal raphia bags handcrafted in Madagascar. Sustainable luxury where tradition meets contemporary elegance."
     />
     <title>{title}</title>
+    <ClientRouter />
     <link
       rel="preload"
       href="/fonts/outfit-latin.woff2"
@@ -48,7 +49,7 @@ const { title, navVariant = "default", activeLink } = Astro.props;
   </head>
   <body>
     <GrainOverlay />
-    <Navbar variant={navVariant} activeLink={activeLink} />
+    <Navbar activeLink={activeLink} />
     <main>
       <slot />
     </main>

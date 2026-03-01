@@ -1,10 +1,9 @@
 ---
 interface Props {
-  variant?: "default" | "light";
   activeLink?: string;
 }
 
-const { variant = "default", activeLink } = Astro.props;
+const { activeLink } = Astro.props;
 
 const navLinks = [
   { href: "/shop", label: "Collection" },
@@ -14,10 +13,7 @@ const navLinks = [
 ];
 ---
 
-<nav
-  id="navbar"
-  class={`navbar ${variant === "light" ? "nav-light" : ""}`}
->
+<nav id="navbar" class="navbar">
   <a href="/" class="navbar__logo">Rafia<span>.</span></a>
   <ul class="navbar__links">
     {navLinks.map((link) => (
@@ -32,7 +28,7 @@ const navLinks = [
     ))}
   </ul>
   <div class="navbar__right">
-    {variant === "default" && (
+    {activeLink !== "/shop" && (
       <a href="/shop" class="navbar__cta">Shop Now</a>
     )}
     <a href="/cart" class="cart-icon" title="Shopping Bag">
@@ -53,11 +49,13 @@ const navLinks = [
   function initNav() {
     const navbar = document.getElementById("navbar");
     if (!navbar) return;
-    if (!navbar.classList.contains("nav-light")) {
-      window.addEventListener("scroll", () => {
-        navbar.classList.toggle("scrolled", window.scrollY > 80);
-      });
-    }
+
+    const onScroll = () => {
+      navbar.classList.toggle("scrolled", window.scrollY > 80);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll);
   }
 
   document.addEventListener("DOMContentLoaded", initNav);
@@ -83,8 +81,7 @@ const navLinks = [
     }
   }
 
-  .navbar:global(.scrolled),
-  .navbar:global(.nav-light) {
+  .navbar:global(.scrolled) {
     background: rgba(255, 252, 247, 0.92);
     backdrop-filter: blur(20px);
     padding: 1rem 2rem;
@@ -92,8 +89,7 @@ const navLinks = [
   }
 
   @media (min-width: 1024px) {
-    .navbar:global(.scrolled),
-    .navbar:global(.nav-light) {
+    .navbar:global(.scrolled) {
       padding: 1rem 4rem;
     }
   }
