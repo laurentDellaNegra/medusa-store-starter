@@ -1,0 +1,26 @@
+---
+import { css } from "../../styled-system/css";
+
+interface Props {
+  text: string;
+  size?: "sm" | "md";
+}
+
+const { text, size = "sm" } = Astro.props;
+
+const badgeStyle = css({
+  position: "absolute",
+  top: size === "sm" ? "1.2rem" : "1.5rem",
+  left: size === "sm" ? "1.2rem" : "1.5rem",
+  padding: size === "sm" ? "0.4rem 1rem" : "0.5rem 1.2rem",
+  bg: "rgba(255, 252, 247, 0.9)",
+  backdropFilter: "blur(10px)",
+  fontSize: "0.6rem",
+  letterSpacing: "wider",
+  textTransform: "uppercase",
+  color: "gold",
+  zIndex: "content",
+});
+---
+
+<span class={badgeStyle}>{text}</span>

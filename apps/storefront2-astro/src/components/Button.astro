@@ -26,29 +26,31 @@ const baseStyle = css({
   overflow: "hidden",
 });
 
+/* Gold slide-in hover: _before slides left→right on hover, <span> stays above */
+const goldSlideIn = {
+  _before: {
+    content: '""',
+    position: "absolute",
+    top: "0",
+    left: "-100%",
+    width: "100%",
+    height: "100%",
+    bg: "gold",
+    transition: "left 0.5s ease",
+    zIndex: "0",
+  },
+  _hover: { _before: { left: "0" } },
+  "& span": { position: "relative", zIndex: "1" },
+} as const;
+
 const styles: Record<string, string> = {
   primary: css({
     padding: "1rem 3rem",
     bg: "espresso",
     color: "sand.light",
-    _before: {
-      content: '""',
-      position: "absolute",
-      top: "0",
-      left: "-100%",
-      width: "100%",
-      height: "100%",
-      bg: "gold",
-      transition: "left 0.5s ease",
-      zIndex: "0",
-    },
-    _hover: {
-      _before: { left: "0" },
-    },
-    "& span": {
-      position: "relative",
-      zIndex: "1",
-    },
+    position: "relative",
+    overflow: "hidden",
+    ...goldSlideIn,
   }),
   outline: css({
     padding: "1rem 3rem",

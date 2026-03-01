@@ -1,6 +1,7 @@
 ---
 import { css } from "../../styled-system/css";
 import type { Product } from "../data/products";
+import ProductImage from "./ProductImage.astro";
 
 interface Props {
   product: Product;
@@ -30,48 +31,6 @@ const cardStyle = css({
     "& .product-shape svg": { transform: "translateY(-8px) rotate(-2deg)" },
     "& .product-action": { opacity: "1", transform: "translateX(-50%) translateY(0)" },
   },
-});
-
-const imageWrapStyle = css({
-  aspectRatio: "3/4",
-  position: "relative",
-  overflow: "hidden",
-  mb: "1.5rem",
-});
-
-const imageBgStyle = css({
-  position: "absolute",
-  inset: "0",
-  transition: "transform 0.8s ease",
-});
-
-const imageShapeStyle = css({
-  position: "absolute",
-  inset: "0",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: "base",
-  "& svg": {
-    width: "55%",
-    height: "auto",
-    filter: "drop-shadow(0 15px 40px rgba(44, 24, 16, 0.15))",
-    transition: "transform 0.6s ease",
-  },
-});
-
-const badgeStyle = css({
-  position: "absolute",
-  top: "1.2rem",
-  left: "1.2rem",
-  padding: "0.4rem 1rem",
-  bg: "rgba(255, 252, 247, 0.9)",
-  backdropFilter: "blur(10px)",
-  fontSize: "0.6rem",
-  letterSpacing: "wider",
-  textTransform: "uppercase",
-  color: "gold",
-  zIndex: "content",
 });
 
 const addBtnStyle = css({
@@ -123,16 +82,13 @@ const priceStyle = css({
 ---
 
 <a href={`/product?id=${product.id}`} class={`${cardStyle} product-card`}>
-  <div class={imageWrapStyle}>
-    <div class={`${imageBgStyle} product-bg`} style={`background:${product.gradient}`}></div>
-    <div class={`${imageShapeStyle} product-shape`} set:html={product.svg} />
-    {product.badge && <span class={badgeStyle}>{product.badge}</span>}
+  <ProductImage gradient={product.gradient} svg={product.svg} badge={product.badge} variant="card">
     {showAddButton && (
       <button class={`${addBtnStyle} product-action`} data-product-id={product.id}>
         Add to Bag
       </button>
     )}
-  </div>
+  </ProductImage>
   <div class={metaStyle}>
     <div>
       <h3 class={nameStyle}>{product.name}</h3>

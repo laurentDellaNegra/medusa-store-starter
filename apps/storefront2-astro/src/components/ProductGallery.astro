@@ -1,6 +1,7 @@
 ---
 import { css } from "../../styled-system/css";
 import type { Product } from "../data/products";
+import ProductImage from "./ProductImage.astro";
 
 interface Props {
   product: Product;
@@ -11,46 +12,6 @@ const { product } = Astro.props;
 const galleryStyle = css({
   position: "static",
   lg: { position: "sticky", top: "7rem" },
-});
-
-const mainImageStyle = css({
-  aspectRatio: "3/4",
-  position: "relative",
-  overflow: "hidden",
-  mb: "1rem",
-});
-
-const mainBgStyle = css({
-  position: "absolute",
-  inset: "0",
-});
-
-const mainShapeStyle = css({
-  position: "absolute",
-  inset: "0",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  "& svg": {
-    width: "55%",
-    height: "auto",
-    filter: "drop-shadow(0 25px 60px rgba(44, 24, 16, 0.2))",
-    animation: "floatBag 4s ease-in-out infinite",
-  },
-});
-
-const badgeStyle = css({
-  position: "absolute",
-  top: "1.5rem",
-  left: "1.5rem",
-  padding: "0.5rem 1.2rem",
-  bg: "rgba(255, 252, 247, 0.9)",
-  backdropFilter: "blur(10px)",
-  fontSize: "0.6rem",
-  letterSpacing: "wider",
-  textTransform: "uppercase",
-  color: "gold",
-  zIndex: "content",
 });
 
 const thumbsStyle = css({
@@ -83,11 +44,7 @@ const thumbBackgrounds = [
 ---
 
 <div class={galleryStyle} id="pdpGallery">
-  <div class={mainImageStyle}>
-    <div class={mainBgStyle} id="pdpMainBg" style={`background:${product.gradient}`}></div>
-    <div class={mainShapeStyle} set:html={product.svg} />
-    {product.badge && <span class={badgeStyle}>{product.badge}</span>}
-  </div>
+  <ProductImage gradient={product.gradient} svg={product.svg} badge={product.badge} variant="gallery" />
   <div class={thumbsStyle}>
     {thumbBackgrounds.map((bg, i) => (
       <div
@@ -108,7 +65,7 @@ const thumbBackgrounds = [
         .forEach((t) => t.classList.remove("active"));
       th.classList.add("active");
       const bg = th.getAttribute("data-bg");
-      const mainBg = document.getElementById("pdpMainBg");
+      const mainBg = document.querySelector("#pdpGallery .product-bg") as HTMLElement | null;
       if (mainBg && bg) mainBg.style.background = bg;
     });
   });

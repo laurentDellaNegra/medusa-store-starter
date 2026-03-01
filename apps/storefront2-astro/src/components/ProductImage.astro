@@ -1,0 +1,66 @@
+---
+import { css } from "../../styled-system/css";
+import Badge from "./Badge.astro";
+
+interface Props {
+  gradient: string;
+  svg: string;
+  badge?: string;
+  /** "card" = smaller shadow, "gallery" = larger shadow + float animation */
+  variant?: "card" | "gallery";
+  /** Extra classes on the wrapper (e.g. for hover target) */
+  class?: string;
+  /** Bottom margin — defaults to 1.5rem for card, 1rem for gallery */
+  mb?: string;
+}
+
+const {
+  gradient,
+  svg,
+  badge,
+  variant = "card",
+  class: className,
+  mb,
+} = Astro.props;
+
+const wrapStyle = css({
+  aspectRatio: "3/4",
+  position: "relative",
+  overflow: "hidden",
+  mb: mb ?? (variant === "card" ? "1.5rem" : "1rem"),
+});
+
+const bgStyle = css({
+  position: "absolute",
+  inset: "0",
+  ...(variant === "card" ? { transition: "transform 0.8s ease" } : {}),
+});
+
+const isGallery = variant === "gallery";
+
+const shapeStyle = css({
+  position: "absolute",
+  inset: "0",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  ...(variant === "card" ? { zIndex: "base" } : {}),
+  "& svg": {
+    width: "55%",
+    height: "auto",
+    filter: isGallery
+      ? "drop-shadow(0 25px 60px rgba(44, 24, 16, 0.2))"
+      : "drop-shadow(0 15px 40px rgba(44, 24, 16, 0.15))",
+    ...(isGallery
+      ? { animation: "floatBag 4s ease-in-out infinite" }
+      : { transition: "transform 0.6s ease" }),
+  },
+});
+---
+
+<div class={`${wrapStyle} ${className || ""}`}>
+  <div class={`${bgStyle} product-bg`} style={`background:${gradient}`}></div>
+  <div class={`${shapeStyle} product-shape`} set:html={svg} />
+  {badge && <Badge text={badge} size={variant === "gallery" ? "md" : "sm"} />}
+  <slot />
+</div>

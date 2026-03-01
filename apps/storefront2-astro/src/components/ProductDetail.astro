@@ -2,6 +2,7 @@
 import { css } from "../../styled-system/css";
 import type { Product } from "../data/products";
 import Breadcrumb from "./Breadcrumb.astro";
+import QuantitySelector from "./QuantitySelector.astro";
 
 interface Props {
   product: Product;
@@ -88,39 +89,6 @@ const qtyRowStyle = css({
   alignItems: "center",
   gap: "1.5rem",
   mb: "2.5rem",
-});
-
-const qtyControlStyle = css({
-  display: "flex",
-  alignItems: "center",
-  border: "1px solid token(colors.sand)",
-});
-
-const qtyBtnStyle = css({
-  width: "44px",
-  height: "44px",
-  border: "none",
-  bg: "transparent",
-  fontSize: "1.1rem",
-  color: "espresso",
-  cursor: "pointer",
-  fontFamily: "body",
-  transition: "background 0.3s",
-  _hover: { bg: "sand.pale" },
-});
-
-const qtyValStyle = css({
-  width: "50px",
-  textAlign: "center",
-  border: "none",
-  borderLeft: "1px solid token(colors.sand)",
-  borderRight: "1px solid token(colors.sand)",
-  fontFamily: "body",
-  fontSize: "body.sm",
-  height: "44px",
-  bg: "transparent",
-  color: "espresso",
-  outline: "none",
 });
 
 const addBtnStyle = css({
@@ -315,11 +283,7 @@ const accordionItems = [
 
   <p class={optionLabelStyle}>Quantity</p>
   <div class={qtyRowStyle}>
-    <div class={qtyControlStyle}>
-      <button class={qtyBtnStyle} id="qtyMinus">&minus;</button>
-      <input type="text" class={qtyValStyle} id="qtyVal" value="1" readonly />
-      <button class={qtyBtnStyle} id="qtyPlus">+</button>
-    </div>
+    <QuantitySelector size="md" id="qty" />
   </div>
 
   <button class={addBtnStyle} id="addToCartBtn">
