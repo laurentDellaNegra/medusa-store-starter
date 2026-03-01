@@ -6,6 +6,7 @@
   --color-espresso: #2C1810;
   --color-espresso-soft: #4A3228;
   --color-gold: #B8956A;
+  --color-gold-text: #867028;
   --color-gold-light: #D4B896;
   --color-gold-bright: #C9A87C;
   --color-cream: #FFFCF7;
@@ -22,10 +23,10 @@
   --color-bg-nav: rgba(255, 252, 247, 0.92);
   --color-text-primary: var(--color-espresso);
   --color-text-secondary: var(--color-espresso-soft);
-  --color-text-accent: var(--color-gold);
+  --color-text-accent: var(--color-gold-text);
   --color-text-on-dark: var(--color-sand);
   --color-text-on-dark-muted: rgba(232, 223, 208, 0.6);
-  --color-text-on-dark-faint: rgba(232, 223, 208, 0.3);
+  --color-text-on-dark-faint: rgba(232, 223, 208, 0.55);
   --color-border-default: var(--color-sand);
   --color-border-accent: var(--color-gold);
   --color-border-subtle: rgba(184, 149, 106, 0.15);

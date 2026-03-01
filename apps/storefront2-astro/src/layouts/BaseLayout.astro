@@ -30,7 +30,9 @@ const { title, navVariant = "default", activeLink } = Astro.props;
     <GrainOverlay />
     <CustomCursor />
     <Navbar variant={navVariant} activeLink={activeLink} />
-    <slot />
+    <main>
+      <slot />
+    </main>
     <Footer />
     <Toast />
 

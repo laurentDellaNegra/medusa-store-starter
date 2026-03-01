@@ -21,6 +21,7 @@ const categories = [
       </button>
     ))}
   </div>
+  <label for="sortSelect" class="sr-only">Sort products</label>
   <select class="sort-select" id="sortSelect">
     <option value="featured">Sort: Featured</option>
     <option value="price-asc">Price: Low to High</option>
@@ -113,5 +114,17 @@ const categories = [
     background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%234A3228' stroke-width='1'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 1rem center;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 </style>

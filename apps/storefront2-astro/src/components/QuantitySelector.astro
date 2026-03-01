@@ -12,6 +12,6 @@ const sizeClass = `qty-control--${size}`;
 
 <div class={`qty-control ${sizeClass}`}>
   <button class="qty-btn" id={`${id}Minus`}>&minus;</button>
-  <input type="text" class="qty-val" id={`${id}Val`} value={String(value)} readonly />
+  <input type="text" class="qty-val" id={`${id}Val`} value={String(value)} readonly aria-label="Quantity" />
   <button class="qty-btn" id={`${id}Plus`}>+</button>
 </div>

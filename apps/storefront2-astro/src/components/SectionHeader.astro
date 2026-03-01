@@ -28,7 +28,7 @@ const { tag, title, description, centered = false } = Astro.props;
     font-size: var(--fs-sm);
     letter-spacing: var(--ls-ultra);
     text-transform: uppercase;
-    color: var(--color-gold);
+    color: var(--color-gold-text);
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
@@ -40,7 +40,7 @@ const { tag, title, description, centered = false } = Astro.props;
     content: "";
     width: 30px;
     height: 1px;
-    background: var(--color-gold);
+    background: var(--color-gold-text);
   }
 
   .section-header--centered .section-header__tag {
@@ -57,7 +57,7 @@ const { tag, title, description, centered = false } = Astro.props;
 
   .section-header__title :global(em) {
     font-style: italic;
-    color: var(--color-gold);
+    color: var(--color-gold-text);
   }
 
   .section-header__desc {

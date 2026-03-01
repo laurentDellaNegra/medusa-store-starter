@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lighthouse": "node lighthouse.mjs",
+    "lighthouse:desktop": "node lighthouse.mjs --desktop"
   },
   "dependencies": {
     "astro": "^5.17.1"

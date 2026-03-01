@@ -27,8 +27,10 @@ const { crumbs, current } = Astro.props;
   }
 
   .link {
-    color: var(--color-gold);
-    text-decoration: none;
+    color: var(--color-gold-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
     transition: color 0.3s;
   }
 
