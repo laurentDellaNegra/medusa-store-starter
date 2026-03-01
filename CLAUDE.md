@@ -24,11 +24,12 @@
 
 # Project: Medusa Store Starter
 
-Nx monorepo with pnpm workspaces. Three apps:
+Nx monorepo with pnpm workspaces. Four apps:
 
 - `@medusa-store-starter/backend` at `apps/backend/` — Medusa v2.13.1 (runs natively on host)
 - `@medusa-store-starter/storefront-next` at `apps/storefront-next/` — Next.js 15, React 19
 - `@medusa-store-starter/storefront-astro` at `apps/storefront-astro/` — Astro 5, React 19, Panda CSS, Park UI
+- `storefront2-astro` at `apps/storefront2-astro/` — Astro 5, minimal (no React/Panda CSS), hardcoded product data, localStorage cart
 
 ## Key commands
 
@@ -102,6 +103,28 @@ Full dockerized stack at repo root:
 - Uses Medusa JS SDK (`@medusajs/js-sdk`) for API calls, nanostores for state management
 - Requires `PUBLIC_MEDUSA_PUBLISHABLE_KEY` in `.env.local`
 - Use `medusa-dev:building-storefronts` and `ecommerce-storefront:storefront-best-practices` skills for storefront work
+
+## Storefront development (Astro — storefront2)
+
+- Minimal Astro 5 storefront at `apps/storefront2-astro/` (no React, no Panda CSS)
+- 4 pages: `/` (home), `/shop`, `/product?id=...`, `/cart`
+- Hardcoded product data in `src/data/products.ts`, localStorage cart
+- No Medusa backend integration (standalone demo storefront)
+
+### E2E & visual regression testing (Playwright)
+
+- Config: `apps/storefront2-astro/playwright.config.ts` (Chromium, dev server on port 4321)
+- Tests: `apps/storefront2-astro/e2e/` — 42 tests across 5 spec files
+  - `home.spec.ts` — homepage sections, navigation, CTAs
+  - `shop.spec.ts` — product grid, filtering, sorting
+  - `product.spec.ts` — PDP details, add to cart, quantity, swatches, accordion
+  - `cart.spec.ts` — empty state, add/remove items, totals, shipping logic
+  - `visual.spec.ts` — full-page screenshot comparison for all routes
+- Visual baselines: `e2e/visual.spec.ts-snapshots/` (committed to git)
+- Commands:
+  - `pnpm test:e2e` — run all tests
+  - `pnpm test:e2e:ui` — interactive Playwright UI mode
+  - `pnpm test:e2e:update` — update visual regression baselines
 
 ---
 

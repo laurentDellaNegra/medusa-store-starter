@@ -26,3 +26,8 @@ pnpm-debug.log*
 ## Panda
 styled-system
 styled-system-studio
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/

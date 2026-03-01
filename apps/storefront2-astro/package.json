@@ -8,9 +8,15 @@
     "preview": "astro preview",
     "astro": "astro",
     "lighthouse": "node lighthouse.mjs",
-    "lighthouse:desktop": "node lighthouse.mjs --desktop"
+    "lighthouse:desktop": "node lighthouse.mjs --desktop",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:update": "playwright test --update-snapshots"
   },
   "dependencies": {
     "astro": "^5.17.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
   }
 }

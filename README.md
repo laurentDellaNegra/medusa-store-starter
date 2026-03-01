@@ -9,7 +9,8 @@ medusa-store-starter/
 ├── apps/
 │   ├── backend/          # Medusa v2 backend + admin dashboard
 │   ├── storefront-next/  # Next.js 15 storefront
-│   └── storefront-astro/ # Astro 5 storefront
+│   ├── storefront-astro/  # Astro 5 storefront (Medusa-connected)
+│   └── storefront2-astro/ # Astro 5 storefront (standalone demo)
 ├── package.json          # Root workspace config
 ├── pnpm-workspace.yaml   # pnpm workspace config
 └── nx.json               # Nx configuration
@@ -20,6 +21,7 @@ medusa-store-starter/
 - **Backend**: Medusa v2.13.1 — runs natively on the host
 - **Storefront (Next.js)**: Next.js 15 with React 19, Tailwind CSS, Medusa JS SDK
 - **Storefront (Astro)**: Astro 5 with React 19, Panda CSS, Park UI, Medusa JS SDK
+- **Storefront 2 (Astro)**: Astro 5, minimal standalone demo (no backend, localStorage cart)
 - **Infrastructure**: Postgres and Redis run in Docker via docker-compose
 
 ## Prerequisites
@@ -148,6 +150,14 @@ pnpm nx run @medusa-store-starter/storefront-next:dev
 | `pnpm nx run @medusa-store-starter/storefront-astro:build`  | Build Astro storefront               |
 | `pnpm nx run @medusa-store-starter/backend:db:migrate`      | Run database migrations              |
 | `pnpm nx run @medusa-store-starter/backend:seed`            | Seed the database                    |
+
+### Storefront 2 (Astro) — Testing
+
+| Command                                                       | Description                          |
+| ------------------------------------------------------------- | ------------------------------------ |
+| `cd apps/storefront2-astro && pnpm test:e2e`                  | Run E2E + visual regression tests    |
+| `cd apps/storefront2-astro && pnpm test:e2e:ui`               | Interactive Playwright UI mode       |
+| `cd apps/storefront2-astro && pnpm test:e2e:update`           | Update visual regression baselines   |
 
 ## Infrastructure
 
