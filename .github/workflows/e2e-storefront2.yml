@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       update-snapshots:
-        description: "Update visual regression baselines"
+        description: "Update visual regression baselines and commit them"
         type: boolean
         default: false
 
@@ -45,13 +45,30 @@ jobs:
       - name: Install Playwright Chromium
         run: pnpm exec playwright install chromium
 
-      - name: Run Playwright tests
-        if: ${{ github.event.inputs.update-snapshots != 'true' }}
-        run: pnpm test:e2e
+      - name: Check for missing Linux baselines
+        id: check-baselines
+        run: |
+          SNAPDIR="e2e/visual.spec.ts-snapshots"
+          if [ -d "$SNAPDIR" ] && ls "$SNAPDIR"/*-linux.png 1>/dev/null 2>&1; then
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Update visual baselines
-        if: ${{ github.event.inputs.update-snapshots == 'true' }}
+      - name: Generate missing Linux baselines
+        if: steps.check-baselines.outputs.missing == 'true' || inputs.update-snapshots
         run: pnpm test:e2e:update
+
+      - name: Commit updated baselines
+        if: steps.check-baselines.outputs.missing == 'true' || inputs.update-snapshots
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update Playwright Linux visual baselines"
+          file_pattern: "apps/storefront2-astro/e2e/visual.spec.ts-snapshots/*-linux.png"
+
+      - name: Run Playwright tests
+        if: steps.check-baselines.outputs.missing == 'false' && !inputs.update-snapshots
+        run: pnpm test:e2e
 
       - name: Upload test report
         uses: actions/upload-artifact@v4
@@ -60,14 +77,6 @@ jobs:
           name: playwright-report
           path: apps/storefront2-astro/playwright-report/
           retention-days: 14
-
-      - name: Upload visual baselines
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-snapshots
-          path: apps/storefront2-astro/e2e/visual.spec.ts-snapshots/
-          retention-days: 30
 
       - name: Upload test results (on failure)
         uses: actions/upload-artifact@v4

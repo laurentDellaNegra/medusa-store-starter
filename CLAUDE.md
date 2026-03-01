@@ -113,8 +113,8 @@ Full dockerized stack at repo root:
 
 ### E2E & visual regression testing (Playwright)
 
-- Config: `apps/storefront2-astro/playwright.config.ts` (Chromium, dev server on port 4321)
-- Tests: `apps/storefront2-astro/e2e/` — 42 tests across 5 spec files
+- Config: `apps/storefront2-astro/playwright.config.ts` (Chromium, desktop + mobile Pixel 7, dev server on port 4321)
+- Tests: `apps/storefront2-astro/e2e/` — 84 tests (42 per viewport) across 5 spec files
   - `home.spec.ts` — homepage sections, navigation, CTAs
   - `shop.spec.ts` — product grid, filtering, sorting
   - `product.spec.ts` — PDP details, add to cart, quantity, swatches, accordion
