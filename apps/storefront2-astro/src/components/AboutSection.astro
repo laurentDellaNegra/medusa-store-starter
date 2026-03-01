@@ -1,0 +1,150 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+
+const WEAVE_COUNT = 80;
+---
+
+<section class="about" id="story">
+  <div class="about__image reveal">
+    <div class="about__weave">
+      {Array.from({ length: WEAVE_COUNT }).map(() => <div class="about__weave-cell" />)}
+    </div>
+    <span class="about__label">Est. 2024 — Madagascar</span>
+  </div>
+  <div class="about__content">
+    <SectionHeader
+      tag="Our Story"
+      title='Born from the <em>Heart</em><br>of Madagascar'
+    />
+    <p class="about__text reveal reveal-delay-2">
+      Rafia was founded on a simple yet profound belief: that true luxury lies
+      in authenticity. Our bags are meticulously hand-woven by skilled
+      artisans in Madagascar, where the art of raphia weaving has been passed
+      down through generations.
+    </p>
+    <div class="about__stats reveal reveal-delay-3">
+      <div>
+        <div class="about__stat-number">150+</div>
+        <div class="about__stat-label">Artisan partners</div>
+      </div>
+      <div>
+        <div class="about__stat-number">100%</div>
+        <div class="about__stat-label">Natural materials</div>
+      </div>
+      <div>
+        <div class="about__stat-number">7–14</div>
+        <div class="about__stat-label">Days per piece</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding: 6rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: var(--size-container);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .about {
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      padding: 10rem 4rem;
+    }
+  }
+
+  .about__image {
+    aspect-ratio: 3/4;
+    background: linear-gradient(
+      160deg,
+      var(--color-sand) 0%,
+      var(--color-gold-light) 100%
+    );
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about__image::before {
+    content: "";
+    position: absolute;
+    inset: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .about__weave {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 3px;
+    padding: 4rem;
+    opacity: 0.3;
+  }
+
+  .about__weave-cell {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+  }
+
+  .about__weave-cell:nth-child(odd) {
+    background: rgba(184, 149, 106, 0.3);
+  }
+
+  .about__label {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-editorial);
+    text-transform: uppercase;
+    color: var(--color-white);
+    writing-mode: vertical-rl;
+  }
+
+  .about__content {
+    padding-right: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .about__content {
+      padding-right: 4rem;
+    }
+  }
+
+  .about__text {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-espresso-soft);
+    margin-bottom: 2.5rem;
+  }
+
+  .about__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    border-top: 1px solid var(--color-sand);
+    padding-top: 2.5rem;
+  }
+
+  .about__stat-number {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: var(--fw-light);
+    color: var(--color-gold-text);
+    line-height: var(--lh-none);
+  }
+
+  .about__stat-label {
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--color-espresso-soft);
+    margin-top: 0.5rem;
+  }
+</style>

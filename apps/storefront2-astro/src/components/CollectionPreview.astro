@@ -1,0 +1,149 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import ProductCard from "./ProductCard.astro";
+import Button from "./Button.astro";
+import { PRODUCTS } from "../data/products";
+
+const heroProducts = PRODUCTS.slice(0, 3);
+---
+
+<section class="collection" id="collection">
+  <div class="collection__header">
+    <SectionHeader
+      tag="The Collection"
+      title="Curated <em>Pieces</em>"
+      centered
+    />
+  </div>
+  <div class="collection__grid">
+    {
+      heroProducts.map((product, i) => (
+        <div class={`reveal ${i > 0 ? `reveal-delay-${i}` : ""}`}>
+          <ProductCard product={product} showAddButton />
+        </div>
+      ))
+    }
+  </div>
+  <div class="collection__view-all reveal">
+    <Button visual="outline" href="/shop">View All Bags</Button>
+  </div>
+</section>
+
+<script
+  is:inline
+  define:vars={{
+    products: PRODUCTS.slice(0, 3).map((p) => ({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      type: p.type,
+      color: p.color,
+      gradient: p.gradient,
+      svg: p.svg,
+    })),
+  }}
+>
+  window.__RAFIA_PRODUCTS = products;
+</script>
+
+<script>
+  function initHomeAddToBag() {
+    document
+      .querySelectorAll<HTMLButtonElement>(".product-action")
+      .forEach((btn) => {
+        btn.addEventListener("click", (e: Event) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const card = btn.closest(".product-card") as HTMLAnchorElement | null;
+          if (!card) return;
+          const href = card.getAttribute("href") || "";
+          const id = new URLSearchParams(href.split("?")[1]).get("id");
+          if (!id) return;
+          const products = (window as any).__RAFIA_PRODUCTS as any[];
+          if (!products) return;
+          const product = products.find((p: any) => p.id === id);
+          if (!product) return;
+
+          const cart: any[] = JSON.parse(
+            localStorage.getItem("rafia_cart") || "[]",
+          );
+          const existing = cart.find((c: any) => c.id === product.id);
+          if (existing) {
+            existing.qty += 1;
+          } else {
+            cart.push({ ...product, qty: 1 });
+          }
+          localStorage.setItem("rafia_cart", JSON.stringify(cart));
+
+          const count = cart.reduce((s: number, i: any) => s + i.qty, 0);
+          document
+            .querySelectorAll<HTMLElement>(".cart-count")
+            .forEach((el) => {
+              el.textContent = String(count);
+              el.style.display = count > 0 ? "flex" : "none";
+              el.classList.remove("bump");
+              void el.offsetWidth;
+              el.classList.add("bump");
+            });
+
+          const n = document.getElementById("cartNotification");
+          if (n) {
+            n.innerHTML = `<span style="color:#B8956A;">✓</span>&ensp;${product.name} added to bag`;
+            n.classList.add("visible");
+            clearTimeout((n as any)._timer);
+            (n as any)._timer = setTimeout(
+              () => n.classList.remove("visible"),
+              2800,
+            );
+          }
+        });
+      });
+  }
+  initHomeAddToBag();
+</script>
+
+<style>
+  .collection {
+    padding: 5rem 2rem;
+    background: var(--color-sand-pale);
+  }
+
+  @media (min-width: 1024px) {
+    .collection {
+      padding: 8rem 4rem 10rem;
+    }
+  }
+
+  .collection__header {
+    text-align: center;
+    max-width: var(--size-content-md);
+    margin-inline: auto;
+    margin-bottom: 5rem;
+  }
+
+  .collection__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    max-width: 400px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .collection__grid {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: var(--size-content-full);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .collection__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .collection__view-all {
+    text-align: center;
+    margin-top: 4rem;
+  }
+</style>
