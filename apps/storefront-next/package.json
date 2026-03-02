@@ -21,7 +21,7 @@
     "@medusajs/ui": "latest",
     "@radix-ui/react-accordion": "^1.2.1",
     "@stripe/react-stripe-js": "^5.3.0",
-    "@stripe/stripe-js": "^8.2.0",
+    "@stripe/stripe-js": "^8.8.0",
     "lodash": "^4.17.21",
     "next": "15.3.9",
     "pg": "^8.11.3",
